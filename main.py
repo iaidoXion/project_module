@@ -20,13 +20,13 @@ with open("setting.json", encoding="UTF-8") as f:
 DataLoadingType = SETTING['MODULE']['DataLoadingType']
 
 class mainclass :
-    #def __init__(self):
-        #self.sk = SessionKey()
+    def __init__(self):
+        self.sk = SessionKey()
 
-    #def Asset(self) :
-        #baseAssetData = AssetAPI(self.sk)
-        #AssetData = TAOD(baseAssetData['dataList'])
-        #LAD(AssetData)
+    def Asset(self) :
+        baseAssetData = AssetAPI(self.sk)
+        AssetData = TAOD(baseAssetData['dataList'])
+        LAD(AssetData)
 
 
     def Statistics(self):
@@ -34,14 +34,14 @@ class mainclass :
         TSDL = TAD(EDL)
         ASDCL = ASDC(TSDL)
         TSDL = TSD(ASDCL)
-        #LSD(TSDL)
+        LSD(TSDL)
 
     #def DriveUse(self):
 
 
 def RunModule() :
     mc = mainclass()
-    #mc.Asset()
+    mc.Asset()
     mc.Statistics()
 
 if __name__ == "__main__":
