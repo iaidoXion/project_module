@@ -1,0 +1,33 @@
+{
+   "API" : {
+    "apiUrl" : "https://192.168.5.100",
+    "Authorization" : "Basic QWRtaW5pc3RyYXRvcjp4aW9uMTIzIQ==",
+    "ContentType" : "application/json"
+  },
+  "MODULE" : {
+    "DataLoadingType" : "DB"
+  },
+  "DB" : {
+    "DBHost" : "localhost",
+    "DBName" : "postgres",
+    "DBUser" : "aidoi",
+    "DBPwd" : "iaido8906#",
+    "AssetTNM" : "daily_assets",
+    "StatisticsTNM" : "daily_statistics"
+  },
+  "FILE" : {
+    "asset": {
+      "Storage" : "data/asset/daily/",
+      "FileName" : "Asset_",
+      "FileType" : ".json"
+    },
+    "statistics" : {
+      "Storage" : "data/statistics/daily/",
+      "FileName" : "Statistics_",
+      "FileType" : ".json"
+    }
+  }
+
+
+
+}
