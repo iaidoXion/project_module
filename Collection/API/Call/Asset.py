@@ -10,13 +10,11 @@ apiUrl = SETTING['API']['apiUrl']
 Authorization = SETTING['API']['Authorization']
 ContentType = SETTING['API']['ContentType']
 
-
-def Asset(sessionKey):
-    sessionKey = sessionKey
+def Data(SK):
     path = "/plugin/products/asset/v1/assets"
     urls = apiUrl + path
     headers = {
-        'session': sessionKey,
+        'session': SK,
         'Authorization': Authorization,
         'Content-Type': ContentType,
     }
@@ -65,3 +63,5 @@ def Asset(sessionKey):
     returnList = {'resCode': resCode, 'dataList': dataList}
 
     return returnList
+
+

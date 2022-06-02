@@ -1,13 +1,9 @@
 from datetime import datetime, timedelta
 
 def DailyCount(TSDL):
-    print(TSDL.todayDriveSize)
-    print(TSDL.yesterdayDriveSize)
-    #{"classification": "login", "item": "N", "count": LHNC}
     ATNM = "all"
     ATC = len(TSDL)
 
-    today = datetime.today().strftime("%Y-%m-%d")
     weekAgo = (datetime.today() - timedelta(7)).strftime("%Y-%m-%d")
 
     DF = TSDL
@@ -38,7 +34,6 @@ def DailyCount(TSDL):
         "LS" : {"name": [LLNM], "value": [LLNC]},
         "DSS" : {"name" : [DSNM], "value": [DSNC]}
     }
-    #print(RD)
     return RD
 
 

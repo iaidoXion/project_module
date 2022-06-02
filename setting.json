@@ -10,8 +10,8 @@
   "DB" : {
     "DBHost" : "localhost",
     "DBName" : "postgres",
-    "DBUser" : "aidoi",
-    "DBPwd" : "iaido8906#",
+    "DBUser" : "postgres",
+    "DBPwd" : "postgres",
     "AssetTNM" : "daily_assets",
     "StatisticsTNM" : "daily_statistics"
   },

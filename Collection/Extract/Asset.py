@@ -14,7 +14,7 @@ today = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 yesterday = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
 twoago = (datetime.today() - timedelta(2)).strftime("%Y-%m-%d")
 
-def AssetDaily() :
+def Daily() :
     try:
         AssetSelectL = []
         if DataLoadingType == 'DB':
@@ -38,7 +38,7 @@ def AssetDaily() :
                         last_seen_at, 
                         asset_collection_date
                     from 
-                        daily_assets
+                        """+AssetTNM+"""
                     where 
                         to_char(asset_collection_date, 'YYYY-MM-DD HH24:MI:SS') > '"""+yesterday+""" 23:58:59' 
                     and 
@@ -49,7 +49,7 @@ def AssetDaily() :
                         disk_total_space, 
                         asset_collection_date
                     from 
-                        daily_assets
+                        """+AssetTNM+"""
                     where 
                         to_char(asset_collection_date, 'YYYY-MM-DD HH24:MI:SS') > '"""+twoago+""" 23:58:59' 
                     and 
@@ -57,7 +57,7 @@ def AssetDaily() :
                     
                 ON t.computer_id = y.computer_id
                 """
-
+            #print(AssetSelectQ)
             AssetSelectCur.execute(AssetSelectQ)
             AssetSelectRS=AssetSelectCur.fetchall()
             for AssetSelectR in AssetSelectRS :

@@ -1,16 +1,17 @@
 from Collection.API.Auth import SessionKey
-from Collection.API.Extract import Asset as AssetAPI
-from Collection.Transform import AssetOrgDaily as TAOD
-from Collection.Load import AssetDaily as LAD
-from Collection.Extract import AssetDaily as EAD
-from Collection.Transform import AssetDaily as TAD
+from Collection.API.Call.Asset import Data as AssetData
+from Collection.API.Call.Sensor import Data as SensorData
+from Collection.Extract.Asset import Daily as EAD
+from Collection.Transform.API import AssetOrgDaily as TAOD
+from Collection.Transform.Asset import Daily as TAD
+from Collection.Transform.Statistics import Daily as TSD
 from Analysis.Statistics import DailyCount as ASDC
-from Collection.Transform import StatisticsDaily as TSD
-from Collection.Load import StatisticsDaily as LSD
+from Collection.Load.Asset import Daily as LAD
+from Collection.Load.Statistics import Daily as LSD
+
 
 import urllib3
 import json
-import schedule
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -24,9 +25,10 @@ class mainclass :
         self.sk = SessionKey()
 
     def Asset(self) :
-        baseAssetData = AssetAPI(self.sk)
-        AssetData = TAOD(baseAssetData['dataList'])
-        LAD(AssetData)
+        BADL = AssetData(self.sk)
+        ADTL = TAOD(BADL['dataList'])
+        SensorData(self.sk)
+        #LAD(ADTL)
 
 
     def Statistics(self):
@@ -34,9 +36,8 @@ class mainclass :
         TSDL = TAD(EDL)
         ASDCL = ASDC(TSDL)
         TSDL = TSD(ASDCL)
-        LSD(TSDL)
+        #LSD(TSDL)
 
-    #def DriveUse(self):
 
 
 def RunModule() :
