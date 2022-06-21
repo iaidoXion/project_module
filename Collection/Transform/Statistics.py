@@ -19,13 +19,20 @@ def Daily(ASDCL) :
             OCL.append("os")
         LCL = []
         for LSC in range(len(ASDCL['LS']['name'])):
-            LCL.append("login")
+            LCL.append("login_history")
         DSCL = []
         for DSSC in range(len(ASDCL['DSS']['name'])):
-            DSCL.append("drive")
-        DC = AACL+AICL+OCL+LCL+DSCL
-        DNM = ASDCL['AA']['name']+ASDCL['AIS']['name']+ASDCL['OS']['name']+ASDCL['LS']['name']+ASDCL['DSS']['name']
-        DV = ASDCL['AA']['value']+ASDCL['AIS']['value']+ASDCL['OS']['value']+ASDCL['LS']['value']+ASDCL['DSS']['value']
+            DSCL.append("drive_size")
+        LPCSL = []
+        for LPCC in range(len(ASDCL['LPCS']['name'])):
+            LPCSL.append("listen_port_count")
+        EPSL = []
+        for EPC in range(len(ASDCL['EPS']['name'])):
+            EPSL.append("established_port")
+
+        DC = AACL+AICL+OCL+LCL+DSCL+LPCSL+EPSL
+        DNM = ASDCL['AA']['name']+ASDCL['AIS']['name']+ASDCL['OS']['name']+ASDCL['LS']['name']+ASDCL['DSS']['name']+ASDCL['LPCS']['name']+ASDCL['EPS']['name']
+        DV = ASDCL['AA']['value']+ASDCL['AIS']['value']+ASDCL['OS']['value']+ASDCL['LS']['value']+ASDCL['DSS']['value']+ASDCL['LPCS']['value']+ASDCL['EPS']['value']
         returnData = {"classification" : DC, "item" : DNM, "count" : DV}
 
     elif DataLoadingType == 'FILE':

@@ -11,8 +11,8 @@
     "DBHost" : "localhost",
     "DBName" : "postgres",
     "DBUser" : "postgres",
-    "DBPwd" : "postgres",
-    "AssetTNM" : "daily_assets",
+    "DBPwd" : "xion123!",
+    "AssetTNM" : "daily_asset",
     "StatisticsTNM" : "daily_statistics"
   },
   "FILE" : {

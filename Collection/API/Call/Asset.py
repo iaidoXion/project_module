@@ -25,7 +25,7 @@ def Data(SK):
     assetJson = json.loads(assetText)
     assetsCount = len(assetJson['data'])
     assetsDataJson = assetJson['data']
-
+    
     dataListAppend = []
     for i in range(0, assetsCount):
         id = assetsDataJson[i]['id']
@@ -41,7 +41,7 @@ def Data(SK):
         ram = assetsDataJson[i]['ram']
         city = assetsDataJson[i]['city']
         chassis_type = assetsDataJson[i]['chassis_type']
-
+        ip_address = assetsDataJson[i]['ip_address']
         data = {
             'id': id,
             'computer_name': computer_name,
@@ -53,7 +53,8 @@ def Data(SK):
             'updated_at': updated_at,
             'last_seen_at': last_seen_at,
             'asset_item': chassis_type,
-            'ci_installed_application': ci_installed_application
+            'ci_installed_application': ci_installed_application,
+            'ip_address' : ip_address
         }
 
         dataListAppend.append(data)

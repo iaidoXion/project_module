@@ -26,9 +26,9 @@ class mainclass :
 
     def Asset(self) :
         BADL = AssetData(self.sk)
-        ADTL = TAOD(BADL['dataList'])
-        SensorData(self.sk)
-        #LAD(ADTL)
+        BSDL = SensorData(self.sk)
+        ADTL = TAOD(BADL['dataList'],BSDL['dataList'])
+        LAD(ADTL)
 
 
     def Statistics(self):
@@ -36,7 +36,7 @@ class mainclass :
         TSDL = TAD(EDL)
         ASDCL = ASDC(TSDL)
         TSDL = TSD(ASDCL)
-        #LSD(TSDL)
+        LSD(TSDL)
 
 
 

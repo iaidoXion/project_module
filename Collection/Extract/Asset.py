@@ -27,6 +27,11 @@ def Daily() :
                     t.os_item as os_item, 
                     t.disk_total_space as today_disk_size, 
                     y.disk_total_space as yesterday_disk_size,
+                    t.ip_address,
+                    t.listen_port_count,
+                    y.listen_port_count,
+                    t.established_port_count,
+                    y.established_port_count,
                     t.last_seen_at as last_seen_at, 
                     t.asset_collection_date as asset_collection_date
                 from 
@@ -35,6 +40,9 @@ def Daily() :
                         asset_item, 
                         os_item, 
                         disk_total_space, 
+                        ip_address,
+                        listen_port_count,
+                        established_port_count,
                         last_seen_at, 
                         asset_collection_date
                     from 
@@ -47,6 +55,8 @@ def Daily() :
                     (select 
                         computer_id,
                         disk_total_space, 
+                        listen_port_count,
+                        established_port_count,
                         asset_collection_date
                     from 
                         """+AssetTNM+"""
