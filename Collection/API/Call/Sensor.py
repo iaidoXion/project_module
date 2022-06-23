@@ -9,10 +9,11 @@ with open("setting.json", encoding="UTF-8") as f:
 apiUrl = SETTING['API']['apiUrl']
 Authorization = SETTING['API']['Authorization']
 ContentType = SETTING['API']['ContentType']
+SensorPath = SETTING['API']['PATH']['Sensor']
+SensorID = SETTING['API']['SensorID']
 
 def Data(SK) :
-    path = "/api/v2/result_data/saved_question/797"
-    #path = "/api/v2/saved_questions"
+    path = SensorPath+SensorID
     urls = apiUrl + path
     headers = {
         'session': SK,
@@ -35,18 +36,8 @@ def Data(SK) :
     for j in range(len(dataList)) :
         DL = []
         for k in range(len(dataList[j]['data'])) :
-            #print(len(dataList[j]['data']))
             DL.append(dataList[j]['data'][k][0]['text'])
         dataListAppend.append(DL)
-    returnDataList = []
-    #for m in range(len(dataListAppend)) :
-    #    DTL = []
-    #    for l in  range(len(columnsListAppend)) :
-    #        DTL.append({columnsListAppend[l] : dataListAppend[m][l]})
-    #    returnDataList.append(DTL)
-    #print(returnDataList)
-    #print(columnsListAppend)
-    #print(columnsListAppend)
     returnList = {'resCode': resCode, 'dataList': dataListAppend, 'dataColumnList': columnsListAppend}
 
     return returnList

@@ -8,17 +8,23 @@ from Collection.Transform.Statistics import Daily as TSD
 from Analysis.Statistics import DailyCount as ASDC
 from Collection.Load.Asset import Daily as LAD
 from Collection.Load.Statistics import Daily as LSD
-
-
+from datetime import datetime
 import urllib3
 import json
+import schedule
+import time
+import logging
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
+today = datetime.today().strftime("%Y%m%d")
+logDateTime = datetime.today().strftime("%Y%m%d%H%M%S")
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
 
 DataLoadingType = SETTING['MODULE']['DataLoadingType']
+logFileDirectory = SETTING['LOG']['directory']
+logFileName = SETTING['LOG']['fileName']
+logFileFormat = SETTING['LOG']['fileFormat']
 
 class mainclass :
     def __init__(self):
@@ -30,7 +36,6 @@ class mainclass :
         ADTL = TAOD(BADL['dataList'],BSDL['dataList'])
         LAD(ADTL)
 
-
     def Statistics(self):
         EDL = EAD()
         TSDL = TAD(EDL)
@@ -38,16 +43,27 @@ class mainclass :
         TSDL = TSD(ASDCL)
         LSD(TSDL)
 
-
-
 def RunModule() :
     mc = mainclass()
     mc.Asset()
     mc.Statistics()
 
-if __name__ == "__main__":
-    #schedule.every().day.at("23:59").do(RunModule)
+def Scheduling():
+    logFile = logFileDirectory+logFileName+today+logFileFormat
+    logFormat = '%(levelname)s, %(asctime)s, %(message)s'
+    logDateFormat = '%Y%m%d%H%M%S'
+    logging.basicConfig(filename=logFile, format=logFormat, datefmt=logDateFormat, level=logging.DEBUG)
+    logging.info('Module Started')
     RunModule()
+    logging.info('Module Finished')
+
+if __name__ == "__main__":
+    #schedule.every(3).seconds.do(job)
+    schedule.every().day.at("23:59:59").do(Scheduling)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+    #Scheduling()
 
 
 

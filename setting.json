@@ -2,7 +2,16 @@
    "API" : {
     "apiUrl" : "https://192.168.5.100",
     "Authorization" : "Basic QWRtaW5pc3RyYXRvcjp4aW9uMTIzIQ==",
-    "ContentType" : "application/json"
+    "ContentType" : "application/json",
+     "PATH" : {
+       "SesstionKey" : "/auth",
+       "Asset" : "/plugin/products/asset/v1/assets",
+       "Sensor" : "/api/v2/result_data/saved_question/",
+       "Questions" : {
+         "Saved" : "/api/v2/saved_questions"
+       }
+     },
+     "SensorID": "797"
   },
   "MODULE" : {
     "DataLoadingType" : "DB"
@@ -26,6 +35,11 @@
       "FileName" : "Statistics_",
       "FileType" : ".json"
     }
+  },
+  "LOG" : {
+    "directory" : "log/",
+    "fileName" : "log_",
+    "fileFormat" : ".log"
   }
 
 
