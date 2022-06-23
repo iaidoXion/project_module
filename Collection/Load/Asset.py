@@ -28,9 +28,10 @@ def Daily(ADTL) :
                 OI = ADTL[i]['os_platform']
                 DTS = str(ADTL[i]['disk_total_space'])
                 II = ADTL[i]['ip_address']
-                LPC = ADTL[i]['listen_port_count']
-                EPC = ADTL[i]['established_port_count']
+                LPC = int(ADTL[i]['listen_port_count'])
+                EPC = int(ADTL[i]['established_port_count'])
                 LSA = ADTL[i]['last_seen_at']
+                #print(type(CID), type(AI), type(OI), type(DTS), type(II), type(LPC), type(EPC), type(LSA))
                 AssetInsertCur.execute(LIQ, (CID, AI, OI, DTS, II, LPC, EPC, LSA))
             AssetInsertConn.commit()
             AssetInsertConn.close()
