@@ -16,7 +16,7 @@ def AssetOrgDaily(BADL, BSDL):
         CI = BADL[i]['computer_id']
         AI = BADL[i]['asset_item']
         OI = BADL[i]['os_platform']
-        DI = BADL[i]['disk_total_space']
+        DI = BADL[i]['drive_use_size']
         LI = BADL[i]['last_seen_at'].split('T')[0]
         II = BADL[i]['ip_address']
         AIPer = AI.lower()
@@ -27,7 +27,7 @@ def AssetOrgDaily(BADL, BSDL):
         ADDFL.append([CI, AI, OI, DI, LI, II])
 
 
-    ADDFCNM = ['computer_id', 'asset_item', 'os_platform', 'disk_total_space', 'last_seen_at', 'ip_address']
+    ADDFCNM = ['computer_id', 'asset_item', 'os_platform', 'drive_use_size', 'last_seen_at', 'ip_address']
     ADDF = pd.DataFrame(ADDFL, columns=ADDFCNM)
     #print(ADDF)
     SDDFL = []
@@ -58,7 +58,7 @@ def AssetOrgDaily(BADL, BSDL):
     computer_id = DFM.computer_id
     asset_item = DFM.asset_item
     os_platform = DFM.os_platform
-    disk_total_space = DFM.disk_total_space
+    drive_use_size = DFM.drive_use_size
     last_seen_at = DFM.last_seen_at
     ip_address = DFM.ip_address
     listen_port_count = DFM.listen_port_count
@@ -67,7 +67,7 @@ def AssetOrgDaily(BADL, BSDL):
         CI = computer_id[k]
         AI = asset_item[k]
         OI = os_platform[k]
-        DI = disk_total_space[k]
+        DI = drive_use_size[k]
         LI = last_seen_at[k]
         II = ip_address[k]
         LPCI = listen_port_count[k]
@@ -87,8 +87,8 @@ def AssetOrgDaily(BADL, BSDL):
                 EPCI = established_port_count[k]
         else :
             EPCI = '0'
-        assetDataList.append({'computer_id': CI, 'asset_item': AI, 'os_platform': OI, 'disk_total_space': DI, 'ip_address': II, 'listen_port_count' : LPCI, 'established_port_count' : EPCI, 'last_seen_at': LI})
-
+        assetDataList.append({'computer_id': CI, 'asset_item': AI, 'os_platform': OI, 'drive_use_size': DI, 'ip_address': II, 'listen_port_count' : LPCI, 'established_port_count' : EPCI, 'last_seen_at': LI})
+        #print(assetDataList)
     returnDataList = assetDataList
     return returnDataList
 

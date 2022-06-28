@@ -58,6 +58,9 @@ def DailyCount(TSDL):
     return RD
 
 
+def Association(TSDL) :
+    print(TSDL)
+
 
 
 

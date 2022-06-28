@@ -17,10 +17,10 @@
     "DataLoadingType" : "DB"
   },
   "DB" : {
-    "DBHost" : "localhost",
+    "DBHost" : "192.168.5.160",
     "DBName" : "postgres",
     "DBUser" : "postgres",
-    "DBPwd" : "xion123!",
+    "DBPwd" : "psql",
     "AssetTNM" : "daily_asset",
     "StatisticsTNM" : "daily_statistics"
   },

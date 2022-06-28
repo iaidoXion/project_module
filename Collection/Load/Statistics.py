@@ -20,7 +20,7 @@ def Daily(TSDL) :
         if DataLoadingType == 'DB':
             StatisticsInsertConn = psycopg2.connect('host={0} dbname={1} user={2} password={3}'.format(DBHost, DBName, DBUser, DBPwd))
             StatisticsInsertCur = StatisticsInsertConn.cursor()
-            SQ = """ INSERT INTO """ + StatisticsTNM + """ (classification, item, item_count, statistics_collection_date) VALUES (%s, %s, %s, '""" + today +""" 23:59:59"""+"""');"""
+            SQ = """ INSERT INTO """ + StatisticsTNM + """ (classification, item, item_count, statistics_collection_date) VALUES (%s, %s, %s, '""" + yesterday +""" 23:59:59"""+"""');"""
 
             CFL = TSDL['classification']
             IL = TSDL['item']

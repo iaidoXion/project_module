@@ -21,15 +21,15 @@ def Daily(ADTL) :
         if DataLoadingType == 'DB':
             AssetInsertConn = psycopg2.connect('host={0} dbname={1} user={2} password={3}'.format(DBHost, DBName, DBUser, DBPwd))
             AssetInsertCur = AssetInsertConn.cursor()
-            LIQ = """ INSERT INTO daily_asset (computer_id, asset_item, os_item, disk_total_space, ip_address, listen_port_count, established_port_count, last_seen_at, asset_collection_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, '""" + today +""" 23:59:59"""+"""');"""
+            LIQ = """ INSERT INTO daily_asset (computer_id, asset_item, os_item, drive_use_size, ip_address, listen_port_count, established_port_count, last_seen_at, asset_collection_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, '""" + yesterday +""" 23:59:59"""+"""');"""
             for i in range(len(ADTL)) :
                 CID = ADTL[i]['computer_id']
                 AI = ADTL[i]['asset_item']
                 OI = ADTL[i]['os_platform']
-                DTS = str(ADTL[i]['disk_total_space'])
+                DTS = str(ADTL[i]['drive_use_size'])
                 II = ADTL[i]['ip_address']
-                LPC = int(ADTL[i]['listen_port_count'])
-                EPC = int(ADTL[i]['established_port_count'])
+                LPC = str(ADTL[i]['listen_port_count'])
+                EPC = str(ADTL[i]['established_port_count'])
                 LSA = ADTL[i]['last_seen_at']
                 #print(type(CID), type(AI), type(OI), type(DTS), type(II), type(LPC), type(EPC), type(LSA))
                 AssetInsertCur.execute(LIQ, (CID, AI, OI, DTS, II, LPC, EPC, LSA))

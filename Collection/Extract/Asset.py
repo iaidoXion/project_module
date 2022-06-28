@@ -22,24 +22,24 @@ def Daily() :
             AssetSelectCur = AssetSelectConn.cursor()
             AssetSelectQ = """ 
                 select
-                    t.computer_id as computer_id,
-                    t.asset_item as asset_item, 
-                    t.os_item as os_item, 
-                    t.disk_total_space as today_disk_size, 
-                    y.disk_total_space as yesterday_disk_size,
-                    t.ip_address,
-                    t.listen_port_count,
+                    y.computer_id as computer_id,
+                    y.asset_item as asset_item, 
+                    y.os_item as os_item, 
+                    y.drive_use_size as today_disk_size, 
+                    yt.drive_use_size as yesterday_disk_size,
+                    y.ip_address,
                     y.listen_port_count,
-                    t.established_port_count,
+                    yt.listen_port_count,
                     y.established_port_count,
-                    t.last_seen_at as last_seen_at, 
-                    t.asset_collection_date as asset_collection_date
+                    yt.established_port_count,
+                    y.last_seen_at as last_seen_at, 
+                    y.asset_collection_date as asset_collection_date
                 from 
                     (select 
                         computer_id,
                         asset_item, 
                         os_item, 
-                        disk_total_space, 
+                        drive_use_size, 
                         ip_address,
                         listen_port_count,
                         established_port_count,
@@ -48,24 +48,19 @@ def Daily() :
                     from 
                         """+AssetTNM+"""
                     where 
-                        to_char(asset_collection_date, 'YYYY-MM-DD HH24:MI:SS') > '"""+yesterday+""" 23:58:59' 
-                    and 
-                        to_char(asset_collection_date, 'YYYY-MM-DD HH24:MI:SS') <= '"""+today+""""') as t
+                        to_char(asset_collection_date, 'YYYY-MM-DD') = '"""+yesterday+"""' ) as y
                 LEFT JOIN 
                     (select 
                         computer_id,
-                        disk_total_space, 
+                        drive_use_size, 
                         listen_port_count,
                         established_port_count,
                         asset_collection_date
                     from 
                         """+AssetTNM+"""
                     where 
-                        to_char(asset_collection_date, 'YYYY-MM-DD HH24:MI:SS') > '"""+twoago+""" 23:58:59' 
-                    and 
-                        to_char(asset_collection_date, 'YYYY-MM-DD HH24:MI:SS') <= '"""+yesterday+""" 23:58:59') as y
-                    
-                ON t.computer_id = y.computer_id
+                        to_char(asset_collection_date, 'YYYY-MM-DD') = '"""+twoago+"""' ) as yt
+                ON y.computer_id = yt.computer_id
                 """
             #print(AssetSelectQ)
             AssetSelectCur.execute(AssetSelectQ)

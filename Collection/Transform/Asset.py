@@ -31,7 +31,7 @@ def Daily(EDL):
             CID = AssetData['computer_id']
             AI = AssetData['asset_item']
             OI = AssetData['os_platform']
-            TDTS = AssetData['disk_total_space']
+            TDTS = AssetData['drive_use_size']
             LSA = AssetData['last_seen_at']
         DL.append([CID, AI, OI, TDTS, YDTS, IP, TLPC, YLPC, TEP, YEP, LSA])
 
