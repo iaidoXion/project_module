@@ -32,11 +32,13 @@ def Data(SK) :
     for i in range(len(columnsList)) :
         columnsName = assetsDataJson['result_sets'][0]['columns'][i]['name']
         columnsListAppend.append(columnsName)
+        #print(columnsName)
     dataListAppend = []
     for j in range(len(dataList)) :
         DL = []
         for k in range(len(dataList[j]['data'])) :
             DL.append(dataList[j]['data'][k][0]['text'])
+        #print(DL)
         dataListAppend.append(DL)
     returnList = {'resCode': resCode, 'dataList': dataListAppend, 'dataColumnList': columnsListAppend}
 

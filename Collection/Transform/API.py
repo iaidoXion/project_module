@@ -44,9 +44,11 @@ def AssetOrgDaily(BADL, BSDL):
             EPI = '0'
         else :
             EPI = BSDL[j][11]
+        RUS = BSDL[j][12].split(' ')[0]
+        #print(RUS)
 
-        SDDFL.append([CI, LPI, EPI])
-    SDDFCNM = ['computer_id', 'listen_port_count', 'established_port_count']
+        SDDFL.append([CI, LPI, EPI, RUS])
+    SDDFCNM = ['computer_id', 'listen_port_count', 'established_port_count', 'ram_use_size']
     SDDF = pd.DataFrame(SDDFL, columns=SDDFCNM)
 
 
@@ -54,7 +56,7 @@ def AssetOrgDaily(BADL, BSDL):
     #print(SDDF.sort_values(by="computer_id", ascending=True).reset_index())
     DFM = pd.merge(left=ADDF, right=SDDF, how="left", on="computer_id")
 
-
+    #print(DFM)
     computer_id = DFM.computer_id
     asset_item = DFM.asset_item
     os_platform = DFM.os_platform
@@ -63,6 +65,7 @@ def AssetOrgDaily(BADL, BSDL):
     ip_address = DFM.ip_address
     listen_port_count = DFM.listen_port_count
     established_port_count = DFM.established_port_count
+    ram_use_size = DFM.ram_use_size
     for k in range(len(computer_id)) :
         CI = computer_id[k]
         AI = asset_item[k]
@@ -87,8 +90,17 @@ def AssetOrgDaily(BADL, BSDL):
                 EPCI = established_port_count[k]
         else :
             EPCI = '0'
-        assetDataList.append({'computer_id': CI, 'asset_item': AI, 'os_platform': OI, 'drive_use_size': DI, 'ip_address': II, 'listen_port_count' : LPCI, 'established_port_count' : EPCI, 'last_seen_at': LI})
-        #print(assetDataList)
+
+        RUSI = ram_use_size[k]
+        if RUSI:
+            if type(RUSI) == float :
+                RUSI = '0'
+            else:
+                RUSI = ram_use_size[k]
+        else:
+            RUSI = '0'
+        #print(RUSI)
+        assetDataList.append({'computer_id': CI, 'asset_item': AI, 'os_platform': OI, 'drive_use_size': DI, 'ip_address': II, 'listen_port_count' : LPCI, 'established_port_count' : EPCI, 'last_seen_at': LI, 'ram_use_size' : RUSI})
     returnDataList = assetDataList
     return returnDataList
 

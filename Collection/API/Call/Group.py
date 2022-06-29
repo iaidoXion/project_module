@@ -12,7 +12,7 @@ ContentType = SETTING['API']['ContentType']
 AssetPath = SETTING['API']['PATH']['Asset']
 
 def Data(SK):
-    path = AssetPath
+    path = '/api/v2/action_groups'
     urls = apiUrl + path
     headers = {
         'session': SK,
@@ -26,7 +26,7 @@ def Data(SK):
     assetsCount = len(assetJson['data'])
     assetsDataJson = assetJson['data']
     #print(assetsDataJson)
-    dataListAppend = []
+    """dataListAppend = []
     for i in range(0, assetsCount):
         id = assetsDataJson[i]['id']
         computer_name = assetsDataJson[i]['computer_name']
@@ -40,7 +40,6 @@ def Data(SK):
         ci_installed_application = assetsDataJson[i]['ci_installed_application']
         chassis_type = assetsDataJson[i]['chassis_type']
         ip_address = assetsDataJson[i]['ip_address']
-        """
         asset_serial_number = assetsDataJson[i]['serial_number']
         asset_manufacturer = assetsDataJson[i]['manufacturer']
         asset_model_name = assetsDataJson[i]['model']
@@ -64,7 +63,7 @@ def Data(SK):
             drive_manufacturer = '-'
             drive_model_name = '-'
         mac_address = assetsDataJson[i]['ci_network_adapter'][0]['mac_address']
-        """
+
 
         data = {
             'id': id,
@@ -79,8 +78,6 @@ def Data(SK):
             'asset_item': chassis_type,
             'ci_installed_application': ci_installed_application,
             'ip_address' : ip_address,
-        }
-        """
             'asset_serial_number' : asset_serial_number,
             'asset_manufacturer' : asset_manufacturer,
             'asset_model_name': asset_model_name,
@@ -99,8 +96,7 @@ def Data(SK):
             'drive_manufacturer': drive_manufacturer,
             'drive_model_name': drive_model_name,
             'mac_address': mac_address,
-            
-        }"""
+        }
 
         dataListAppend.append(data)
 
@@ -108,6 +104,6 @@ def Data(SK):
     dataList = dataListAppend
     returnList = {'resCode': resCode, 'dataList': dataList}
 
-    return returnList
+    return returnList"""
 
 

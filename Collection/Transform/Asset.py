@@ -26,16 +26,18 @@ def Daily(EDL):
             YLPC = AssetData[7]
             TEP = AssetData[8]
             YEP = AssetData[9]
-            LSA = AssetData[10]
+            TRUS = AssetData[10]
+            YRUS = AssetData[11]
+            LSA = AssetData[12]
         elif DataLoadingType == 'FILE':
             CID = AssetData['computer_id']
             AI = AssetData['asset_item']
             OI = AssetData['os_platform']
             TDTS = AssetData['drive_use_size']
             LSA = AssetData['last_seen_at']
-        DL.append([CID, AI, OI, TDTS, YDTS, IP, TLPC, YLPC, TEP, YEP, LSA])
+        DL.append([CID, AI, OI, TDTS, YDTS, IP, TLPC, YLPC, TEP, YEP, TRUS, YRUS, LSA])
 
-    DFCNM = ['id', 'assetItem', 'os', 'todayDriveSize', 'yesterdayDriveSize', 'ip', 'todayListenPortCount','yesterdayListenPortCount', 'todayEstablishedPort', 'yesterdayEstablishedPort', 'lastLogin']
+    DFCNM = ['id', 'assetItem', 'os', 'todayDriveSize', 'yesterdayDriveSize', 'ip', 'todayListenPortCount','yesterdayListenPortCount', 'todayEstablishedPort', 'yesterdayEstablishedPort', 'todayRamUseSize', 'yesterdayRamUseSize', 'lastLogin']
     DF = pd.DataFrame(DL, columns=DFCNM)
     #print(DF)
     return DF

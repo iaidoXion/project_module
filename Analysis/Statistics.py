@@ -23,6 +23,7 @@ def DailyCount(TSDL):
     DC = 0
     LPCC = 0
     EPC = 0
+    RUSC = 0
     for i in range(len(TSDL.id)) :
         if TSDL.todayDriveSize[i] == TSDL.yesterdayDriveSize[i] :
             DC = DC+1
@@ -32,6 +33,10 @@ def DailyCount(TSDL):
         #print(type(TSDL.todayEstablishedPort[i]))
         if TSDL.todayEstablishedPort[i] == 0 :
             EPC = EPC+1
+
+        if TSDL.todayRamUseSize[i] == TSDL.yesterdayRamUseSize[i] :
+            RUSC = RUSC+1
+
 
 
 
@@ -44,6 +49,9 @@ def DailyCount(TSDL):
     EPNM = "N"
     EPNC = EPC
 
+    RUSNM = "no_change"
+    RUSNC = RUSC
+
 
 
     RD = {
@@ -54,6 +62,7 @@ def DailyCount(TSDL):
         "DSS" : {"name" : [DSNM], "value": [DSNC]},
         "LPCS" : {"name" : [LPCNM], "value": [LPCNC]},
         "EPS" : {"name" : [EPNM], "value": [EPNC]},
+        "RUS" : {"name" : [RUSNM], "value": [RUSNC]},
     }
     return RD
 

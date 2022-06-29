@@ -28,11 +28,14 @@ def Daily(ASDCL) :
             LPCSL.append("listen_port_count")
         EPSL = []
         for EPC in range(len(ASDCL['EPS']['name'])):
-            EPSL.append("established_port")
+            EPSL.append("established_port_count")
+        RUSL = []
+        for RUSC in range(len(ASDCL['RUS']['name'])):
+            RUSL.append("ram_use_size")
 
-        DC = AACL+AICL+OCL+LCL+DSCL+LPCSL+EPSL
-        DNM = ASDCL['AA']['name']+ASDCL['AIS']['name']+ASDCL['OS']['name']+ASDCL['LS']['name']+ASDCL['DSS']['name']+ASDCL['LPCS']['name']+ASDCL['EPS']['name']
-        DV = ASDCL['AA']['value']+ASDCL['AIS']['value']+ASDCL['OS']['value']+ASDCL['LS']['value']+ASDCL['DSS']['value']+ASDCL['LPCS']['value']+ASDCL['EPS']['value']
+        DC = AACL+AICL+OCL+LCL+DSCL+LPCSL+EPSL+RUSL
+        DNM = ASDCL['AA']['name']+ASDCL['AIS']['name']+ASDCL['OS']['name']+ASDCL['LS']['name']+ASDCL['DSS']['name']+ASDCL['LPCS']['name']+ASDCL['EPS']['name']+ASDCL['RUS']['name']
+        DV = ASDCL['AA']['value']+ASDCL['AIS']['value']+ASDCL['OS']['value']+ASDCL['LS']['value']+ASDCL['DSS']['value']+ASDCL['LPCS']['value']+ASDCL['EPS']['value']+ASDCL['RUS']['value']
         returnData = {"classification" : DC, "item" : DNM, "count" : DV}
 
     elif DataLoadingType == 'FILE':
