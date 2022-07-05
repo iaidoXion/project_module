@@ -18,8 +18,7 @@ import time
 import logging
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-today = datetime.today().strftime("%Y%m%d")
-logDateTime = datetime.today().strftime("%Y%m%d%H%M%S")
+
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
 
@@ -43,7 +42,8 @@ class mainclass :
     def Statistics(self):
         today = datetime.today().strftime("%Y-%m-%d")
         if today == moduleInstallDate:
-            print(today)
+            logging.info(today)
+            #print(today)
         else:
             if core == 'Tanium':
                 EDL = EAD()         # 어제 자산 데이터와 그제 자산 데이터
@@ -63,6 +63,7 @@ def RunModule() :
         mc.Statistics()
 
 def Scheduling():
+    today = datetime.today().strftime("%Y%m%d%H%M%S")
     logFile = logFileDirectory+logFileName+today+logFileFormat
     logFormat = '%(levelname)s, %(asctime)s, %(message)s'
     logDateFormat = '%Y%m%d%H%M%S'
@@ -72,12 +73,13 @@ def Scheduling():
     logging.info('Module Finished')
 
 if __name__ == "__main__":
-    #schedule.every(3).seconds.do(Scheduling)
+    """
+    schedule.every(3).seconds.do(Scheduling)
     schedule.every().day.at("00:00:00").do(Scheduling)
     while True:
         schedule.run_pending()
-        time.sleep(1)
-    #Scheduling()
+        time.sleep(1)"""
+    Scheduling()
 
 
 
