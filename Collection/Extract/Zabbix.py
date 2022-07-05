@@ -22,6 +22,9 @@ def Daily() :
             AssetSelectCur = AssetSelectConn.cursor()
             AssetSelectQ = """ 
                 select * from web_menusetting;
+                
+                
+                
                 """
             #print(AssetSelectQ)
             AssetSelectCur.execute(AssetSelectQ)
