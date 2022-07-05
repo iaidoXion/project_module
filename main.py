@@ -3,6 +3,7 @@ from Collection.API.Call.Asset import Data as AssetData
 from Collection.API.Call.Sensor import Data as SensorData
 from Collection.API.Call.Group import Data as GroupData
 from Collection.Extract.Asset import Daily as EAD
+from Collection.Extract.Zabbix import Daily as EZD
 from Collection.Transform.API import AssetOrgDaily as TAOD
 from Collection.Transform.Asset import Daily as TAD
 from Collection.Transform.Statistics import Daily as TSD
@@ -26,6 +27,7 @@ DataLoadingType = SETTING['MODULE']['DataLoadingType']
 logFileDirectory = SETTING['LOG']['directory']
 logFileName = SETTING['LOG']['fileName']
 logFileFormat = SETTING['LOG']['fileFormat']
+core = SETTING['PROJECT']['CORE']
 
 class mainclass :
     def __init__(self):
@@ -35,19 +37,25 @@ class mainclass :
         BADL = AssetData(self.sk)
         BSDL = SensorData(self.sk)
         ADTL = TAOD(BADL['dataList'],BSDL['dataList'])
-        LAD(ADTL)
+        #LAD(ADTL)
 
     def Statistics(self):
-        EDL = EAD()         # 어제 자산 데이터와 그제 자산 데이터
-        TSDL = TAD(EDL)     # 어제 자산 데이터와 그제 자산 데이터 병합 및 변환
-        ASDCL= ASDC(TSDL)   # count
-        TSDL = TSD(ASDCL)
-        LSD(TSDL)
+        if core == 'Tanium':
+            EDL = EAD()         # 어제 자산 데이터와 그제 자산 데이터
+            TSDL = TAD(EDL)     # 어제 자산 데이터와 그제 자산 데이터 병합 및 변환
+            ASDCL= ASDC(TSDL)   # count
+            TSDL = TSD(ASDCL)
+            LSD(TSDL)
+        elif core == 'Zabbix':
+            EDL = EZD()
 
 def RunModule() :
     mc = mainclass()
-    mc.Asset()
-    mc.Statistics()
+    if core == 'Tanium' :
+        mc.Asset()
+        mc.Statistics()
+    elif core == 'Zabbix' :
+        mc.Statistics()
 
 def Scheduling():
     logFile = logFileDirectory+logFileName+today+logFileFormat
@@ -60,11 +68,11 @@ def Scheduling():
 
 if __name__ == "__main__":
     #schedule.every(3).seconds.do(Scheduling)
-    schedule.every().day.at("00:00:00").do(Scheduling)
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
-    #Scheduling()
+    #schedule.every().day.at("00:00:00").do(Scheduling)
+    #while True:
+    #    schedule.run_pending()
+#    time.sleep(1)
+    Scheduling()
 
 
 
