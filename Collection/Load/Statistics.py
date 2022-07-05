@@ -1,5 +1,6 @@
 import psycopg2
 import json
+import logging
 from datetime import datetime, timedelta
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
@@ -18,6 +19,8 @@ yesterday = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
 def Daily(TSDL) :
     try:
         if DataLoadingType == 'DB':
+            logging.info('StatisticsToday : '+today)
+            logging.info('StatisticsYesterday : '+yesterday)
             StatisticsInsertConn = psycopg2.connect('host={0} dbname={1} user={2} password={3}'.format(DBHost, DBName, DBUser, DBPwd))
             StatisticsInsertCur = StatisticsInsertConn.cursor()
             SQ = """ INSERT INTO """ + StatisticsTNM + """ (classification, item, item_count, statistics_collection_date) VALUES (%s, %s, %s, '""" + yesterday +""" 23:59:59"""+"""');"""
