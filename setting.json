@@ -1,4 +1,8 @@
 {
+  "PROJECT" : {
+    "CORE" : "Zabbix",
+    "TYPE" : "System"
+  },
    "API" : {
     "apiUrl" : "https://192.168.5.100",
     "Authorization" : "Basic QWRtaW5pc3RyYXRvcjp4aW9uMTIzIQ==",
