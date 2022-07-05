@@ -28,6 +28,7 @@ logFileDirectory = SETTING['LOG']['directory']
 logFileName = SETTING['LOG']['fileName']
 logFileFormat = SETTING['LOG']['fileFormat']
 core = SETTING['PROJECT']['CORE']
+moduleInstallDate = SETTING['MODULE']['InstallDate']
 
 class mainclass :
     def __init__(self):
@@ -37,17 +38,21 @@ class mainclass :
         BADL = AssetData(self.sk)
         BSDL = SensorData(self.sk)
         ADTL = TAOD(BADL['dataList'],BSDL['dataList'])
-        #LAD(ADTL)
+        LAD(ADTL)
 
     def Statistics(self):
-        if core == 'Tanium':
-            EDL = EAD()         # 어제 자산 데이터와 그제 자산 데이터
-            TSDL = TAD(EDL)     # 어제 자산 데이터와 그제 자산 데이터 병합 및 변환
-            ASDCL= ASDC(TSDL)   # count
-            TSDL = TSD(ASDCL)
-            LSD(TSDL)
-        elif core == 'Zabbix':
-            EDL = EZD()
+        today = datetime.today().strftime("%Y-%m-%d")
+        if today == moduleInstallDate:
+            print(today)
+        else:
+            if core == 'Tanium':
+                EDL = EAD()         # 어제 자산 데이터와 그제 자산 데이터
+                TSDL = TAD(EDL)     # 어제 자산 데이터와 그제 자산 데이터 병합 및 변환
+                ASDCL= ASDC(TSDL)   # count
+                TSDL = TSD(ASDCL)
+                LSD(TSDL)
+            elif core == 'Zabbix':
+                EDL = EZD()
 
 def RunModule() :
     mc = mainclass()
@@ -68,11 +73,11 @@ def Scheduling():
 
 if __name__ == "__main__":
     #schedule.every(3).seconds.do(Scheduling)
-    #schedule.every().day.at("00:00:00").do(Scheduling)
-    #while True:
-    #    schedule.run_pending()
-#    time.sleep(1)
-    Scheduling()
+    schedule.every().day.at("00:00:00").do(Scheduling)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+    #Scheduling()
 
 
 
