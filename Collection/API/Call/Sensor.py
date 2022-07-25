@@ -11,8 +11,7 @@ Authorization = SETTING['API']['Authorization']
 ContentType = SETTING['API']['ContentType']
 SensorPath = SETTING['API']['PATH']['Sensor']
 SensorID = SETTING['API']['SensorID']
-
-def Data(SK) :
+def data(SK) :
     path = SensorPath+SensorID
     urls = apiUrl + path
     headers = {
@@ -26,21 +25,14 @@ def Data(SK) :
     assetText = response.text
     assetJson = json.loads(assetText)
     assetsDataJson = assetJson['data']
-    columnsList = assetsDataJson['result_sets'][0]['columns']
     dataList = assetsDataJson['result_sets'][0]['rows']
     columnsListAppend = []
-    for i in range(len(columnsList)) :
-        columnsName = assetsDataJson['result_sets'][0]['columns'][i]['name']
-        columnsListAppend.append(columnsName)
-        #print(columnsName)
     dataListAppend = []
     for j in range(len(dataList)) :
         DL = []
         for k in range(len(dataList[j]['data'])) :
             DL.append(dataList[j]['data'][k][0]['text'])
-        #print(DL)
         dataListAppend.append(DL)
-    returnList = {'resCode': resCode, 'dataList': dataListAppend, 'dataColumnList': columnsListAppend}
-
+    returnList = {'resCode': resCode, 'dataList': dataListAppend}
     return returnList
 

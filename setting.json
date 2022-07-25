@@ -1,6 +1,7 @@
 {
   "PROJECT" : {
     "CORE" : "Tanium",
+    "CUSTOMER" : "NC",
     "TYPE" : "System"
   },
    "API" : {
@@ -15,11 +16,12 @@
          "Saved" : "/api/v2/saved_questions"
        }
      },
-     "SensorID": "1191"
+     "SensorID": "1875"
   },
   "MODULE" : {
     "InstallDate" : "2022-07-05",
-    "DataLoadingType" : "DB"
+    "DataLoadingType" : "DB",
+    "RamUsage" : 60
   },
   "DB" : {
     "DBHost" : "192.168.5.160",

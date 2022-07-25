@@ -1,4 +1,8 @@
 from datetime import datetime, timedelta
+import json
+with open("setting.json", encoding="UTF-8") as f:
+    SETTING = json.loads(f.read())
+AlarmRamUsage = SETTING['MODULE']['RamUsage']
 
 def DailyCount(TSDL):
     ATNM = "all"
@@ -7,7 +11,7 @@ def DailyCount(TSDL):
     weekAgo = (datetime.today() - timedelta(7)).strftime("%Y-%m-%d")
 
     DF = TSDL
-    LLNM = "N"
+    LLNM = "no_change"
     LLNC = len(DF[(DF['lastLogin'] < weekAgo)])
 
     AIG = DF.groupby(['assetItem'])
@@ -20,25 +24,20 @@ def DailyCount(TSDL):
     OSNM = OSGBR.os
     OSC = OSGBR.counts
 
-    DC = 0
-    LPCC = 0
-    EPC = 0
+
     RUSC = 0
-    for i in range(len(TSDL.id)) :
-        if TSDL.todayDriveSize[i] == TSDL.yesterdayDriveSize[i] :
-            DC = DC+1
+    DC = ATC-len(TSDL['todayDriveSize'].compare(TSDL['yesterdayDriveSize']))
+    LPCC = ATC-len(TSDL['todayListenPortCount'].compare(TSDL['yesterdayListenPortCount']))
+    EPC = ATC-len(TSDL['todayEstablishedPort'].compare(TSDL['yesterdayEstablishedPort']))
+    for i in range(len(TSDL.id)):
+        todayRamTotalSize = int(TSDL['todayRamTotalSize'][i])
+        todayRamUseSize = int(TSDL['todayRamUseSize'][i])
+        if todayRamTotalSize != 0 and todayRamUseSize != 0 :
+            usage = (todayRamUseSize/todayRamTotalSize)*100
+            if usage < AlarmRamUsage :
+                RUSC = RUSC +1
 
-        if str(TSDL.todayListenPortCount[i]) == str(TSDL.yesterdayListenPortCount[i]) :
-           LPCC = LPCC+1
-        #print(type(TSDL.todayEstablishedPort[i]))
-        if TSDL.todayEstablishedPort[i] == 0 :
-            EPC = EPC+1
-
-        if TSDL.todayRamUseSize[i] == TSDL.yesterdayRamUseSize[i] :
-            RUSC = RUSC+1
-
-
-
+    RUSC = ATC - RUSC
 
     DSNM = "no_change"
     DSNC = DC
@@ -46,7 +45,7 @@ def DailyCount(TSDL):
     LPCNM = "no_change"
     LPCNC = LPCC
 
-    EPNM = "N"
+    EPNM = "no_change"
     EPNC = EPC
 
     RUSNM = "no_change"
@@ -64,11 +63,11 @@ def DailyCount(TSDL):
         "EPS" : {"name" : [EPNM], "value": [EPNC]},
         "RUS" : {"name" : [RUSNM], "value": [RUSNC]},
     }
+    #print(RD)
     return RD
 
 
-def Association(TSDL) :
-    print(TSDL)
+
 
 
 
