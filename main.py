@@ -1,20 +1,20 @@
+import pandas as pd
+
 from Collection.API.Auth import SessionKey
-from Collection.API.Call.Asset import Data as AssetData
-from Collection.API.Call.Sensor import Data as SensorData
+from Collection.API.Call.Asset import data as AssetData
+from Collection.API.Call.Sensor import data as SensorData
 from Collection.API.Call.Group import Data as GroupData
 from Collection.Extract.Asset import Daily as EAD
 from Collection.Extract.Zabbix import Daily as EZD
-from Collection.Transform.API import AssetOrgDaily as TAOD
+from Collection.Transform.API import dataframe as TDF, dataList as TDL
 from Collection.Transform.Asset import Daily as TAD
 from Collection.Transform.Statistics import Daily as TSD
-from Analysis.Statistics import DailyCount as ASDC, Association as ASA
+from Analysis.Statistics import DailyCount as ASDC
 from Collection.Load.Asset import Daily as LAD
 from Collection.Load.Statistics import Daily as LSD
 from datetime import datetime
 import urllib3
 import json
-import schedule
-import time
 import logging
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -34,16 +34,19 @@ class mainclass :
         self.sk = SessionKey()
 
     def Asset(self) :
-        BADL = AssetData(self.sk)
-        BSDL = SensorData(self.sk)
-        ADTL = TAOD(BADL['dataList'],BSDL['dataList'])
-        LAD(ADTL)
+        BADL = AssetData(self.sk)                                       # Asset API Call
+        BSDL = SensorData(self.sk)                                      # Sensor API Call
+        ADL = TDF(BADL, 'today', 'asset')
+        SDL = TDF(BSDL, 'today', 'sensor')
+        DL = [ADL,SDL]
+        DTL = TDL(DL)
+        LAD(DTL)
+
 
     def Statistics(self):
         today = datetime.today().strftime("%Y-%m-%d")
         if today == moduleInstallDate:
             logging.info(today)
-            #print(today)
         else:
             if core == 'Tanium':
                 EDL = EAD()         # 어제 자산 데이터와 그제 자산 데이터

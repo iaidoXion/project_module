@@ -33,7 +33,7 @@ def Daily() :
                     y.established_port_count,
                     yt.established_port_count,
                     y.ram_use_size,
-                    yt.ram_use_size,
+                    y.ram_total_size,
                     y.last_seen_at as last_seen_at, 
                     y.asset_collection_date as asset_collection_date
                 from 
@@ -46,6 +46,7 @@ def Daily() :
                         listen_port_count,
                         established_port_count,
                         ram_use_size,
+                        ram_total_size,
                         last_seen_at, 
                         asset_collection_date
                     from 
@@ -58,7 +59,6 @@ def Daily() :
                         drive_use_size, 
                         listen_port_count,
                         established_port_count,
-                        ram_use_size,
                         asset_collection_date
                     from 
                         """+AssetTNM+"""
