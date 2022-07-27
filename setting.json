@@ -1,9 +1,34 @@
 {
+  "MODULE" : {
+    "SOURCE" : {
+      "COLLECTION" : "true",
+      "PLUGIN" : {
+        "INPUT" : "API",
+        "Transform" : "true",
+        "OUTPUT" : "DB"
+      }
+    },
+    "STATISTICS" : {
+      "COLLECTION" : "true",
+      "PLUGIN" : {
+        "INPUT" : "DB",
+        "Transform" : "true",
+        "OUTPUT" : "DB"
+      },
+      "WAITING" : {
+        "USE" : "true",
+        "DATE" : "2022-07-05"
+      }
+    },
+      "DataLoadingType" : "DB",
+      "RamUsage" : 60
+  },
   "PROJECT" : {
     "CORE" : "Tanium",
     "CUSTOMER" : "NC",
     "TYPE" : "System"
   },
+
    "API" : {
     "apiUrl" : "https://192.168.5.100",
     "Authorization" : "Basic QWRtaW5pc3RyYXRvcjp4aW9uMTIzIQ==",
@@ -18,16 +43,12 @@
      },
      "SensorID": "1875"
   },
-  "MODULE" : {
-    "InstallDate" : "2022-07-05",
-    "DataLoadingType" : "DB",
-    "RamUsage" : 60
-  },
+
   "DB" : {
-    "DBHost" : "192.168.5.160",
+    "DBHost" : "localhost",
     "DBName" : "postgres",
-    "DBUser" : "postgres",
-    "DBPwd" : "psql",
+    "DBUser" : "aidoi",
+    "DBPwd" : "iaido8906#",
     "AssetTNM" : "daily_asset",
     "StatisticsTNM" : "daily_statistics"
   },

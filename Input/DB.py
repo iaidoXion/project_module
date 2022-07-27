@@ -14,7 +14,7 @@ today = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 yesterday = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
 twoago = (datetime.today() - timedelta(2)).strftime("%Y-%m-%d")
 
-def Daily() :
+def tanium() :
     try:
         AssetSelectL = []
         if DataLoadingType == 'DB':
