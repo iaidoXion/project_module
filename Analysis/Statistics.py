@@ -5,6 +5,7 @@ with open("setting.json", encoding="UTF-8") as f:
 AlarmRamUsage = SETTING['MODULE']['RamUsage']
 
 def DailyCount(TSDL):
+    #print(TSDL)
     ATNM = "all"
     ATC = len(TSDL)
 

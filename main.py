@@ -1,12 +1,14 @@
 from Input.API import tanium as IAT
 from Input.DB import tanium as IDT
+from Input.ES import ES as IEE
 from Transform.Dataframe import dataframe as TDF
 from Transform.Datalist import dataList as TDL
 from Transform.Asset import Daily as TAD
 from Transform.Statistics import Daily as TSD
 from Analysis.Statistics import DailyCount as ASDC
-from Output.Asset import Daily as LAD
-from Output.Statistics import Daily as LSD
+from Output.DB import load as ODL
+from Output.ES import load as OEL
+
 
 from datetime import datetime
 import urllib3
@@ -46,12 +48,14 @@ def main() :
             BADL = IAT(sk, 'Asset')                                       # Asset API Call
             BSDL = IAT(sk, 'sensor')                                      # Sensor API Call
         if sourceTransformPlugin == "true" :
-            ADL = TDF(BADL, 'today', 'asset')
-            SDL = TDF(BSDL, 'today', 'sensor')
+            ADL = TDF(BADL, 'today', 'asset', sourceInputPlugin)
+            SDL = TDF(BSDL, 'today', 'sensor', sourceInputPlugin)
             DL = [ADL,SDL]
             DTL = TDL(DL)
-        #if sourceOutputPlugin == 'DB' :
-            #LAD(DTL)
+        if sourceOutputPlugin == 'DB' :
+            ODL(DTL, 'asset')
+        elif sourceOutputPlugin == 'ES' :
+            print(DTL)
 
     if statisticsCollection == 'true' :
         if statisticsWaitingUse == 'true' :
@@ -60,16 +64,18 @@ def main() :
             else:
                 if statisticsInputPlugin == 'DB' :
                     EDL = IDT()                                         # 어제 자산 데이터와 그제 자산 데이터
+                    if statisticsTransformPlugin == 'true':
+                        TSDL = TAD(EDL)                                  # 어제 자산 데이터와 그제 자산 데이터 병합 및 변환
                 elif statisticsInputPlugin == 'ES' :
-                    print()
-
-                if statisticsTransformPlugin == 'true' :
-                    TSDL = TAD(EDL)                                     # 어제 자산 데이터와 그제 자산 데이터 병합 및 변환
+                    DL =  IEE()
+                    if statisticsTransformPlugin == 'true':
+                        a = TDF(DL, 'today', 'asset', statisticsInputPlugin)
+                        #print(a)
                 ASDCL = ASDC(TSDL)                                      # count
                 #if statisticsTransformPlugin == 'true':
                 if statisticsOutputPlugin == 'DB':
                     TSDL = TSD(ASDCL)
-                    #LSD(TSDL)
+                    ODL(TSDL, 'statistics')
 
 
 
@@ -77,7 +83,8 @@ def main() :
 
 
 def RunModule() :
-    today = datetime.today().strftime("%Y%m%d%H%M%S")
+    #today = datetime.today().strftime("%Y%m%d%H%M%S")
+    today = datetime.today().strftime("%Y%m%d")
     logFile = logFileDirectory + logFileName + today + logFileFormat
     logFormat = '%(levelname)s, %(asctime)s, %(message)s'
     logDateFormat = '%Y%m%d%H%M%S'

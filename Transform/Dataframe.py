@@ -1,29 +1,42 @@
 import json
 import pandas as pd
-
+from datetime import datetime
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
 
-def dataframe(data, day, dataType) :
+def dataframe(data, day, dataType, InputPlugin) :
     DFL = []
     if data['resCode'] == 200 :
         DL = data['dataList']
         if day == 'today' :
             if dataType == 'asset' :
                 DFC = ['computer_id', 'asset_item', 'os_platform', 'drive_use_size', 'last_seen_at', 'ip_address']
-                for i in range(len(DL)) :
-                    CI = DL[i]['computer_id']
-                    AI = DL[i]['asset_item']
-                    OI = DL[i]['os_platform']
-                    DI = DL[i]['drive_use_size']
-                    LI = DL[i]['last_seen_at'].split('T')[0]
-                    II = DL[i]['ip_address']
+                for d in DL :
+                    if InputPlugin == 'API' :
+                        CI = d['computer_id']
+                        AI = d['asset_item']
+                        OI = d['os_platform']
+                        DI = d['drive_use_size']
+                        LI = d['last_seen_at'].split('T')[0]
+                        II = d['ip_address']
+                    elif InputPlugin == 'ES' :
+                        CI = d['Computer ID']
+                        AI = d['Chassis Type']
+                        OI = d['OS Platform']
+                        DI = d['Disk Used Space'].split(' ')[1]
+                        dateString = d['Last Reboot'].split('+')[0]
+                        dateFormatter = "%a, %d %b %Y %H:%M:%S "
+                        LI = datetime.strptime(dateString, dateFormatter)
+                        II = d['IPv4 Address']
                     AIPer = AI.lower()
                     if AIPer.startswith('macbook'):
                         AI = 'Notebook'
                     if AIPer.startswith('imac'):
                         AI = 'Desktop'
                     DFL.append([CI, AI, OI, DI, LI, II])
+
+
+
             elif dataType == 'sensor' :
                 DFC = ['computer_id', 'listen_port_count', 'established_port_count', 'ram_use_size', 'ram_total_size']
                 for i in range(len(DL)):
