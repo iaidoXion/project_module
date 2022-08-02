@@ -10,7 +10,7 @@ from Output.DB import write as ODL
 from Output.ES import write as OEL
 
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import urllib3
 import json
 import logging
@@ -41,7 +41,8 @@ core = SETTING['PROJECT']['CORE']
 
 
 def main() :
-    today = datetime.today().strftime("%Y-%m-%d")
+    module_install_date = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
+    #today = datetime.today().strftime("%Y-%m-%d")
     if sourceCollection == 'true' :
         if sourceInputPlugin == 'API' :
             sk = IAT('','Auth')
@@ -59,8 +60,8 @@ def main() :
 
     if statisticsCollection == 'true' :
         if statisticsWaitingUse == 'true' :
-            if today == statisticsWaitingDate :
-                logging.info(today)
+            if module_install_date == statisticsWaitingDate :
+                logging.info(module_install_date)
             else:
                 if statisticsInputPlugin == 'DB' :
                     EDL = IDT()
