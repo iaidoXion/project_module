@@ -15,7 +15,7 @@ AssetPath = SETTING['API']['PATH']['Asset']
 SensorPath = SETTING['API']['PATH']['Sensor']
 SensorID = SETTING['API']['SensorID']
 
-def tanium(SK, APITYPE):
+def read(SK, APITYPE):
     try:
         if APITYPE == 'Auth' :
                 logging.info('API Session Key Call Start')

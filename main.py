@@ -1,13 +1,13 @@
-from Input.API import tanium as IAT
-from Input.DB import tanium as IDT
-from Input.ES import ES as IEE
+from Input.API import read as IAT
+from Input.DB import read as IDT
+from Input.ES import read as IEE
 from Transform.Dataframe import dataframe as TDF
 from Transform.Datalist import dataList as TDL
 from Transform.Asset import Daily as TAD
 from Transform.Statistics import Daily as TSD
 from Analysis.Statistics import DailyCount as ASDC
-from Output.DB import load as ODL
-from Output.ES import load as OEL
+from Output.DB import write as ODL
+from Output.ES import write as OEL
 
 
 from datetime import datetime
@@ -45,17 +45,17 @@ def main() :
     if sourceCollection == 'true' :
         if sourceInputPlugin == 'API' :
             sk = IAT('','Auth')
-            BADL = IAT(sk, 'Asset')                                       # Asset API Call
-            BSDL = IAT(sk, 'sensor')                                      # Sensor API Call
+            BDL = IAT(sk, 'sensor')                                      # API Call
+        elif sourceInputPlugin == 'ES' :
+            print()
         if sourceTransformPlugin == "true" :
-            ADL = TDF(BADL, 'today', 'asset', sourceInputPlugin)
-            SDL = TDF(BSDL, 'today', 'sensor', sourceInputPlugin)
-            DL = [ADL,SDL]
-            DTL = TDL(DL)
-        if sourceOutputPlugin == 'DB' :
-            ODL(DTL, 'asset')
-        elif sourceOutputPlugin == 'ES' :
-            print(DTL)
+            TDFL = TDF(BDL, sourceInputPlugin, 'source')
+        if sourceOutputPlugin == 'DB':
+            print()
+            #ODL(TDFL, 'asset')
+        elif sourceOutputPlugin == 'ES':
+            OEL(TDFL, 'asset')
+            print()
 
     if statisticsCollection == 'true' :
         if statisticsWaitingUse == 'true' :
@@ -63,22 +63,18 @@ def main() :
                 logging.info(today)
             else:
                 if statisticsInputPlugin == 'DB' :
-                    EDL = IDT()                                         # 어제 자산 데이터와 그제 자산 데이터
-                    if statisticsTransformPlugin == 'true':
-                        TSDL = TAD(EDL)                                  # 어제 자산 데이터와 그제 자산 데이터 병합 및 변환
-                elif statisticsInputPlugin == 'ES' :
-                    DL =  IEE()
-                    if statisticsTransformPlugin == 'true':
-                        a = TDF(DL, 'today', 'asset', statisticsInputPlugin)
-                        #print(a)
-                ASDCL = ASDC(TSDL)                                      # count
-                #if statisticsTransformPlugin == 'true':
+                    EDL = IDT()
+                elif statisticsInputPlugin == 'ES':
+                    EDL = IEE()
+                if statisticsTransformPlugin == 'true':
+                    TSDL = TDF(EDL, statisticsInputPlugin, 'statistics')
+                ASDCL = ASDC(TSDL)
                 if statisticsOutputPlugin == 'DB':
                     TSDL = TSD(ASDCL)
                     ODL(TSDL, 'statistics')
-
-
-
+                    """if statisticsTransformPlugin == 'true':
+                        a = TDF(DL, 'today', 'asset', statisticsInputPlugin)
+                        #print(a)"""
 
 
 

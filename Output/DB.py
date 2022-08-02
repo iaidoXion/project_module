@@ -17,27 +17,44 @@ today = datetime.today().strftime("%Y-%m-%d")
 yesterday = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
 
 
-def load(data, dataType) :
+def write(data, dataType) :
     try:
         if dataType == 'asset':
             logging.info('assetToday : '+today)
             logging.info('assetYesterday : '+yesterday)
             AssetInsertConn = psycopg2.connect('host={0} dbname={1} user={2} password={3}'.format(DBHost, DBName, DBUser, DBPwd))
             AssetInsertCur = AssetInsertConn.cursor()
-            LIQ = """ INSERT INTO daily_asset (computer_id, asset_item, os_item, drive_use_size, ip_address, listen_port_count, established_port_count, ram_use_size, ram_total_size, last_seen_at, asset_collection_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '""" + yesterday +""" 23:59:59"""+"""');"""
-            for i in range(len(data)) :
-                CID = data[i]['computer_id']
-                AI = data[i]['asset_item']
-                OI = data[i]['os_platform']
-                DTS = str(data[i]['drive_use_size'])
-                II = data[i]['ip_address']
-                LPC = str(data[i]['listen_port_count'])
-                EPC = str(data[i]['established_port_count'])
-                RUS = data[i]['ram_use_size']
-                RTS = data[i]['ram_total_size']
-                LSA = data[i]['last_seen_at']
-                #print(type(CID), type(AI), type(OI), type(DTS), type(II), type(LPC), type(EPC), type(LSA))
-                AssetInsertCur.execute(LIQ, (CID, AI, OI, DTS, II, LPC, EPC,  RUS, RTS, LSA))
+            LIQ = """ INSERT INTO daily_asset (computer_id, computer_name, last_reboot, disk_total_space, disk_used_space, os_platform, operating_system, is_virtual, chassis_type, ip_address, listen_port_count, established_port_count, ram_use_size, ram_total_size, asset_collection_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '""" + yesterday +""" 23:59:59"""+"""');"""
+            computer_id = data.computer_id
+            computer_name = data.computer_name
+            last_reboot = data.last_reboot
+            disk_total_space = data.disk_total_space
+            disk_used_space = data.disk_used_space
+            os_platform = data.os_platform
+            operating_system = data.operating_system
+            is_virtual = data.is_virtual
+            chassis_type = data.chassis_type
+            ip_address = data.ip_address
+            listen_port_count = data.listen_port_count
+            established_port_count = data.established_port_count
+            ram_use_size = data.ram_use_size
+            ram_total_size = data.ram_total_size
+            for i in range(len(computer_id)):
+                CI = computer_id[i]
+                CN = computer_name[i]
+                LR = last_reboot[i]
+                DTS = disk_total_space[i]
+                DUS = disk_used_space[i]
+                OP = os_platform[i]
+                OS = operating_system[i]
+                IV = is_virtual[i]
+                CT = chassis_type[i]
+                IP = ip_address[i]
+                LPC = listen_port_count[i]
+                EPC = established_port_count[i]
+                RUS = ram_use_size[i]
+                RTS = ram_total_size[i]
+                AssetInsertCur.execute(LIQ, (CI, CN, LR, DTS, DUS, OP, OS, IV, CT, IP, LPC, EPC, RUS, RTS))
             AssetInsertConn.commit()
             AssetInsertConn.close()
         elif dataType == 'statistics' :

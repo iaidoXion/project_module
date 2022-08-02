@@ -14,7 +14,7 @@ today = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 yesterday = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
 twoago = (datetime.today() - timedelta(2)).strftime("%Y-%m-%d")
 
-def tanium() :
+def read() :
     try:
         AssetSelectL = []
         if DataLoadingType == 'DB':
@@ -23,10 +23,10 @@ def tanium() :
             AssetSelectQ = """ 
                 select
                     y.computer_id as computer_id,
-                    y.asset_item as asset_item, 
-                    y.os_item as os_item, 
-                    y.drive_use_size as today_disk_size, 
-                    yt.drive_use_size as yesterday_disk_size,
+                    y.chassis_type as asset_item, 
+                    y.os_platform as os_item, 
+                    y.disk_used_space as today_disk_size, 
+                    yt.disk_used_space as yesterday_disk_size,
                     y.ip_address,
                     y.listen_port_count,
                     yt.listen_port_count,
@@ -34,20 +34,20 @@ def tanium() :
                     yt.established_port_count,
                     y.ram_use_size,
                     y.ram_total_size,
-                    y.last_seen_at as last_seen_at, 
+                    y.last_reboot as last_seen_at, 
                     y.asset_collection_date as asset_collection_date
                 from 
                     (select 
                         computer_id,
-                        asset_item, 
-                        os_item, 
-                        drive_use_size, 
+                        chassis_type, 
+                        os_platform, 
+                        disk_used_space, 
                         ip_address,
                         listen_port_count,
                         established_port_count,
                         ram_use_size,
                         ram_total_size,
-                        last_seen_at, 
+                        last_reboot, 
                         asset_collection_date
                     from 
                         """+AssetTNM+"""
@@ -56,7 +56,7 @@ def tanium() :
                 LEFT JOIN 
                     (select 
                         computer_id,
-                        drive_use_size, 
+                        disk_used_space, 
                         listen_port_count,
                         established_port_count,
                         asset_collection_date

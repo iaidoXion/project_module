@@ -45,10 +45,10 @@
   },
 
   "DB" : {
-    "DBHost" : "localhost",
+    "DBHost" : "192.168.5.160",
     "DBName" : "postgres",
-    "DBUser" : "aidoi",
-    "DBPwd" : "iaido8906#",
+    "DBUser" : "postgres",
+    "DBPwd" : "psql",
     "AssetTNM" : "daily_asset",
     "StatisticsTNM" : "daily_statistics"
   },
