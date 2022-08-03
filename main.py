@@ -52,8 +52,7 @@ def main() :
         if sourceTransformPlugin == "true" :
             TDFL = TDF(BDL, sourceInputPlugin, 'source')
         if sourceOutputPlugin == 'DB':
-            print()
-            #ODL(TDFL, 'asset')
+            ODL(TDFL, 'asset')
         elif sourceOutputPlugin == 'ES':
             OEL(TDFL, 'asset')
             print()
