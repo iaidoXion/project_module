@@ -1,75 +1,153 @@
 {
-  "MODULE" : {
-    "SOURCE" : {
-      "COLLECTION" : "true",
-      "PLUGIN" : {
-        "INPUT" : "API",
-        "Transform" : "true",
-        "OUTPUT" : "DB"
-      }
-    },
-    "STATISTICS" : {
-      "COLLECTION" : "true",
-      "PLUGIN" : {
-        "INPUT" : "DB",
-        "Transform" : "true",
-        "OUTPUT" : "DB"
-      },
-      "WAITING" : {
-        "USE" : "true",
-        "DATE" : "2022-07-05"
-      }
-    },
-      "DataLoadingType" : "DB",
-      "RamUsage" : 60
-  },
   "PROJECT" : {
-    "CORE" : "Tanium",
     "CUSTOMER" : "NC",
-    "TYPE" : "System"
-  },
-
-   "API" : {
-    "apiUrl" : "https://192.168.5.100",
-    "Authorization" : "Basic QWRtaW5pc3RyYXRvcjp4aW9uMTIzIQ==",
-    "ContentType" : "application/json",
-     "PATH" : {
-       "SesstionKey" : "/auth",
-       "Asset" : "/plugin/products/asset/v1/assets",
-       "Sensor" : "/api/v2/result_data/saved_question/",
-       "Questions" : {
-         "Saved" : "/api/v2/saved_questions"
-       }
-     },
-     "SensorID": "1875"
-  },
-
-  "DB" : {
-    "DBHost" : "192.168.5.160",
-    "DBName" : "postgres",
-    "DBUser" : "postgres",
-    "DBPwd" : "psql",
-    "AssetTNM" : "daily_asset",
-    "StatisticsTNM" : "daily_statistics"
-  },
-  "FILE" : {
-    "asset": {
-      "Storage" : "data/asset/daily/",
-      "FileName" : "Asset_",
-      "FileType" : ".json"
-    },
-    "statistics" : {
-      "Storage" : "data/statistics/daily/",
-      "FileName" : "Statistics_",
-      "FileType" : ".json"
+    "TYPE" : "System",
+    "WAITING" : {
+      "USE" : "true",
+      "DATE" : "2022-07-05"
     }
   },
   "LOG" : {
     "directory" : "log/",
     "fileName" : "log_",
     "fileFormat" : ".log"
+  },
+  "CORE" : {
+    "Tanium" : {
+      "USE" : "true",
+      "MODULE" : {
+        "SOURCE" : {
+          "COLLECTION" : "false",
+          "PLUGIN" : {
+            "INPUT" : "API",
+            "Transform" : "true",
+            "OUTPUT" : "DB"
+          }
+        },
+        "STATISTICS" : {
+          "COLLECTION" : "true",
+          "PLUGIN" : {
+            "INPUT" : "ES",
+            "Transform" : "true",
+            "OUTPUT" : "ES"
+          }
+        },
+        "CASE" : {
+          "RamUsage" : 60
+        }
+      },
+      "API" : {
+        "apiUrl" : "https://192.168.5.100",
+        "Authorization" : "Basic QWRtaW5pc3RyYXRvcjp4aW9uMTIzIQ==",
+        "ContentType" : "application/json",
+         "PATH" : {
+           "SesstionKey" : "/auth",
+           "Asset" : "/plugin/products/asset/v1/assets",
+           "Sensor" : "/api/v2/result_data/saved_question/",
+           "Questions" : {
+             "Saved" : "/api/v2/saved_questions"
+           }
+         },
+         "SensorID": "1875"
+      },
+      "DB" : {
+        "DBHost" : "192.168.5.160",
+        "DBName" : "postgres",
+        "DBUser" : "postgres",
+        "DBPwd" : "psql",
+        "AssetTNM" : "daily_asset",
+        "StatisticsTNM" : "daily_statistics"
+      },
+      "ES" : {
+        "URL" : "http://192.168.0.15",
+        "PORT" : "9200",
+        "SOURCE" : {
+          "INDEX" : "iaido"
+        },
+        "STATISTICS" : {
+          "INDEX" : "iaido_statistics"
+        }
+      },
+      "FILE" : {
+        "asset": {
+          "Storage" : "data/asset/daily/",
+          "FileName" : "Asset_",
+          "FileType" : ".json"
+        },
+        "statistics" : {
+          "Storage" : "data/statistics/daily/",
+          "FileName" : "Statistics_",
+          "FileType" : ".json"
+        }
+      }
+    },
+    "Zabbix" : {
+      "USE" : "false",
+      "MODULE" : {
+        "SOURCE" : {
+          "COLLECTION" : "",
+          "PLUGIN" : {
+            "INPUT" : "",
+            "Transform" : "",
+            "OUTPUT" : ""
+          }
+        },
+        "STATISTICS" : {
+          "COLLECTION" : "",
+          "PLUGIN" : {
+            "INPUT" : "",
+            "Transform" : "",
+            "OUTPUT" : ""
+          }
+        },
+        "CASE" : {
+          "RamUsage" : 60
+        }
+      },
+      "API" : {
+        "apiUrl" : "",
+        "Authorization" : "",
+        "ContentType" : "",
+         "PATH" : {
+           "SesstionKey" : "",
+           "Asset" : "",
+           "Sensor" : "",
+           "Questions" : {
+             "Saved" : ""
+           }
+         },
+         "SensorID": ""
+      },
+      "DB" : {
+        "DBHost" : "",
+        "DBName" : "",
+        "DBUser" : "",
+        "DBPwd" : "",
+        "AssetTNM" : "",
+        "StatisticsTNM" : ""
+      },
+      "ES" : {
+        "URL" : "",
+        "PORT" : "",
+        "SOURCE" : {
+          "INDEX" : ""
+        },
+        "STATISTICS" : {
+          "INDEX" : ""
+        }
+      },
+      "FILE" : {
+        "asset": {
+          "Storage" : "",
+          "FileName" : "",
+          "FileType" : ""
+        },
+        "statistics" : {
+          "Storage" : "",
+          "FileName" : "",
+          "FileType" : ""
+        }
+      }
+    }
   }
-
-
-
 }

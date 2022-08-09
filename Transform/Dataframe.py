@@ -1,16 +1,18 @@
 import json
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
+yesterday = (datetime.today() - timedelta(1)).strftime("%Y%m%d")
+twodaysago = (datetime.today() - timedelta(2)).strftime("%Y%m%d")
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
 
-def dataframe(data, InputPlugin, dataType) :
+def plug_in(data, InputPlugin, dataType) :
     DFL = []
     if dataType == 'source' :
         DL = data['dataList']
         DFC = ['computer_id', 'computer_name', 'last_reboot', 'disk_total_space', 'disk_used_space', 'os_platform',
-               'operating_system', 'is_virtual', 'chassis_type', 'ip_address', 'listen_port_count', 'established_port_count', 'ram_use_size', 'ram_total_size']
-        # print(DL)
+               'operating_system', 'is_virtual', 'chassis_type', 'ip_address', 'listen_port_count', 'established_port_count',
+               'ram_use_size', 'ram_total_size']
         for d in DL:
             if InputPlugin == 'API' :
                 CI = d[0]
@@ -33,31 +35,56 @@ def dataframe(data, InputPlugin, dataType) :
                 print()
 
             DFL.append([CI, CN, LR, DTS, DUS, OP, OS, IV, CT, IP, LPC, EPC, RUS, RTS])
-    if dataType == 'statistics':
-        DFC = ['id', 'assetItem', 'os', 'todayDriveSize', 'yesterdayDriveSize', 'ip', 'todayListenPortCount','yesterdayListenPortCount', 'todayEstablishedPort', 'yesterdayEstablishedPort', 'todayRamUseSize', 'todayRamTotalSize', 'lastLogin']
-        for d in data :
-            CID = d[0]
-            AI = d[1]
-            AIPer = d[1].lower()
-            if AIPer.startswith('macbook'):
-                AI = 'Notebook'
-            if AI.startswith('imac'):
-                AI = 'Desktop'
-            OI = d[2]
-            TDTS = d[3]
-            YDTS = d[4]
-            IP = d[5]
-            TLPC = d[6]
-            YLPC = d[7]
-            TEP = d[8]
-            YEP = d[9]
-            TRUS = d[10]
-            TRTS = d[11]
-            LSA = d[12]
-            DFL.append([CID, AI, OI, TDTS, YDTS, IP, TLPC, YLPC, TEP, YEP, TRUS, TRTS, LSA])
+    elif dataType == 'statistics':
+        DFC = ['id', 'assetItem', 'os', 'yesterdayDriveSize', 'twodaysagoDriveSize', 'ip', 'yesterdayListenPortCount','twodaysagoListenPortCount', 'yesterdayEstablishedPort', 'twodaysagoEstablishedPort', 'yesterdayRamUseSize', 'yesterdayRamTotalSize', 'lastLogin']
+
+        if InputPlugin == 'DB' :
+            for d in data:
+                CID = d[0]
+                AI = d[1]
+                AIPer = AI.lower()
+                if AIPer.startswith('macbook'):
+                    AI = 'Notebook'
+                if AI.startswith('imac'):
+                    AI = 'Desktop'
+                OI = d[2]
+                TDTS = d[3]
+                YDTS = d[4]
+                IP = d[5]
+                TLPC = d[6]
+                YLPC = d[7]
+                TEP = d[8]
+                YEP = d[9]
+                TRUS = d[10]
+                TRTS = d[11]
+                LSA = d[12]
+                DFL.append([CID, AI, OI, TDTS, YDTS, IP, TLPC, YLPC, TEP, YEP, TRUS, TRTS, LSA])
+        elif InputPlugin == 'ES' :
+            data = data.dropna(axis=0)
+            for i in range(len(data.id)) :
+                CID = data.id[i]
+                AI = data.assetItem[i]
+                AIPer = AI.lower()
+                if AIPer.startswith('macbook'):
+                    AI = 'Notebook'
+                if AI.startswith('imac'):
+                    AI = 'Desktop'
+                OI = data.os[i]
+                TDTS = data.yesterdayDriveSize[i]
+                YDTS = data.twodaysagoDriveSize[i]
+                IP = data.ip[i]
+                TLPC = data.yesterdayListenPortCount[i]
+                YLPC = data.twodaysagoListenPortCount[i]
+                TEP = data.yesterdayEstablishedPort[i]
+                YEP = data.twodaysagoEstablishedPort[i]
+                TRUS = data.yesterdayRamUseSize[i]
+                TRTS = data.yesterdayRamTotalSize[i]
+                LSA = data.lastLogin[i]
+                DFL.append([CID, AI, OI, TDTS, YDTS, IP, TLPC, YLPC, TEP, YEP, TRUS, TRTS, LSA])
     DF = pd.DataFrame(DFL, columns=DFC)
 
     return DF
+
     """
         for i in range(len(DL)):
             # CI = DL[i][0]

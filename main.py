@@ -1,15 +1,14 @@
-from Input.API import read as IAT
-from Input.DB import read as IDT
-from Input.ES import read as IEE
-from Transform.Dataframe import dataframe as TDF
-from Transform.Datalist import dataList as TDL
-from Transform.Asset import Daily as TAD
+from Input.API import plug_in as IAPIs
+from Input.DB import plug_in as IDPI
+from Input.ES import plug_in as IEPI
+from Transform.Dataframe import plug_in as TDFPI
+from Transform.Merge import plug_in as TMPI
+from Transform.Datalist import plug_in as TDLPI
+#from Transform.Asset import Daily as TAD
 from Transform.Statistics import Daily as TSD
 from Analysis.Statistics import DailyCount as ASDC
-from Output.DB import write as ODL
-from Output.ES import write as OEL
-
-
+from Output.DB import plug_in as ODPI
+from Output.ES import plug_in as OEPI
 from datetime import datetime, timedelta
 import urllib3
 import json
@@ -19,67 +18,62 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
-
-sourceCollection = SETTING['MODULE']['SOURCE']['COLLECTION']
-sourceInputPlugin = SETTING['MODULE']['SOURCE']['PLUGIN']['INPUT']
-sourceTransformPlugin = SETTING['MODULE']['SOURCE']['PLUGIN']['Transform']
-sourceOutputPlugin = SETTING['MODULE']['SOURCE']['PLUGIN']['OUTPUT']
-
-statisticsCollection = SETTING['MODULE']['STATISTICS']['COLLECTION']
-statisticsWaitingUse = SETTING['MODULE']['STATISTICS']['WAITING']['USE']
-statisticsWaitingDate = SETTING['MODULE']['STATISTICS']['WAITING']['DATE']
-statisticsInputPlugin = SETTING['MODULE']['STATISTICS']['PLUGIN']['INPUT']
-statisticsTransformPlugin = SETTING['MODULE']['STATISTICS']['PLUGIN']['Transform']
-statisticsOutputPlugin = SETTING['MODULE']['STATISTICS']['PLUGIN']['OUTPUT']
-
-
-DataLoadingType = SETTING['MODULE']['DataLoadingType']
+waitingUse = SETTING['PROJECT']['WAITING']['USE']
+waitingDate = SETTING['PROJECT']['WAITING']['DATE']
 logFileDirectory = SETTING['LOG']['directory']
 logFileName = SETTING['LOG']['fileName']
 logFileFormat = SETTING['LOG']['fileFormat']
-core = SETTING['PROJECT']['CORE']
-
+TU = SETTING['CORE']['Tanium']['USE']
+TSoC = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['COLLECTION']
+TSoIP = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']
+TSoTP = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['Transform']
+TSoOP = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']
+TStC = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['COLLECTION']
+TStIP = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']
+TStTP = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['Transform']
+TStOP = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['OUTPUT']
 
 def main() :
     module_install_date = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
-    #today = datetime.today().strftime("%Y-%m-%d")
-    if sourceCollection == 'true' :
-        if sourceInputPlugin == 'API' :
-            sk = IAT('','Auth')
-            BDL = IAT(sk, 'sensor')                                      # API Call
-        elif sourceInputPlugin == 'ES' :
-            print()
-        if sourceTransformPlugin == "true" :
-            TDFL = TDF(BDL, sourceInputPlugin, 'source')
-        if sourceOutputPlugin == 'DB':
-            ODL(TDFL, 'asset')
-        elif sourceOutputPlugin == 'ES':
-            OEL(TDFL, 'asset')
-            print()
+    if TU == 'true' :
+        if TSoC == 'true' :
+            if TSoIP == 'API' :
+                sk = IAPIs('','Auth')
+                BDL = IAPIs(sk, 'sensor')                                      # API Call
+            elif TSoIP == 'ES' :
+                print()
+            if TSoTP == "true" :
+                TDFDL = TDFPI(BDL, TSoIP, 'source')
 
-    if statisticsCollection == 'true' :
-        if statisticsWaitingUse == 'true' :
-            if module_install_date == statisticsWaitingDate :
-                logging.info(module_install_date)
-            else:
-                if statisticsInputPlugin == 'DB' :
-                    EDL = IDT()
-                elif statisticsInputPlugin == 'ES':
-                    EDL = IEE()
-                if statisticsTransformPlugin == 'true':
-                    TSDL = TDF(EDL, statisticsInputPlugin, 'statistics')
-                ASDCL = ASDC(TSDL)
-                if statisticsOutputPlugin == 'DB':
+            if TSoOP == 'DB':
+                ODPI(TDFDL, 'source')
+            elif TSoOP == 'ES':
+                OEPI(TDFDL, 'source')
+
+        if TStC == 'true' :
+            if waitingUse == 'true' :
+                if module_install_date == waitingDate :
+                    logging.info(module_install_date)
+                else:
+                    if TStIP == 'DB' :
+                        SBDL = IDPI()
+                        SDL = SBDL
+                    elif TStIP == 'ES':
+                        SBDL = IEPI()
+                        SDL = TMPI(SBDL)
+
+                    if TStTP == 'true':
+                        TSDL = TDFPI(SDL, TStIP, 'statistics')
+
+                    ASDCL = ASDC(TSDL)
                     TSDL = TSD(ASDCL)
-                    ODL(TSDL, 'statistics')
-                    """if statisticsTransformPlugin == 'true':
-                        a = TDF(DL, 'today', 'asset', statisticsInputPlugin)
-                        #print(a)"""
 
+                    if TStOP == 'DB':
+                        ODPI(TSDL, 'statistics')
+                    elif TStOP == 'ES':
+                        OEPI(TSDL, 'statistics')
 
-
-def RunModule() :
-    #today = datetime.today().strftime("%Y%m%d%H%M%S")
+if __name__ == "__main__":
     today = datetime.today().strftime("%Y%m%d")
     logFile = logFileDirectory + logFileName + today + logFileFormat
     logFormat = '%(levelname)s, %(asctime)s, %(message)s'
@@ -88,12 +82,3 @@ def RunModule() :
     logging.info('Module Started')
     main()
     logging.info('Module Finished')
-
-
-
-
-if __name__ == "__main__":
-    RunModule()
-
-
-

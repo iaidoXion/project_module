@@ -3,24 +3,23 @@ import json
 from datetime import datetime, timedelta
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
-DataLoadingType = SETTING['MODULE']['DataLoadingType']
-DBHost = SETTING['DB']['DBHost']
-DBName = SETTING['DB']['DBName']
-DBUser = SETTING['DB']['DBUser']
-DBPwd = SETTING['DB']['DBPwd']
-AssetTNM = SETTING['DB']['AssetTNM']
-BS = SETTING['FILE']
+TU = SETTING['CORE']['Tanium']['USE']
+TDBHost = SETTING['CORE']['Tanium']['DB']['DBHost']
+TDBName = SETTING['CORE']['Tanium']['DB']['DBName']
+TDBUser = SETTING['CORE']['Tanium']['DB']['DBUser']
+TDBPwd = SETTING['CORE']['Tanium']['DB']['DBPwd']
+TATNM = SETTING['CORE']['Tanium']['DB']['AssetTNM']
 today = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 yesterday = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
 twoago = (datetime.today() - timedelta(2)).strftime("%Y-%m-%d")
 
-def read() :
+def plug_in() :
     try:
-        AssetSelectL = []
-        if DataLoadingType == 'DB':
-            AssetSelectConn = psycopg2.connect('host={0} dbname={1} user={2} password={3}'.format(DBHost, DBName, DBUser, DBPwd))
-            AssetSelectCur = AssetSelectConn.cursor()
-            AssetSelectQ = """ 
+        if TU == 'true':
+            SDL = []
+            SelectConn = psycopg2.connect('host={0} dbname={1} user={2} password={3}'.format(TDBHost, TDBName, TDBUser, TDBPwd))
+            SelectCur = SelectConn.cursor()
+            SelectQ = """ 
                 select
                     y.computer_id as computer_id,
                     y.chassis_type as asset_item, 
@@ -50,9 +49,9 @@ def read() :
                         last_reboot, 
                         asset_collection_date
                     from 
-                        """+AssetTNM+"""
+                        """ + TATNM + """
                     where 
-                        to_char(asset_collection_date, 'YYYY-MM-DD') = '"""+yesterday+"""' ) as y
+                        to_char(asset_collection_date, 'YYYY-MM-DD') = '""" + yesterday + """' ) as y
                 LEFT JOIN 
                     (select 
                         computer_id,
@@ -61,31 +60,18 @@ def read() :
                         established_port_count,
                         asset_collection_date
                     from 
-                        """+AssetTNM+"""
+                        """ + TATNM + """
                     where 
-                        to_char(asset_collection_date, 'YYYY-MM-DD') = '"""+twoago+"""' ) as yt
+                        to_char(asset_collection_date, 'YYYY-MM-DD') = '""" + twoago + """' ) as yt
                 ON y.computer_id = yt.computer_id
                 """
-            #print(AssetSelectQ)
-            AssetSelectCur.execute(AssetSelectQ)
-            AssetSelectRS=AssetSelectCur.fetchall()
-            for AssetSelectR in AssetSelectRS :
-                AssetSelectL.append(AssetSelectR)
-        elif DataLoadingType == 'FILE':
-            AS = BS['asset']
-            Storage = AS['Storage']
-            FNM = AS['FileName'] + yesterday
-            FT = AS['FileType']
-            FileFullName = FNM + FT
-            with open(Storage + FileFullName, encoding="UTF-8") as ADF:
-                ADL = json.loads(ADF.read())
-            AssetSelectL=ADL
-        return AssetSelectL
+            SelectCur.execute(SelectQ)
+            SelectRS = SelectCur.fetchall()
+            for RS in SelectRS:
+                SDL.append(RS)
+        return SDL
     except :
-        if DataLoadingType == 'DB':
-            print('Asset Daily Table connection(Select) Failure')
-        elif DataLoadingType == 'FILE':
-            print('Asset Daily File(Read) Failure')
+        print('Asset Daily Table connection(Select) Failure')
 
 
 

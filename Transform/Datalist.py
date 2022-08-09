@@ -5,7 +5,7 @@ import numpy as np
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
 
-def dataList(data) :
+def plug_in(data) :
     #print(data)
     computer_id = data.computer_id
     computer_name = data.computer_name

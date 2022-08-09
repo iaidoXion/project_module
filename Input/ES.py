@@ -1,39 +1,102 @@
 from elasticsearch import Elasticsearch
+from datetime import datetime, timedelta
+import json
+yesterday = (datetime.today() - timedelta(1)).strftime("%Y%m%d")
+twodaysago = (datetime.today() - timedelta(2)).strftime("%Y%m%d")
+with open("setting.json", encoding="UTF-8") as f:
+    SETTING = json.loads(f.read())
+TU = SETTING['CORE']['Tanium']['USE']
+TESURL = SETTING['CORE']['Tanium']['ES']['URL']
+TESPORT = SETTING['CORE']['Tanium']['ES']['PORT']
+TESSOURCEINDEX = SETTING['CORE']['Tanium']['ES']['SOURCE']['INDEX']
 
-index = 'iaido'
-def read():
-    es = Elasticsearch(["http://192.168.0.15:9200"])
-    es.cat.indices()
-    body = {
-        "query": {
-            "bool": {
-                "must": [
-                    {
-                        "match":
-                            {
-                                "Collection Date": "2022-07-31 23:59:59"
+def plug_in():
+    try:
+        if TU == 'true' :
+            indexName = TESSOURCEINDEX
+            es = Elasticsearch([TESURL+":"+TESPORT])
+            searchCount = {
+                "query" : {
+                    "match_all" : {}
+                }
+
+            }
+            res = es.search(index=indexName, body=searchCount)
+            dataCount = res['hits']['total']['value']
+            body = {
+                "size": dataCount,
+                "query": {
+                    "bool": {
+                        "must": {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "match": {
+                                            "Collection Date": yesterday
+                                        }
+                                    },
+                                    {
+                                        "match": {
+                                            "Collection Date": twodaysago
+                                        }
+                                    }
+                                ]
                             }
-                    },
-                    {
-                        "match":
-                            {
-                                "Collection Date": "2022-08-01 23:59:59"
-                            }
+                        }
                     }
-                ]
+                }
+            }
+
+            resData = es.search(index=indexName, body=body)
+            yesterdayDL = []
+            twodaysagoDL = []
+            for data in resData['hits']['hits']:
+                if data['_source']['Collection Date'] == yesterday :
+                    yesterdayDL.append(data['_source'])
+                elif data['_source']['Collection Date'] == twodaysago :
+                    twodaysagoDL.append(data['_source'])
+                #dataListAppend.append(data['_source'])
+
+            returnData = {'yesterday' : yesterdayDL, 'twodaysago' : twodaysagoDL}
+        return returnData
+    except :
+        print('ES Failure')
+
+
+    """
+    searchKword = [twodaysago,yesterday]
+    dataListAppend = []
+    for i in range(len(searchKword)) :
+        body = {
+            "size": dataCount,
+            "query": {
+                "match": {"Collection Date": searchKword[i]}
             }
         }
-    }
+        resData = es.search(index=indexName, body=body)
+        for data in resData['hits']['hits']:
+            dataListAppend.append(data['_source'])
+    return dataListAppend
+    """
+    """
+    dataList = es.search(index='iaido', body=body)
+    dataListAppend = []
+    for data in resData['hits']['hits']:
+        dataListAppend.append(data['_source'])
+    
 
+    returnList = dataListAppend
+    print(returnList)
+    return returnList
 
-    dataList = es.search(index=index, body=body)
-    print(dataList)
+    
+    t2 = es.search(index=index, body=body2)
+    print(t1['hits']['hits']['_source'])
+    print(t2['hits']['hits']['_source'])
+    """
     """
     dataList = es.get(index=index)
-    dataListAppend = []
-    for data in dataList['hits']['hits'] :
-        dataListAppend.append(data['_source'])
+    """
 
-    returnList = {'resCode': 200, 'dataList': dataListAppend}
-    print(returnList)
-    return returnList"""
+    #print(dataList)
+

@@ -3,7 +3,7 @@ import json
 import pandas as pd
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
-AlarmRamUsage = SETTING['MODULE']['RamUsage']
+AlarmRamUsage = SETTING['CORE']['Tanium']['MODULE']['CASE']['RamUsage']
 
 
 def DailyCount(TSDL):
@@ -46,24 +46,24 @@ def DailyCount(TSDL):
 
 
     RUSC = 0
-    DC = ATC-len(TSDL.todayDriveSize.compare(TSDL.yesterdayDriveSize))
-    LPCC = ATC-len(TSDL.todayListenPortCount.compare(TSDL.yesterdayListenPortCount))
-    EPC = ATC-len(TSDL.todayEstablishedPort.compare(TSDL.yesterdayEstablishedPort))
+    DC = ATC-len(TSDL.yesterdayDriveSize.compare(TSDL.twodaysagoDriveSize))
+    LPCC = ATC-len(TSDL.yesterdayListenPortCount.compare(TSDL.twodaysagoListenPortCount))
+    EPC = ATC-len(TSDL.yesterdayEstablishedPort.compare(TSDL.twodaysagoEstablishedPort))
 
     for i in range(len(TSDL.id)) :
-        todayRamTotalSize = TSDL.todayRamTotalSize[i].split(' ')[0]
-        todayRamUseSize = TSDL.todayRamUseSize[i].split(' ')[0]
-        if todayRamTotalSize.isdigit() :
-            todayRamTotalSize = int(todayRamTotalSize)
+        yesterdayRamTotalSize = TSDL.yesterdayRamTotalSize[i].split(' ')[0]
+        yesterdayRamUseSize = TSDL.yesterdayRamUseSize[i].split(' ')[0]
+        if yesterdayRamTotalSize.isdigit() :
+            yesterdayRamTotalSize = int(yesterdayRamTotalSize)
         else :
-            todayRamTotalSize = 0
-        if todayRamUseSize.isdigit() :
-            todayRamUseSize = int(todayRamUseSize)
+            yesterdayRamTotalSize = 0
+        if yesterdayRamUseSize.isdigit() :
+            yesterdayRamUseSize = int(yesterdayRamUseSize)
         else :
-            todayRamUseSize = 0
+            yesterdayRamUseSize = 0
 
-        if todayRamTotalSize != 0 and todayRamUseSize != 0 :
-            usage = (todayRamUseSize / todayRamTotalSize) * 100
+        if yesterdayRamTotalSize != 0 and yesterdayRamUseSize != 0 :
+            usage = (yesterdayRamUseSize / yesterdayRamTotalSize) * 100
             if usage < AlarmRamUsage:
                 RUSC = RUSC+1
     RUSC = ATC - RUSC
