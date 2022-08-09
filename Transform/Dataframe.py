@@ -85,6 +85,32 @@ def plug_in(data, InputPlugin, dataType) :
 
     return DF
 
+def zplug_in(data, InputPlugin, dataType):
+    DFL = {}
+    if dataType == 'source':
+        DL = data['dataList']
+
+        DFC = ['zabbix_name', 'zabbix_description', 'zabbix_ip',  'zabbix_up_time', 'zabbix_process_num',
+               'zabbix_process_run', 'zabbix_disk_used', 'zabbix_mem_used', 'zabbix_cpu_used', 'zabbix_agent_ver','zabbix_agent_run']
+        for d in DL:
+            if InputPlugin == 'API':
+                IP=d['ip']
+                if d['itemname']=="System name":
+                    SN= d['value']
+                if d['itemname']=="System description":
+                    OS= d['value'].split(' ')[0]
+                if d['itemname'] == "Uptime" or d['itemname'] == "System uptime":
+                    UT= d['value']
+                if d['itemname'] == "Number of processes":
+                    PN= d['value']
+                #if d['itemname'] == ""
+                    print(PN)
+
+
+
+
+
+
     """
         for i in range(len(DL)):
             # CI = DL[i][0]

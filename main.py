@@ -1,7 +1,7 @@
 from Input.API import plug_in as IAPIs
 from Input.DB import plug_in as IDPI
 from Input.ES import plug_in as IEPI
-from Transform.Dataframe import plug_in as TDFPI
+from Transform.Dataframe import plug_in as TDFPI ,zplug_in as ZDFPI
 from Transform.Merge import plug_in as TMPI
 from Transform.Datalist import plug_in as TDLPI
 #from Transform.Asset import Daily as TAD
@@ -23,6 +23,7 @@ waitingDate = SETTING['PROJECT']['WAITING']['DATE']
 logFileDirectory = SETTING['LOG']['directory']
 logFileName = SETTING['LOG']['fileName']
 logFileFormat = SETTING['LOG']['fileFormat']
+
 TU = SETTING['CORE']['Tanium']['USE']
 TSoC = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['COLLECTION']
 TSoIP = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']
@@ -32,6 +33,18 @@ TStC = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['COLLECTION']
 TStIP = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']
 TStTP = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['Transform']
 TStOP = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['OUTPUT']
+
+
+
+ZU = SETTING['CORE']['Zabbix']['USE']
+ZSoC = SETTING['CORE']['Zabbix']['MODULE']['SOURCE']['COLLECTION']
+ZSoIP = SETTING['CORE']['Zabbix']['MODULE']['SOURCE']['PLUGIN']['INPUT']
+ZSoTP = SETTING['CORE']['Zabbix']['MODULE']['SOURCE']['PLUGIN']['Transform']
+ZSoOP = SETTING['CORE']['Zabbix']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']
+ZStC = SETTING['CORE']['Zabbix']['MODULE']['STATISTICS']['COLLECTION']
+ZStIP = SETTING['CORE']['Zabbix']['MODULE']['STATISTICS']['PLUGIN']['INPUT']
+ZStTP = SETTING['CORE']['Zabbix']['MODULE']['STATISTICS']['PLUGIN']['Transform']
+ZStOP = SETTING['CORE']['Zabbix']['MODULE']['STATISTICS']['PLUGIN']['OUTPUT']
 
 def main() :
     module_install_date = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
@@ -73,12 +86,62 @@ def main() :
                     elif TStOP == 'ES':
                         OEPI(TSDL, 'statistics')
 
+    elif ZU == 'true':
+        if ZSoC == 'true' :
+            if ZSoIP == 'API' :
+                sk = IAPIs('','SesstionKey')
+                ZBDL = IAPIs(sk, 'Asset')                                      # API Call
+                #print(ZBDL)
+
+            elif ZSoIP == 'ES' :
+                print()
+
+            if ZSoTP == "true" :
+                TDFDL = ZDFPI(ZBDL, ZSoIP, 'source')
+                print()
+            if ZSoOP == 'DB':
+                #ODPI(TDFDL, 'source')
+                print()
+            elif TSoOP == 'ES':
+                #OEPI(TDFDL, 'source')
+                print()
+                
+                
+                
+        #일단은 사용안함
+        if ZStC == 'true' :
+            if waitingUse == 'true' :
+                if module_install_date == waitingDate :
+                    logging.info(module_install_date)
+                else:
+                    if ZStIP == 'DB' :
+                        SBDL = IDPI()
+                        SDL = SBDL
+                    elif ZStIP == 'ES':
+                        SBDL = IEPI()
+                        SDL = TMPI(SBDL)
+
+                    if ZStTP == 'true':
+                        TSDL = TDFPI(SDL, TStIP, 'statistics')
+
+                    ASDCL = ASDC(TSDL)
+                    TSDL = TSD(ASDCL)
+
+                    if ZStOP == 'DB':
+                        ODPI(TSDL, 'statistics')
+                    elif ZStOP == 'ES':
+                        OEPI(TSDL, 'statistics')
+
+
+
+
+
 if __name__ == "__main__":
-    today = datetime.today().strftime("%Y%m%d")
-    logFile = logFileDirectory + logFileName + today + logFileFormat
-    logFormat = '%(levelname)s, %(asctime)s, %(message)s'
-    logDateFormat = '%Y%m%d%H%M%S'
-    logging.basicConfig(filename=logFile, format=logFormat, datefmt=logDateFormat, level=logging.DEBUG)
-    logging.info('Module Started')
+    #today = datetime.today().strftime("%Y%m%d")
+    #logFile = logFileDirectory + logFileName + today + logFileFormat
+    #logFormat = '%(levelname)s, %(asctime)s, %(message)s'
+    #logDateFormat = '%Y%m%d%H%M%S'
+    #logging.basicConfig(filename=logFile, format=logFormat, datefmt=logDateFormat, level=logging.DEBUG)
+    #logging.info('Module Started')
     main()
-    logging.info('Module Finished')
+    #logging.info('Module Finished')
