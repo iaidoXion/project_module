@@ -6,7 +6,61 @@ with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
 
 def plug_in(data) :
-    #print(data)
+    AACL = []
+    for AASC in range(len(data['AA']['name'])):
+        AACL.append("asset")
+    AICL = []
+    for AISC in range(len(data['AIS']['name'])):
+        AICL.append("asset")
+    OCL = []
+    for OSC in range(len(data['OS']['name'])):
+        OCL.append("os")
+    LCL = []
+    for LSC in range(len(data['LS']['name'])):
+        LCL.append("login_history")
+    DSCL = []
+    for DSSC in range(len(data['DSS']['name'])):
+        DSCL.append("drive_size")
+    LPCSL = []
+    for LPCC in range(len(data['LPCS']['name'])):
+        LPCSL.append("listen_port_count")
+    EPSL = []
+    for EPC in range(len(data['EPS']['name'])):
+        EPSL.append("established_port_count")
+    RUSL = []
+    for RUSC in range(len(data['RUS']['name'])):
+        RUSL.append("ram_use_size")
+
+    DC = AACL + AICL + OCL + LCL + DSCL + LPCSL + EPSL + RUSL
+    DNM = data['AA']['name'] + data['AIS']['name'] + data['OS']['name'] + data['LS']['name'] + data['DSS'][
+        'name'] + data['LPCS']['name'] + data['EPS']['name'] + data['RUS']['name']
+    DV = data['AA']['value'] + data['AIS']['value'] + data['OS']['value'] + data['LS']['value'] + data['DSS'][
+        'value'] + data['LPCS']['value'] + data['EPS']['value'] + data['RUS']['value']
+    returnData = {"classification": DC, "item": DNM, "count": DV}
+    return returnData
+    """
+    elif DataLoadingType == 'FILE':
+    AASDL = []
+    for AASC in range(len(ASDCL['AA']['name'])):
+        AASDL.append(
+            {"classification": "asset", "item": ASDCL['AA']['name'][AASC], "count": ASDCL['AA']['value'][AASC]})
+    AISDL = []
+    for AISC in range(len(ASDCL['AIS']['name'])):
+        AISDL.append(
+            {"classification": "asset", "item": ASDCL['AIS']['name'][AISC], "count": ASDCL['AIS']['value'][AISC]})
+    OSDL = []
+    for OSC in range(len(ASDCL['OS']['name'])):
+        OSDL.append({"classification": "os", "item": ASDCL['OS']['name'][OSC], "count": ASDCL['OS']['value'][OSC]})
+    LSDL = []
+    for LSC in range(len(ASDCL['LS']['name'])):
+        LSDL.append({"classification": "login", "item": ASDCL['LS']['name'][LSC], "count": ASDCL['LS']['value'][LSC]})
+    returnData = {"AAS": AASDL, "AIS": AISDL, "OS": OSDL, "LS": LSDL}
+
+
+    """
+
+
+    """
     computer_id = data.computer_id
     computer_name = data.computer_name
     last_reboot = data.last_reboot
@@ -40,6 +94,7 @@ def plug_in(data) :
         DL.append({'computer_id':CI, 'computer_name':CN, 'last_reboot':LR, 'disk_total_space':DTS, 'disk_used_space':DUS, 'os_platform':OP, 'operating_system':OS,
                'is_virtual':IV, 'chassis_type':CT, 'ip_address':IP, 'listen_port_count':LPC, 'established_port_count':EPC, 'ram_use_size':RUS, 'ram_total_size':RTS})
     return DL
+    """
     """
     assetData = data[0]
     sensorData = data[1]

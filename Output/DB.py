@@ -17,18 +17,26 @@ yesterday = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
 
 def plug_in(data, dataType) :
     try:
+        logging.info('OUTPUT Plug In : DB')
         if TU == 'true':
-            logging.info('assetToday : ' + today)
-            logging.info('assetYesterday : ' + yesterday)
-            insertConn = psycopg2.connect(
-                'host={0} dbname={1} user={2} password={3}'.format(TDBHost, TDBName, TDBUser, TDBPwd))
+            logging.info('Table connection(Insert) Start')
+            logging.info('Insert Data Type : '+dataType)
+            logging.info('Databases Host : ' + TDBHost)
+            logging.info('Databases Name : ' + TDBName)
+            logging.info('Databases User : ' + TDBUser)
+            logging.info('Databases PWD : ' + TDBPwd)
+            insertConn = psycopg2.connect('host={0} dbname={1} user={2} password={3}'.format(TDBHost, TDBName, TDBUser, TDBPwd))
             insertCur = insertConn.cursor()
             if dataType == 'source':
-                IQ = """ INSERT INTO daily_asset (computer_id, computer_name, last_reboot, disk_total_space, disk_used_space, os_platform, operating_system, is_virtual, chassis_type, ip_address, listen_port_count, established_port_count, ram_use_size, ram_total_size, asset_collection_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '""" + yesterday +""" 23:59:59"""+"""');"""
+                TNM = TATNM
+                IQ = """ INSERT INTO """+TNM+""" (computer_id, computer_name, last_reboot, disk_total_space, disk_used_space, os_platform, operating_system, is_virtual, chassis_type, ip_address, listen_port_count, established_port_count, ram_use_size, ram_total_size, asset_collection_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '""" + yesterday +""" 23:59:59"""+"""');"""
                 datalen = len(data.computer_id)
             elif dataType == 'statistics':
-                IQ = """ INSERT INTO """ + TStTNM + """ (classification, item, item_count, statistics_collection_date) VALUES (%s, %s, %s, '""" + yesterday + """ 23:59:59""" + """');"""
+                TNM = TStTNM
+                IQ = """ INSERT INTO """ + TNM + """ (classification, item, item_count, statistics_collection_date) VALUES (%s, %s, %s, '""" + yesterday + """ 23:59:59""" + """');"""
                 datalen = len(data['classification'])
+            logging.info('Table Name : ' + TNM)
+            logging.info('Insert Query : ' + IQ)
             for i in range(datalen):
                 if dataType == 'source':
                     CI = data.computer_id[i]
@@ -46,7 +54,6 @@ def plug_in(data, dataType) :
                     RUS = data.ram_use_size[i]
                     RTS = data.ram_total_size[i]
                     dataList = CI, CN, LR, DTS, DUS, OP, OS, IV, CT, IP, LPC, EPC, RUS, RTS
-                    insertCur.execute(IQ, ())
                 elif dataType == 'statistics':
                     CF = data['classification'][i]
                     ITEM = data['item'][i]
@@ -55,5 +62,5 @@ def plug_in(data, dataType) :
                 insertCur.execute(IQ, (dataList))
             insertConn.commit()
             insertConn.close()
-    except :
-        print('Asset Daily Table connection(Insert) Failure')
+    except ConnectionError as e:
+        logging.warning(dataType + 'Data Insert Connection Failure : ' + str(e))

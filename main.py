@@ -1,11 +1,9 @@
-from Input.API import plug_in as IAPIs
+from Input.API import plug_in as IAPI
 from Input.DB import plug_in as IDPI
 from Input.ES import plug_in as IEPI
 from Transform.Dataframe import plug_in as TDFPI
 from Transform.Merge import plug_in as TMPI
 from Transform.Datalist import plug_in as TDLPI
-#from Transform.Asset import Daily as TAD
-from Transform.Statistics import Daily as TSD
 from Analysis.Statistics import DailyCount as ASDC
 from Output.DB import plug_in as ODPI
 from Output.ES import plug_in as OEPI
@@ -38,8 +36,8 @@ def main() :
     if TU == 'true' :
         if TSoC == 'true' :
             if TSoIP == 'API' :
-                sk = IAPIs('','Auth')
-                BDL = IAPIs(sk, 'sensor')                                      # API Call
+                sk = IAPI('','SesstionKey')['dataList'][0]
+                BDL = IAPI(sk, 'sensor')
             elif TSoIP == 'ES' :
                 print()
             if TSoTP == "true" :
@@ -66,7 +64,7 @@ def main() :
                         TSDL = TDFPI(SDL, TStIP, 'statistics')
 
                     ASDCL = ASDC(TSDL)
-                    TSDL = TSD(ASDCL)
+                    TSDL = TDLPI(ASDCL)
 
                     if TStOP == 'DB':
                         ODPI(TSDL, 'statistics')

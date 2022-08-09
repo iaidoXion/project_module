@@ -1,5 +1,6 @@
 import psycopg2
 import json
+import logging
 from datetime import datetime, timedelta
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
@@ -15,7 +16,9 @@ twoago = (datetime.today() - timedelta(2)).strftime("%Y-%m-%d")
 
 def plug_in() :
     try:
+        logging.info('INPUT Plug In : DB')
         if TU == 'true':
+            logging.info('Asset Daily Table connection(Select) Start')
             SDL = []
             SelectConn = psycopg2.connect('host={0} dbname={1} user={2} password={3}'.format(TDBHost, TDBName, TDBUser, TDBPwd))
             SelectCur = SelectConn.cursor()
@@ -70,9 +73,5 @@ def plug_in() :
             for RS in SelectRS:
                 SDL.append(RS)
         return SDL
-    except :
-        print('Asset Daily Table connection(Select) Failure')
-
-
-
-
+    except ConnectionError as e:
+        logging.warning(TATNM + ' Table Select connection Failure : ' + str(e))
