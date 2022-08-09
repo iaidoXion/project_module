@@ -83,22 +83,22 @@
       }
     },
     "Zabbix" : {
-      "USE" : "false",
+      "USE" : "true",
       "MODULE" : {
         "SOURCE" : {
-          "COLLECTION" : "",
+          "COLLECTION" : "true",
           "PLUGIN" : {
-            "INPUT" : "",
-            "Transform" : "",
-            "OUTPUT" : ""
+            "INPUT" : "API",
+            "Transform" : "true",
+            "OUTPUT" : "DB"
           }
         },
         "STATISTICS" : {
-          "COLLECTION" : "",
+          "COLLECTION" : "false",
           "PLUGIN" : {
-            "INPUT" : "",
-            "Transform" : "",
-            "OUTPUT" : ""
+            "INPUT" : "API",
+            "Transform" : "true",
+            "OUTPUT" : "DB"
           }
         },
         "CASE" : {
@@ -106,18 +106,10 @@
         }
       },
       "API" : {
-        "apiUrl" : "",
-        "Authorization" : "",
-        "ContentType" : "",
-         "PATH" : {
-           "SesstionKey" : "",
-           "Asset" : "",
-           "Sensor" : "",
-           "Questions" : {
-             "Saved" : ""
-           }
-         },
-         "SensorID": ""
+        "apiUrl" : "http://192.168.0.14/zabbix/api_jsonrpc.php/",
+        "ContentType" : "application/json",
+        "UNAME" : "Admin",
+        "PWORD" : "zabbix"
       },
       "DB" : {
         "DBHost" : "",
