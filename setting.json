@@ -17,7 +17,7 @@
       "USE" : "true",
       "MODULE" : {
         "SOURCE" : {
-          "COLLECTION" : "false",
+          "COLLECTION" : "true",
           "PLUGIN" : {
             "INPUT" : "API",
             "Transform" : "true",
@@ -27,9 +27,9 @@
         "STATISTICS" : {
           "COLLECTION" : "true",
           "PLUGIN" : {
-            "INPUT" : "ES",
+            "INPUT" : "DB",
             "Transform" : "true",
-            "OUTPUT" : "ES"
+            "OUTPUT" : "DB"
           }
         },
         "CASE" : {
