@@ -1,6 +1,7 @@
 from elasticsearch import Elasticsearch
 from datetime import datetime, timedelta
 import json
+import logging
 yesterday = (datetime.today() - timedelta(1)).strftime("%Y%m%d")
 twodaysago = (datetime.today() - timedelta(2)).strftime("%Y%m%d")
 with open("setting.json", encoding="UTF-8") as f:
@@ -12,6 +13,7 @@ TESSOURCEINDEX = SETTING['CORE']['Tanium']['ES']['SOURCE']['INDEX']
 
 def plug_in():
     try:
+        logging.info('INPUT Plug In : ES')
         if TU == 'true' :
             indexName = TESSOURCEINDEX
             es = Elasticsearch([TESURL+":"+TESPORT])

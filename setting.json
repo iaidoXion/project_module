@@ -42,7 +42,6 @@
         "ContentType" : "application/json",
          "PATH" : {
            "SesstionKey" : "/auth",
-           "Asset" : "/plugin/products/asset/v1/assets",
            "Sensor" : "/api/v2/result_data/saved_question/",
            "Questions" : {
              "Saved" : "/api/v2/saved_questions"
@@ -62,10 +61,12 @@
         "URL" : "http://192.168.0.15",
         "PORT" : "9200",
         "SOURCE" : {
-          "INDEX" : "iaido"
+          "INDEX" : "iaido",
+          "MappingFile" : "Mapping/ES/source.json"
         },
         "STATISTICS" : {
-          "INDEX" : "iaido_statistics"
+          "INDEX" : "iaido_statistics",
+          "MappingFile" : "Mapping/ES/statistics.json"
         }
       },
       "FILE" : {
