@@ -90,13 +90,13 @@ def main() :
             if ZSoIP == 'API' :
                 sk = IAPI('', 'SesstionKey')
                 ZBDL = IAPI(sk, 'Asset')
-                #print(ZBDL)
 
             elif ZSoIP == 'ES' :
                 print()
 
             if ZSoTP == "true" :
                 ZDFDL = ZDFPI(ZBDL, ZSoIP, 'source')
+
             if ZSoOP == 'DB':
                 ODPI(ZDFDL, 'source')
             elif TSoOP == 'ES':

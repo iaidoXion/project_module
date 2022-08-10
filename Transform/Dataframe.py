@@ -102,7 +102,7 @@ def zplug_in(data, InputPlugin, dataType):
         DL = data['dataList']
 
         DFC = ['zabbix_name', 'zabbix_description', 'zabbix_ip',  'zabbix_up_time', 'zabbix_process_num',
-                               'zabbix_disk_used', 'zabbix_mem_used', 'zabbix_cpu_used', 'zabbix_agent_ver', 'zabbix_agent_run']
+               'zabbix_disk_used', 'zabbix_mem_used', 'zabbix_cpu_used', 'zabbix_agent_ver', 'zabbix_agent_run']
         DFL = []
         for d in DL:
             if InputPlugin == 'API':
@@ -132,9 +132,8 @@ def zplug_in(data, InputPlugin, dataType):
 
                     DFL.append([SN, OS, IP, UT, PN, DU, MU, CU, AV, AR])
                     # print(DFL)
-                DF = pd.DataFrame(DFL, columns=DFC)
-                # print(DF)
-                return DF
+    DF = pd.DataFrame(DFL, columns=DFC)
+    return DF
 
 
 
