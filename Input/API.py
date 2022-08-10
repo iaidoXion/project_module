@@ -64,7 +64,7 @@ def plug_in(SK, APITYPE):
 
 
         if ZU == 'true':
-            if APITYPE == 'Auth':
+            if APITYPE == 'SesstionKey':
                 logging.info('Zabbix API Session Key Call Start')
                 urls = zabbixApiUrl
 

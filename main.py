@@ -51,16 +51,17 @@ def main() :
             if TSoIP == 'API' :
                 sk = IAPI('','SesstionKey')['dataList'][0]
                 BDL = IAPI(sk, 'sensor')
-            elif TSoIP == 'ES' :
-                print()
+            if TSoIP == 'ES' :
+                BDL = IEPI('source')
+
             if TSoTP == "true" :
                 TDFDL = TDFPI(BDL, TSoIP, 'source')
-
+            """
             if TSoOP == 'DB':
                 ODPI(TDFDL, 'source')
             elif TSoOP == 'ES':
                 OEPI(TDFDL, 'source')
-
+            """
         if TStC == 'true' :
             if waitingUse == 'true' :
                 if module_install_date == waitingDate :
@@ -70,7 +71,7 @@ def main() :
                         SBDL = IDPI()
                         SDL = SBDL
                     elif TStIP == 'ES':
-                        SBDL = IEPI()
+                        SBDL = IEPI('statistics')
                         SDL = TMPI(SBDL)
 
                     if TStTP == 'true':
@@ -87,19 +88,17 @@ def main() :
     elif ZU == 'true':
         if ZSoC == 'true' :
             if ZSoIP == 'API' :
-                sk = IAPIs('','SesstionKey')
-                ZBDL = IAPIs(sk, 'Asset')                                      # API Call
+                sk = IAPI('', 'SesstionKey')
+                ZBDL = IAPI(sk, 'Asset')
                 #print(ZBDL)
 
             elif ZSoIP == 'ES' :
                 print()
 
             if ZSoTP == "true" :
-                TDFDL = ZDFPI(ZBDL, ZSoIP, 'source')
-                print()
+                ZDFDL = ZDFPI(ZBDL, ZSoIP, 'source')
             if ZSoOP == 'DB':
-                #ODPI(TDFDL, 'source')
-                print()
+                ODPI(ZDFDL, 'source')
             elif TSoOP == 'ES':
                 #OEPI(TDFDL, 'source')
                 print()
@@ -123,7 +122,7 @@ def main() :
                         TSDL = TDFPI(SDL, TStIP, 'statistics')
 
                     ASDCL = ASDC(TSDL)
-                    TSDL = TSD(ASDCL)
+                    TSDL = TDLPI(ASDCL)
 
                     if ZStOP == 'DB':
                         ODPI(TSDL, 'statistics')
@@ -135,11 +134,11 @@ def main() :
 
 
 if __name__ == "__main__":
-    #today = datetime.today().strftime("%Y%m%d")
-    #logFile = logFileDirectory + logFileName + today + logFileFormat
-    #logFormat = '%(levelname)s, %(asctime)s, %(message)s'
-    #logDateFormat = '%Y%m%d%H%M%S'
-    #logging.basicConfig(filename=logFile, format=logFormat, datefmt=logDateFormat, level=logging.DEBUG)
-    #logging.info('Module Started')
+    today = datetime.today().strftime("%Y%m%d")
+    logFile = logFileDirectory + logFileName + today + logFileFormat
+    logFormat = '%(levelname)s, %(asctime)s, %(message)s'
+    logDateFormat = '%Y%m%d%H%M%S'
+    logging.basicConfig(filename=logFile, format=logFormat, datefmt=logDateFormat, level=logging.DEBUG)
+    logging.info('Module Started')
     main()
-    #logging.info('Module Finished')
+    logging.info('Module Finished')

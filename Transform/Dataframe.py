@@ -29,11 +29,23 @@ def plug_in(data, InputPlugin, dataType) :
                 EPC = d[11]
                 RUS = d[12]
                 RTS = d[13]
-            elif InputPlugin == 'DB' :
+            if InputPlugin == 'DB' :
                 print()
-            elif InputPlugin == 'ES' :
-                print()
-
+            if InputPlugin == 'ES' :
+                CI = d['Computer ID']
+                CN = d['Computer Name']
+                LR = 'd[2]'
+                DTS = 'd[3]'
+                DUS = 'd[4]'
+                OP = 'd[5]'
+                OS = 'd[6]'
+                IV = 'd[7]'
+                CT = 'd[8]'
+                IP = 'd[9]'
+                LPC = 'd[10]'
+                EPC = 'd[11]'
+                RUS = 'd[12]'
+                RTS = 'd[13]'
             DFL.append([CI, CN, LR, DTS, DUS, OP, OS, IV, CT, IP, LPC, EPC, RUS, RTS])
     elif dataType == 'statistics':
         DFC = ['id', 'assetItem', 'os', 'yesterdayDriveSize', 'twodaysagoDriveSize', 'ip', 'yesterdayListenPortCount','twodaysagoListenPortCount', 'yesterdayEstablishedPort', 'twodaysagoEstablishedPort', 'yesterdayRamUseSize', 'yesterdayRamTotalSize', 'lastLogin']
@@ -86,12 +98,12 @@ def plug_in(data, InputPlugin, dataType) :
     return DF
 
 def zplug_in(data, InputPlugin, dataType):
-    DFL = {}
     if dataType == 'source':
         DL = data['dataList']
 
         DFC = ['zabbix_name', 'zabbix_description', 'zabbix_ip',  'zabbix_up_time', 'zabbix_process_num',
-               'zabbix_process_run', 'zabbix_disk_used', 'zabbix_mem_used', 'zabbix_cpu_used', 'zabbix_agent_ver','zabbix_agent_run']
+                               'zabbix_disk_used', 'zabbix_mem_used', 'zabbix_cpu_used', 'zabbix_agent_ver', 'zabbix_agent_run']
+        DFL = []
         for d in DL:
             if InputPlugin == 'API':
                 IP=d['ip']
@@ -103,8 +115,26 @@ def zplug_in(data, InputPlugin, dataType):
                     UT= d['value']
                 if d['itemname'] == "Number of processes":
                     PN= d['value']
-                #if d['itemname'] == ""
-                    print(PN)
+                if d['itemname'] == "/: Space utilization":
+                    DU = d['value']
+                if d['itemname'] == "Memory utilization":
+                    MU = d['value']
+                if d['itemname'] == "CPU utilization":
+                    CU = d['value']
+                if d['itemname'] == "Version of Zabbix agent running":
+                    AV = d['value']
+                if d['itemname'] == "Zabbix agent availability":
+                    AA = d['value']
+                    if AA == '1':
+                        AR = "사용중"
+                    else:
+                        AR = "사용안함"
+
+                    DFL.append([SN, OS, IP, UT, PN, DU, MU, CU, AV, AR])
+                    # print(DFL)
+                DF = pd.DataFrame(DFL, columns=DFC)
+                # print(DF)
+                return DF
 
 
 

@@ -11,20 +11,29 @@ TESURL = SETTING['CORE']['Tanium']['ES']['URL']
 TESPORT = SETTING['CORE']['Tanium']['ES']['PORT']
 TESSOURCEINDEX = SETTING['CORE']['Tanium']['ES']['SOURCE']['INDEX']
 
-def plug_in():
+def plug_in(dataType):
     try:
-        logging.info('INPUT Plug In : ES')
-        if TU == 'true' :
-            indexName = TESSOURCEINDEX
-            es = Elasticsearch([TESURL+":"+TESPORT])
-            searchCount = {
-                "query" : {
-                    "match_all" : {}
+        logging.info(dataType+' INPUT Plug In : ES')
+        indexName = TESSOURCEINDEX
+        es = Elasticsearch([TESURL + ":" + TESPORT])
+        searchCount = {
+            "query": {
+                "match_all": {}
+            }
+
+        }
+        res = es.search(index=indexName, body=searchCount)
+        dataCount = res['hits']['total']['value']
+        if dataType == 'source' :
+            body = {
+                "size": dataCount,
+                "query": {
+                    "match_all": {}
                 }
 
             }
-            res = es.search(index=indexName, body=searchCount)
-            dataCount = res['hits']['total']['value']
+        if dataType == 'statistics' :
+            #if TU == 'true' :
             body = {
                 "size": dataCount,
                 "query": {
@@ -49,17 +58,22 @@ def plug_in():
                 }
             }
 
-            resData = es.search(index=indexName, body=body)
-            yesterdayDL = []
-            twodaysagoDL = []
-            for data in resData['hits']['hits']:
-                if data['_source']['Collection Date'] == yesterday :
+        resData = es.search(index=indexName, body=body)
+        yesterdayDL = []
+        twodaysagoDL = []
+        dataListAppend = []
+        for data in resData['hits']['hits']:
+            if dataType == 'source':
+                dataListAppend.append(data['_source'])
+            if dataType == 'statistics':
+                if data['_source']['Collection Date'] == yesterday:
                     yesterdayDL.append(data['_source'])
-                elif data['_source']['Collection Date'] == twodaysago :
+                elif data['_source']['Collection Date'] == twodaysago:
                     twodaysagoDL.append(data['_source'])
-                #dataListAppend.append(data['_source'])
-
-            returnData = {'yesterday' : yesterdayDL, 'twodaysago' : twodaysagoDL}
+        if dataType == 'source':
+            returnData = {'dataList': dataListAppend}
+        if dataType == 'statistics':
+            returnData = {'yesterday': yesterdayDL, 'twodaysago': twodaysagoDL}
         return returnData
     except :
         print('ES Failure')

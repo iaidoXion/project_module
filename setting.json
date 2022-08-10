@@ -112,12 +112,12 @@
         "PWORD" : "zabbix"
       },
       "DB" : {
-        "DBHost" : "",
-        "DBName" : "",
-        "DBUser" : "",
-        "DBPwd" : "",
-        "AssetTNM" : "",
-        "StatisticsTNM" : ""
+        "DBHost" : "192.168.5.160",
+        "DBName" : "postgres",
+        "DBUser" : "postgres",
+        "DBPwd" : "psql",
+        "AssetTNM" : "zabbix_asset",
+        "StatisticsTNM" : "zabbix_statistics"
       },
       "ES" : {
         "URL" : "",
