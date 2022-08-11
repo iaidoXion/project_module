@@ -24,29 +24,52 @@ today = datetime.today().strftime("%Y-%m-%d")
 yesterday = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
 
 
-def plug_in(data, dataType) :
+def plug_in(data, core, dataType) :
     try:
-        logging.info('OUTPUT Plug In : DB')
-        if TU == 'true':
-            logging.info('Table connection(Insert) Start')
-            logging.info('Insert Data Type : '+dataType)
-            logging.info('Databases Host : ' + TDBHost)
-            logging.info('Databases Name : ' + TDBName)
-            logging.info('Databases User : ' + TDBUser)
-            logging.info('Databases PWD : ' + TDBPwd)
-            insertConn = psycopg2.connect('host={0} dbname={1} user={2} password={3}'.format(TDBHost, TDBName, TDBUser, TDBPwd))
-            insertCur = insertConn.cursor()
+        logging.info(core+' '+dataType+' Data OUTPUT Plug In : DB')
+        logging.info(core + ' ' + dataType + ' Data Table connection(Insert) Start')
+        if core == 'tanium':
+            DBHost = TDBHost
+            DBName = TDBName
+            DBUser = TDBUser
+            DBPwd = TDBPwd
             if dataType == 'source':
                 TNM = TATNM
+            if dataType == 'statistics':
+                TNM = TStTNM
+        if core == 'zabbix':
+            DBHost = ZDBHost
+            DBName = ZDBName
+            DBUser = ZDBUser
+            DBPwd = ZDBPwd
+            if dataType == 'source':
+                TNM = ZATNM
+
+        logging.info('Insert Data Type : '+dataType)
+        logging.info('Databases Host : ' + DBHost)
+        logging.info('Databases Name : ' + DBName)
+        logging.info('Databases User : ' + DBUser)
+        logging.info('Databases PWD : ' + DBPwd)
+        insertConn = psycopg2.connect('host={0} dbname={1} user={2} password={3}'.format(DBHost, DBName, DBUser, DBPwd))
+        insertCur = insertConn.cursor()
+
+        if core == 'tanium':
+            if dataType == 'source':
                 IQ = """ INSERT INTO """+TNM+""" (computer_id, computer_name, last_reboot, disk_total_space, disk_used_space, os_platform, operating_system, is_virtual, chassis_type, ip_address, listen_port_count, established_port_count, ram_use_size, ram_total_size, asset_collection_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '""" + yesterday +""" 23:59:59"""+"""');"""
                 datalen = len(data.computer_id)
-            elif dataType == 'statistics':
-                TNM = TStTNM
+            if dataType == 'statistics':
                 IQ = """ INSERT INTO """ + TNM + """ (classification, item, item_count, statistics_collection_date) VALUES (%s, %s, %s, '""" + yesterday + """ 23:59:59""" + """');"""
                 datalen = len(data['classification'])
-            logging.info('Table Name : ' + TNM)
-            logging.info('Insert Query : ' + IQ)
-            for i in range(datalen):
+        if core == 'zabbix':
+            if dataType == 'source':
+                IQ = """ INSERT INTO """ + TNM + """ (zabbix_asset_num, zabbix_name, zabbix_description, zabbix_ip, zabbix_up_time, zabbix_process_num, zabbix_disk_used, zabbix_mem_used, zabbix_cpu_used, zabbix_agent_ver, zabbix_agent_run, zabbix_asset_date) VALUES (nextval('seq_zabbix_asset'), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '""" + yesterday + """ 23:59:59""" + """');"""
+                datalen = len(data.zabbix_name)
+
+        logging.info('Table Name : ' + TNM)
+        logging.info('Insert Query : ' + IQ)
+        print(datalen)
+        for i in range(datalen):
+            if core == 'tanium':
                 if dataType == 'source':
                     CI = data.computer_id[i]
                     CN = data.computer_name[i]
@@ -63,40 +86,13 @@ def plug_in(data, dataType) :
                     RUS = data.ram_use_size[i]
                     RTS = data.ram_total_size[i]
                     dataList = CI, CN, LR, DTS, DUS, OP, OS, IV, CT, IP, LPC, EPC, RUS, RTS
-                elif dataType == 'statistics':
+                if dataType == 'statistics':
                     CF = data['classification'][i]
                     ITEM = data['item'][i]
                     ICOUNT = data['count'][i]
                     dataList = CF, ITEM, ICOUNT
-                insertCur.execute(IQ, (dataList))
-            insertConn.commit()
-            insertConn.close()
-        if ZU == 'true':
-            logging.info('Table connection(Insert) Start')
-            logging.info('Insert Data Type : ' + dataType)
-            logging.info('Databases Host : ' + ZDBHost)
-            logging.info('Databases Name : ' + ZDBName)
-            logging.info('Databases User : ' + ZDBUser)
-            logging.info('Databases PWD : ' + ZDBPwd)
-            insertConn = psycopg2.connect(
-                'host={0} dbname={1} user={2} password={3}'.format(ZDBHost, ZDBName, ZDBUser, ZDBPwd))
-            insertCur = insertConn.cursor()
-            if dataType == 'source':
-                TNM = ZATNM
-                IQ = """ INSERT INTO """ + TNM + """ (zabbix_asset_num, zabbix_name, zabbix_description, zabbix_ip, zabbix_up_time, zabbix_process_num, zabbix_disk_used, zabbix_mem_used, zabbix_cpu_used, zabbix_agent_ver, zabbix_agent_run, zabbix_asset_date) VALUES (nextval('seq_zabbix_asset'), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '""" + yesterday + """ 23:59:59""" + """');"""
-                datalen = len(data.zabbix_name)
-                # print(datalen)
-            elif dataType == 'statistics':
-                print()
-                # TNM = ZStTNM
-                # IQ = """ INSERT INTO """ + TNM + """ (classification, item, item_count, statistics_collection_date) VALUES (%s, %s, %s, '""" + yesterday + """ 23:59:59""" + """');"""
-                # datalen = len(data['classification'])
-
-            logging.info('Table Name : ' + TNM)
-            logging.info('Insert Query : ' + IQ)
-            for i in range(datalen):
+            if core == 'zabbix':
                 if dataType == 'source':
-
                     HN = data.zabbix_name[i]
                     OS = data.zabbix_description[i]
                     IP = data.zabbix_ip[i]
@@ -107,15 +103,9 @@ def plug_in(data, dataType) :
                     CU = data.zabbix_cpu_used[i]
                     AV = data.zabbix_agent_ver[i]
                     AR = data.zabbix_agent_run[i]
-
                     dataList = HN, OS, IP, UT, PN, DU, MU, CU, AV, AR
-                elif dataType == 'statistics':
-                    CF = data['classification'][i]
-                    ITEM = data['item'][i]
-                    ICOUNT = data['count'][i]
-                    dataList = CF, ITEM, ICOUNT
-                insertCur.execute(IQ, (dataList))
-            insertConn.commit()
-            insertConn.close()
+            insertCur.execute(IQ, (dataList))
+        insertConn.commit()
+        insertConn.close()
     except ConnectionError as e:
         logging.warning(dataType + 'Data Insert Connection Failure : ' + str(e))

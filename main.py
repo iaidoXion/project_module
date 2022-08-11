@@ -56,12 +56,12 @@ def main() :
 
             if TSoTP == "true" :
                 TDFDL = TDFPI(BDL, TSoIP, 'source')
-            """
+
             if TSoOP == 'DB':
-                ODPI(TDFDL, 'source')
+                ODPI(TDFDL, 'tanium', 'source')
             elif TSoOP == 'ES':
                 OEPI(TDFDL, 'source')
-            """
+
         if TStC == 'true' :
             if waitingUse == 'true' :
                 if module_install_date == waitingDate :
@@ -81,7 +81,7 @@ def main() :
                     TSDL = TDLPI(ASDCL)
 
                     if TStOP == 'DB':
-                        ODPI(TSDL, 'statistics')
+                        ODPI(TSDL, 'tanium', 'statistics')
                     elif TStOP == 'ES':
                         OEPI(TSDL, 'statistics')
 
@@ -98,11 +98,10 @@ def main() :
                 ZDFDL = ZDFPI(ZBDL, ZSoIP, 'source')
 
             if ZSoOP == 'DB':
-                ODPI(ZDFDL, 'source')
+                ODPI(ZDFDL, 'zabbix', 'source')
             elif TSoOP == 'ES':
-                #OEPI(TDFDL, 'source')
                 print()
-                
+
                 
                 
         #일단은 사용안함
@@ -125,7 +124,7 @@ def main() :
                     TSDL = TDLPI(ASDCL)
 
                     if ZStOP == 'DB':
-                        ODPI(TSDL, 'statistics')
+                        ODPI(TSDL, 'zabbix', 'statistics')
                     elif ZStOP == 'ES':
                         OEPI(TSDL, 'statistics')
 
