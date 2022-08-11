@@ -114,79 +114,84 @@ def plug_in(SK, APITYPE):
                     host = hostDataJson[i]['host']
                     ip = hostDataJson[i]['interfaces'][0]['ip']
 
-                    r2 = requests.post(urls, json={
-                        "jsonrpc": "2.0",
-                        "method": "item.get",
-                        "params": {
-                            "output": ["value_type", "itemid", "name", "lastclock", "lastvalue"],
-                            "filter": {
-                                "hostid": hostid
+                    items = ["System name", "System description", "System uptime", "Number of processes", "/: Space utilization",
+                                "Memory utilization", "CPU utilization", "Version of Zabbix agent running", "Zabbix agent availability"]
 
-                            }
-
-                        },
-                        "auth": SK,
-                        "id": 1
-                    }
-                                       )
-
-                    itemText = r2.text
-                    itemJson = json.loads(itemText)
-                    itemCount = len(itemJson['result'])
-                    itemDataJson = itemJson['result']
-
-                    # print(itemDataJson)
-                    # print(itemCount)
-
-                    for j in range(0, itemCount):
-                        itemid = itemDataJson[j]['itemid']
-                        itemname = itemDataJson[j]['name']
-                        value_type = itemDataJson[j]['value_type']
-
-                        r3 = requests.post(urls, json={
+                    for item in items:
+                        r2 = requests.post(urls, json={
                             "jsonrpc": "2.0",
-                            "method": "history.get",
+                            "method": "item.get",
                             "params": {
-
-                                "history": value_type,
-                                "sortfield": "clock",
-                                "sortorder": "DESC",
-                                "limit": 1,
-
+                                "output": ["value_type", "itemid", "name", "lastclock", "lastvalue"],
                                 "filter": {
-                                    "itemid": itemid
+                                    "hostid": hostid,
+                                    "name": item
+
                                 }
 
                             },
-
                             "auth": SK,
                             "id": 1
                         }
                                            )
 
-                        historyText = r3.text
-                        historyJson = json.loads(historyText)
-                        historyCount = len(historyJson['result'])
-                        historyDataJson = historyJson['result']
+                        itemText = r2.text
+                        itemJson = json.loads(itemText)
+                        itemCount = len(itemJson['result'])
+                        itemDataJson = itemJson['result']
 
-                        for k in range(0, historyCount):
-                            clock = historyDataJson[k]['clock']
-                            value = historyDataJson[k]['value']
+                        # print(itemDataJson)
+                        # print(itemCount)
 
-                            data = {
-                                'host': host,
-                                'hostid': hostid,
-                                'ip': ip,
-                                'itemid': itemid,
-                                'itemname': itemname,
-                                'value_type': value_type,
-                                'clock': clock,
-                                'value': value
+                        for j in range(0, itemCount):
+                            itemid = itemDataJson[j]['itemid']
+                            itemname = itemDataJson[j]['name']
+                            value_type = itemDataJson[j]['value_type']
+
+                            r3 = requests.post(urls, json={
+                                "jsonrpc": "2.0",
+                                "method": "history.get",
+                                "params": {
+
+                                    "history": value_type,
+                                    "sortfield": "clock",
+                                    "sortorder": "DESC",
+                                    "limit": 1,
+
+                                    "filter": {
+                                        "itemid": itemid
+                                    }
+
+                                },
+
+                                "auth": SK,
+                                "id": 1
                             }
-                            # print(data)
+                                               )
 
-                        dataListAppend.append(data)
-                    returnList = {'dataList': dataListAppend}
+                            historyText = r3.text
+                            historyJson = json.loads(historyText)
+                            historyCount = len(historyJson['result'])
+                            historyDataJson = historyJson['result']
+
+                            for k in range(0, historyCount):
+                                clock = historyDataJson[k]['clock']
+                                value = historyDataJson[k]['value']
+
+                                data = {
+                                    'host': host,
+                                    'hostid': hostid,
+                                    'ip': ip,
+                                    'itemid': itemid,
+                                    'itemname': itemname,
+                                    'value_type': value_type,
+                                    'clock': clock,
+                                    'value': value
+                                }
+                                print(data)
+
+                            dataListAppend.append(data)
+                        returnList = {'dataList': dataListAppend}
 
                 # print(dataList)
             return returnList

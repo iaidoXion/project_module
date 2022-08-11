@@ -111,7 +111,7 @@ def zplug_in(data, InputPlugin, dataType):
                     SN= d['value']
                 if d['itemname']=="System description":
                     OS= d['value'].split(' ')[0]
-                if d['itemname'] == "Uptime" or d['itemname'] == "System uptime":
+                if d['itemname'] == "System uptime":
                     UT= d['value']
                 if d['itemname'] == "Number of processes":
                     PN= d['value']
