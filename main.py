@@ -49,8 +49,8 @@ def main() :
     if TU == 'true' :
         if TSoC == 'true' :
             if TSoIP == 'API' :
-                sk = IAPI('','SesstionKey')['dataList'][0]
-                BDL = IAPI(sk, 'sensor')
+                sk = IAPI('', 'tanium','SesstionKey', '')['dataList'][0]
+                BDL = IAPI(sk, 'tanium', 'sensor', '')
             if TSoIP == 'ES' :
                 BDL = IEPI('source')
 
@@ -85,21 +85,25 @@ def main() :
                     elif TStOP == 'ES':
                         OEPI(TSDL, 'statistics')
 
-    elif ZU == 'true':
+    if ZU == 'true':
         if ZSoC == 'true' :
             if ZSoIP == 'API' :
-                sk = IAPI('', 'SesstionKey')
-                ZBDL = IAPI(sk, 'Asset')
+                sk = IAPI('', 'zabbix', 'SesstionKey', '')['dataList'][0]
+                ZHDL = IAPI(sk, 'zabbix', 'assetHost', '')
+                ZIDL = IAPI(sk, 'zabbix', 'assetItem', ZHDL['dataList'])
+                ZBDL = IAPI(sk, 'zabbix', 'asset', ZIDL['dataList'])
 
-            elif ZSoIP == 'ES' :
+
+            if ZSoIP == 'ES' :
                 print()
 
             if ZSoTP == "true" :
                 ZDFDL = ZDFPI(ZBDL, ZSoIP, 'source')
+                print(ZDFDL)
 
             if ZSoOP == 'DB':
                 ODPI(ZDFDL, 'zabbix', 'source')
-            elif TSoOP == 'ES':
+            if TSoOP == 'ES':
                 print()
 
                 

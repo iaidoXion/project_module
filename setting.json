@@ -108,6 +108,13 @@
       "API" : {
         "apiUrl" : "http://192.168.0.14/zabbix/api_jsonrpc.php/",
         "ContentType" : "application/json",
+        "jsonrpc" : "2.0",
+        "method" : {
+          "SesstionKey" : "user.login",
+          "host": "host.get",
+          "item" : "item.get",
+          "history" : "history.get"
+        },
         "UNAME" : "Admin",
         "PWORD" : "zabbix"
       },
