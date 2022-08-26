@@ -4,7 +4,7 @@
     "TYPE" : "System",
     "WAITING" : {
       "USE" : "true",
-      "DATE" : "2022-07-05"
+      "DATE" : "2022-08-24"
     }
   },
   "LOG" : {
@@ -19,54 +19,111 @@
         "SOURCE" : {
           "COLLECTION" : "true",
           "PLUGIN" : {
-            "INPUT" : "API",
+            "INPUT" : {
+              "API" : {
+                "USE" : "true",
+                "URL" : "https://192.168.5.100",
+                "PATH" : {
+                   "SesstionKey" : "/api/v2/session/login",
+                   "Sensor" : "/api/v2/result_data/saved_question/"
+                 },
+                 "username" : "administrator",
+                 "password" : "xion123!",
+                 "SensorID": "2307"
+              },
+              "DB" : {
+                "PS" : {
+                  "USE": "false",
+                  "HOST": "192.168.5.160",
+                  "NAME": "postgres",
+                  "USER": "postgres",
+                  "PWD": "psql",
+                  "TNM": "daily_asset_new"
+                }
+              },
+              "ES" : {
+                "USE" : "false",
+                "URL" : "http://192.168.0.15",
+                "PORT" : "9200",
+                "INDEX" : "iaido"
+              }
+            },
             "Transform" : "true",
-            "OUTPUT" : "DB"
+            "OUTPUT" : {
+              "DB": {
+                "PS" : {
+                  "USE": "true",
+                  "HOST": "192.168.5.160",
+                  "NAME": "postgres",
+                  "USER": "postgres",
+                  "PWD": "psql",
+                  "TNM": "daily_asset_new"
+                }
+              },
+              "ES": {
+                "USE": "false",
+                "URL": "http://192.168.0.15",
+                "PORT": "9200",
+                "INDEX": "iaido",
+                "MappingFile" : "Mapping/ES/Tanium/source.json"
+              }
+            }
           }
         },
         "STATISTICS" : {
           "COLLECTION" : "true",
           "PLUGIN" : {
-            "INPUT" : "DB",
+            "INPUT" : {
+              "API" : {
+                "USE" : "false",
+                "apiUrl" : "https://192.168.5.100",
+                 "PATH" : {
+                   "SesstionKey" : "/auth",
+                   "Sensor" : "/api/v2/result_data/saved_question/"
+                 },
+                 "SensorID": "2307"
+              },
+              "DB" : {
+                "PS" : {
+                "USE" : "true",
+                  "HOST" : "192.168.5.160",
+                  "NAME" : "postgres",
+                  "USER" : "postgres",
+                  "PWD" : "psql",
+                  "TNM" : "daily_asset_new"
+                }
+              },
+              "ES" : {
+                "USE" : "false",
+                "URL" : "http://192.168.0.15",
+                "PORT" : "9200",
+                "INDEX" : "iaido"
+              }
+            },
             "Transform" : "true",
-            "OUTPUT" : "DB"
+            "OUTPUT" : {
+              "DB" : {
+                "PS" : {
+                  "USE" : "true",
+                  "HOST" : "192.168.5.160",
+                  "NAME" : "postgres",
+                  "USER" : "postgres",
+                  "PWD" : "psql",
+                  "TNM" : "daily_statistics"
+                }
+              },
+              "ES" : {
+                "USE" : "false",
+                "URL" : "http://192.168.0.15",
+                "PORT" : "9200",
+                "INDEX" : "iaido",
+                "MappingFile" : "Mapping/ES/Tanium/statistics.json"
+              }
+            }
           }
         },
         "CASE" : {
           "RamUsage" : 60
-        }
-      },
-      "API" : {
-        "apiUrl" : "https://192.168.5.100",
-        "Authorization" : "Basic QWRtaW5pc3RyYXRvcjp4aW9uMTIzIQ==",
-        "ContentType" : "application/json",
-         "PATH" : {
-           "SesstionKey" : "/auth",
-           "Sensor" : "/api/v2/result_data/saved_question/",
-           "Questions" : {
-             "Saved" : "/api/v2/saved_questions"
-           }
-         },
-         "SensorID": "1875"
-      },
-      "DB" : {
-        "DBHost" : "192.168.5.160",
-        "DBName" : "postgres",
-        "DBUser" : "postgres",
-        "DBPwd" : "psql",
-        "AssetTNM" : "daily_asset",
-        "StatisticsTNM" : "daily_statistics"
-      },
-      "ES" : {
-        "URL" : "http://192.168.0.15",
-        "PORT" : "9200",
-        "SOURCE" : {
-          "INDEX" : "iaido",
-          "MappingFile" : "Mapping/ES/source.json"
-        },
-        "STATISTICS" : {
-          "INDEX" : "iaido_statistics",
-          "MappingFile" : "Mapping/ES/statistics.json"
         }
       },
       "FILE" : {
@@ -83,7 +140,7 @@
       }
     },
     "Zabbix" : {
-      "USE" : "true",
+      "USE" : "false",
       "MODULE" : {
         "SOURCE" : {
           "COLLECTION" : "true",

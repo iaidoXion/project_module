@@ -6,15 +6,24 @@ yesterday = (datetime.today() - timedelta(1)).strftime("%Y%m%d")
 twodaysago = (datetime.today() - timedelta(2)).strftime("%Y%m%d")
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
-TU = SETTING['CORE']['Tanium']['USE']
-TESURL = SETTING['CORE']['Tanium']['ES']['URL']
-TESPORT = SETTING['CORE']['Tanium']['ES']['PORT']
-TESSOURCEINDEX = SETTING['CORE']['Tanium']['ES']['SOURCE']['INDEX']
+TSOESURL = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['ES']['URL']
+TSOESPORT = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['ES']['PORT']
+TSOESSOURCEINDEX = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['ES']['INDEX']
 
+TSTESURL = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['ES']['URL']
+TSTESPORT = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['ES']['PORT']
+TSTESSOURCEINDEX = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['ES']['INDEX']
 def plug_in(dataType):
     try:
         logging.info(dataType+' INPUT Plug In : ES')
-        indexName = TESSOURCEINDEX
+        if dataType == 'source' :
+            TESURL = TSOESURL
+            TESPORT = TSOESPORT
+            indexName = TSOESSOURCEINDEX
+        if dataType == 'statistics' :
+            TESURL = TSTESURL
+            TESPORT = TSTESPORT
+            indexName = TSTESSOURCEINDEX
         es = Elasticsearch([TESURL + ":" + TESPORT])
         searchCount = {
             "query": {
@@ -33,7 +42,6 @@ def plug_in(dataType):
 
             }
         if dataType == 'statistics' :
-            #if TU == 'true' :
             body = {
                 "size": dataCount,
                 "query": {

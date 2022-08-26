@@ -8,12 +8,12 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
 
-TAU = SETTING['CORE']['Tanium']['API']['apiUrl']
-TAA = SETTING['CORE']['Tanium']['API']['Authorization']
-TACT = SETTING['CORE']['Tanium']['API']['ContentType']
-TASKP = SETTING['CORE']['Tanium']['API']['PATH']['SesstionKey']
-TASP = SETTING['CORE']['Tanium']['API']['PATH']['Sensor']
-TASID = SETTING['CORE']['Tanium']['API']['SensorID']
+TAPIURL = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['URL']
+TAPISKPATH = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['PATH']['SesstionKey']
+TAPISPATH = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['PATH']['Sensor']
+TAPIUNM = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['username']
+TAPIPWD = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['password']
+TAPISID = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['SensorID']
 
 ZAU = SETTING['CORE']['Zabbix']['API']['apiUrl']
 ZAJRPC = SETTING['CORE']['Zabbix']['API']['jsonrpc']
@@ -31,32 +31,37 @@ def plug_in(SK, core, APITYPE, data):
         logging.info(core+' '+APITYPE+' Data API Call Start')
         dataList = []
         if core == 'tanium' :
-            apiUrl = TAU
+            apiUrl = TAPIURL
         if core == 'zabbix':
             apiUrl = ZAU
-
         if core == 'tanium':
             if APITYPE == 'SesstionKey':
-                path = TASKP
-                headers = {'Authorization': TAA}
+                path = TAPISKPATH
+                headers = '{"username": "'+TAPIUNM+'", "domain": "", "password": "'+TAPIPWD+'"}'
             if APITYPE == 'sensor':
-                path = TASP + TASID
-                headers = {'session': SK, 'Authorization': TAA, 'Content-Type': TACT}
+                path = TAPISPATH + TAPISID
+                headers = {'session': SK}
             urls = apiUrl + path
             logging.info(core + ' ' + APITYPE + ' Data API URL : '+urls)
-            response = requests.request("GET", urls, headers=headers, verify=False)
+            if APITYPE == 'SesstionKey' :
+                response = requests.post(urls, data=headers, verify=False)
+            if APITYPE == 'sensor':
+                response = requests.post(urls, headers=headers, verify=False)
             resCode = response.status_code
             logging.info('API Session Key Call Success, ' + 'Sesponse Status Code : ' + str(resCode))
-            responseText = response.text
+            responseText = response.content.decode('utf-8')
             if APITYPE == 'SesstionKey' :
-                dataList.append(responseText)
+                jsonObj = json.loads(responseText)  # Convert to dict from json
+                sessionID = jsonObj['data']['session']
+                dataList.append(sessionID)
             if APITYPE == 'sensor':
                 responseJson = json.loads(responseText)
                 responseDataJson = responseJson['data']
                 for j in range(len(responseDataJson['result_sets'][0]['rows'])):
                     DL = []
                     for k in range(len(responseDataJson['result_sets'][0]['rows'][j]['data'])):
-                        DL.append(responseDataJson['result_sets'][0]['rows'][j]['data'][k][0]['text'])
+                        #DL.append(responseDataJson['result_sets'][0]['rows'][j]['data'][k][0]['text'])
+                        DL.append(responseDataJson['result_sets'][0]['rows'][j]['data'][k])
                     dataList.append(DL)
 
         if core == 'zabbix':

@@ -7,7 +7,6 @@ AlarmRamUsage = SETTING['CORE']['Tanium']['MODULE']['CASE']['RamUsage']
 
 
 def DailyCount(TSDL):
-
     ATNM = "all"
     ATC = len(TSDL)
     weekAgo = (datetime.today() - timedelta(7)).strftime("%Y-%m-%d")
@@ -45,28 +44,9 @@ def DailyCount(TSDL):
     OSC = OSGBR.counts
 
 
-    RUSC = 0
     DC = ATC-len(TSDL.yesterdayDriveSize.compare(TSDL.twodaysagoDriveSize))
     LPCC = ATC-len(TSDL.yesterdayListenPortCount.compare(TSDL.twodaysagoListenPortCount))
     EPC = ATC-len(TSDL.yesterdayEstablishedPort.compare(TSDL.twodaysagoEstablishedPort))
-
-    for i in range(len(TSDL.id)) :
-        yesterdayRamTotalSize = TSDL.yesterdayRamTotalSize[i].split(' ')[0]
-        yesterdayRamUseSize = TSDL.yesterdayRamUseSize[i].split(' ')[0]
-        if yesterdayRamTotalSize.isdigit() :
-            yesterdayRamTotalSize = int(yesterdayRamTotalSize)
-        else :
-            yesterdayRamTotalSize = 0
-        if yesterdayRamUseSize.isdigit() :
-            yesterdayRamUseSize = int(yesterdayRamUseSize)
-        else :
-            yesterdayRamUseSize = 0
-
-        if yesterdayRamTotalSize != 0 and yesterdayRamUseSize != 0 :
-            usage = (yesterdayRamUseSize / yesterdayRamTotalSize) * 100
-            if usage < AlarmRamUsage:
-                RUSC = RUSC+1
-    RUSC = ATC - RUSC
 
     DSNM = "no_change"
     DSNC = DC
@@ -77,8 +57,6 @@ def DailyCount(TSDL):
     EPNM = "no_change"
     EPNC = EPC
 
-    RUSNM = "no_change"
-    RUSNC = RUSC
 
 
 
@@ -90,7 +68,6 @@ def DailyCount(TSDL):
         "DSS" : {"name" : [DSNM], "value": [DSNC]},
         "LPCS" : {"name" : [LPCNM], "value": [LPCNC]},
         "EPS" : {"name" : [EPNM], "value": [EPNC]},
-        "RUS" : {"name" : [RUSNM], "value": [RUSNC]},
     }
 
     return RD
