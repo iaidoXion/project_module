@@ -1,4 +1,4 @@
-from Input.API import plug_in as IAPI
+from API.Tanium import plug_in as IAPI
 from Input.DB.PS.Tanium import plug_in as IDPI
 from Input.ES.Tanium import plug_in as IEPI
 from Transform.Dataframe import plug_in as TDFPI
@@ -45,8 +45,8 @@ def plug_in() :
     module_install_date = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
     if TSoC == 'true':
         if TSoIPAU == 'true':
-            sk = IAPI('', 'tanium', 'SesstionKey', '')['dataList'][0]
-            BDL = IAPI(sk, 'tanium', 'sensor', '')
+            sk = IAPI('', 'SesstionKey')['dataList'][0]
+            BDL = IAPI(sk, 'sensor')
             TSoIP = 'API'
         if TSoIPDBPSU == 'true':
             BDL = IDPI('tanium', 'source')
@@ -69,6 +69,7 @@ def plug_in() :
             else:
                 if TStIPDBPSU == 'true':
                     SBDL = IDPI('tanium', 'statistics')
+
                     SDL = SBDL['dataList']
                     TStIP = 'DB'
                 if TStIPESU == 'true':
@@ -84,4 +85,3 @@ def plug_in() :
                     ODPI(TSDL, 'tanium', 'statistics')
                 if TStOPESU == 'ES':
                     OEPI(TSDL, 'statistics')
-

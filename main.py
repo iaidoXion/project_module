@@ -1,5 +1,5 @@
-from Core.TaniumPlugIn import plug_in as TPI
-from Core.ZabbixPlugIn import plug_in as ZPI
+from Core.Tanium import plug_in as TPI
+from Core.Zabbix import plug_in as ZPI
 from datetime import datetime
 import urllib3
 import json

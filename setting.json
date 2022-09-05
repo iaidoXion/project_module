@@ -140,7 +140,7 @@
       }
     },
     "Zabbix" : {
-      "USE" : "false",
+      "USE" : "true",
       "MODULE" : {
         "SOURCE" : {
           "COLLECTION" : "true",

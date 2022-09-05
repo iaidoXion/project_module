@@ -1,4 +1,4 @@
-from Input.API import plug_in as IAPI
+from API.Zabbix import plug_in as IAPI
 from Transform.Dataframe import zplug_in as ZDFPI
 from Output.DB.PS.Tanium import plug_in as ODPI
 from datetime import datetime, timedelta
@@ -25,10 +25,10 @@ def plug_in() :
     module_install_date = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
     if ZSoC == 'true':
         if ZSoIP == 'API':
-            sk = IAPI('', 'zabbix', 'SesstionKey', '')['dataList'][0]
-            ZHDL = IAPI(sk, 'zabbix', 'assetHost', '')
-            ZIDL = IAPI(sk, 'zabbix', 'assetItem', ZHDL['dataList'])
-            ZBDL = IAPI(sk, 'zabbix', 'asset', ZIDL['dataList'])
+            sk = IAPI('', 'SesstionKey', '')['dataList'][0]
+            ZHDL = IAPI(sk, 'assetHost', '')
+            ZIDL = IAPI(sk, 'assetItem', ZHDL['dataList'])
+            ZBDL = IAPI(sk, 'asset', ZIDL['dataList'])
 
         if ZSoTP == "true":
             ZDFDL = ZDFPI(ZBDL, ZSoIP, 'source')
