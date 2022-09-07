@@ -33,80 +33,44 @@ def plug_in(data, InputPlugin, dataType) :
                 CN = d[1][0]['text']
                 LR = d[2][0]['text']
                 DTS = []
-                DTS_item = []
-                DUS_item = []
-                DTS_sum = 0
-                DUS_sum = 0
-                DTS_result = 0
-                DUS_result = 0
-                ##############################Drive Total Size####################################
-                if  d[3][0]['text'][0] == "[" :
-                    DUS.append(d[4][0]['text'])
-                else:
-                    if len(d[3]) == 1:
-                        DTS_item.append(d[3][0]['text'].split(' '))
-                    elif len(d[3]) > 1 :
-                        for x in d[3] :
-                            DTS_item.append(x['text'].split(' '))
-                    for x in DTS_item :
-                        if len(x) == 3 :
-                            if(x[2] == 'KB') :
-                                DTS_result = int(x[1])
-                            elif(x[2] == 'MB') :
-                                DTS_result = int(x[1])*1024
-                            elif(x[2] == 'GB') : # 기준
-                                DTS_result = int(x[1])*1024*1024
-                            elif(x[2] == 'TB') :
-                                DTS_result = int(x[1])*1024*1024*1024
-                            elif(x[2] == 'PB') :
-                                DTS_result = int(x[1])*1024*1024*1024*1024
-                        elif len(x) == 2 :
-                            if("K" in x[1].upper()) :
-                                DTS_result = float(x[1].upper().strip("K"))
-                            elif("M" in x[1].upper()) :
-                                DTS_result = float(x[1].strip("M")) * 1024
-                            elif("G" in x[1].upper()) :
-                                DTS_result = float(x[1].strip("G")) * 1024 * 1024
-                        DTS_sum += DTS_result
-                items = round(DTS_sum/1024/1024)
-                DTS.append(str(items) + "GB")
-                # for DTSD in d[3] :
-                #     DTS.append(DTSD['text'])
+                
+                for DTSD in d[3] :
+                    DTS.append(DTSD['text'])
                 
                 ##############################Drive Use Size####################################    
                 DUS = []
-                if  d[4][0]['text'][0] == "[" :
-                    DUS.append(d[4][0]['text'])
-                else:
-                    if len(d[4]) == 1:
-                        DUS_item.append(d[4][0]['text'].split(' '))
-                    elif len(d[4]) > 1 :
-                        for x in d[4] :
-                            DUS_item.append(x['text'].split(' '))
-                    for x in DUS_item :
-                        if len(x) == 3 :
-                            if(x[2] == 'KB') :
-                                DUS_result = int(x[1])
-                            elif(x[2] == 'MB') :
-                                DUS_result = int(x[1])*1024
-                            elif(x[2] == 'GB') : # 기준
-                                DUS_result = int(x[1])*1024*1024
-                            elif(x[2] == 'TB') :
-                                DUS_result = int(x[1])*1024*1024*1024
-                            elif(x[2] == 'PB') :
-                                DUS_result = int(x[1])*1024*1024*1024*1024
-                        elif len(x) == 2 :
-                            if("K" in x[1].upper()) :
-                                DUS_result = float(x[1].upper().strip("K"))
-                            elif("M" in x[1].upper()) :
-                                DUS_result = float(x[1].strip("M")) * 1024
-                            elif("G" in x[1].upper()) :
-                                DUS_result = float(x[1].strip("G")) * 1024 * 1024
-                        DUS_sum += DUS_result
-                items = round(DUS_sum/1024/1024)
-                DUS.append(str(items) + "GB")
-                # for DUSD in d[4] :
-                #     DUS.append(DUSD['text'])
+                # if  d[4][0]['text'][0] == "[" :
+                #     DUS.append(d[4][0]['text'])
+                # else:
+                #     if len(d[4]) == 1:
+                #         DUS_item.append(d[4][0]['text'].split(' '))
+                #     elif len(d[4]) > 1 :
+                #         for x in d[4] :
+                #             DUS_item.append(x['text'].split(' '))
+                #     for x in DUS_item :
+                #         if len(x) == 3 :
+                #             if(x[2] == 'KB') :
+                #                 DUS_result = int(x[1])
+                #             elif(x[2] == 'MB') :
+                #                 DUS_result = int(x[1])*1024
+                #             elif(x[2] == 'GB') : # 기준
+                #                 DUS_result = int(x[1])*1024*1024
+                #             elif(x[2] == 'TB') :
+                #                 DUS_result = int(x[1])*1024*1024*1024
+                #             elif(x[2] == 'PB') :
+                #                 DUS_result = int(x[1])*1024*1024*1024*1024
+                #         elif len(x) == 2 :
+                #             if("K" in x[1].upper()) :
+                #                 DUS_result = float(x[1].upper().strip("K"))
+                #             elif("M" in x[1].upper()) :
+                #                 DUS_result = float(x[1].strip("M")) * 1024
+                #             elif("G" in x[1].upper()) :
+                #                 DUS_result = float(x[1].strip("G")) * 1024 * 1024
+                #         DUS_sum += DUS_result
+                # items = round(DUS_sum/1024/1024)
+                # DUS.append(str(items) + "GB")
+                for DUSD in d[4] :
+                    DUS.append(DUSD['text'])
                 
                     
                 OP = d[5][0]['text']
@@ -328,8 +292,93 @@ def plug_in(data, InputPlugin, dataType) :
                 if AI.startswith('imac'):
                     AI = 'Desktop'
                 OI = d[2]
-                TDTS = d[3]
-                YDTS = d[4]
+                
+                #TDTS = d[3]
+                TDTS = []
+                YDTS = []
+                DTS_item = []
+                DUS_item = []
+                DTS_sum = 0
+                DUS_sum = 0
+                DTS_result = 0
+                DUS_result = 0
+                ##############################Drive Total Size####################################
+                list = str(d[3]).split(',')
+                if  "current result unavailable" in list[0] :
+                    DTS_item.append(list[0])
+                else:
+                    if len(list) == 1:
+                        a = list[0].split(' ')
+                        DTS_item.append(a)
+                    elif len(list) > 1 :
+                        for i in list:
+                            a = i.split(' ')
+                            DTS_item.append(a)
+                    for x in DTS_item :
+                        if len(x) == 3 :
+                            if('KB' in x[2]) :
+                                DTS_result = int(x[1])
+                            elif('MB' in x[2]) :
+                                DTS_result = int(x[1])*1024
+                            elif('GB' in x[2]) : # 기준
+                                DTS_result = int(x[1])*1024*1024
+                            elif('TB' in x[2]) :
+                                DTS_result = int(x[1])*1024*1024*1024
+                            elif('PB' in x[2]) :
+                                DTS_result = int(x[1])*1024*1024*1024*1024
+                        elif len(x) == 2 :
+                            if("K" in x[1].upper()) :
+                                a = x[1].upper().find("K")
+                                DTS_result = float(x[1][:a])
+                            elif("M" in x[1].upper()) :
+                                a = x[1].upper().find("M")
+                                DTS_result = float(x[1][:a]) * 1024
+                            elif("G" in x[1].upper()) :
+                                a = x[1].upper().find("G")
+                                DTS_result = float(x[1][:a]) * 1024 * 1024
+                        DTS_sum += DTS_result
+                        
+                items = round(DTS_sum/1024/1024)
+                TDTS.append(str(items) + "KB")
+                
+                #YDTS = d[4]
+                list = str(d[4]).split(',')
+                if  "current result unavailable" in list[0] :
+                    DUS_item.append(list[0])
+                else:
+                    if len(list) == 1:
+                        a = list[0].split(' ')
+                        DUS_item.append(a)
+                    elif len(list) > 1 :
+                        for i in list:
+                            a = i.split(' ')
+                            DUS_item.append(a)
+                    for x in DUS_item :
+                        if len(x) == 3 :
+                            if('KB' in x[2]) :
+                                DUS_result = int(x[1])
+                            elif('MB' in x[2]) :
+                                DUS_result = int(x[1])*1024
+                            elif('GB' in x[2]) : # 기준
+                                DUS_result = int(x[1])*1024*1024
+                            elif('TB' in x[2]) :
+                                DUS_result = int(x[1])*1024*1024*1024
+                            elif('PB' in x[2]) :
+                                DUS_result = int(x[1])*1024*1024*1024*1024
+                        elif len(x) == 2 :
+                            if("K" in x[1].upper()) :
+                                a = x[1].upper().find("K")
+                                DUS_result = float(x[1][:a])
+                            elif("M" in x[1].upper()) :
+                                a = x[1].upper().find("M")
+                                DUS_result = float(x[1][:a]) * 1024
+                            elif("G" in x[1].upper()) :
+                                a = x[1].upper().find("G")
+                                DUS_result = float(x[1][:a]) * 1024 * 1024
+                        DUS_sum += DUS_result
+                items = round(DUS_sum/1024/1024)
+                YDTS.append(str(items) + "KB")
+                
                 IP = d[5]
                 TLPC = d[6]
                 YLPC = d[7]
@@ -362,7 +411,6 @@ def plug_in(data, InputPlugin, dataType) :
                 LSA = data.lastLogin[i]
                 DFL.append([CID, AI, OI, TDTS, YDTS, IP, TLPC, YLPC, TEP, YEP, TRUS, TRTS, LSA])
     DF = pd.DataFrame(DFL, columns=DFC)
-    #print(DF['disk_total_space'])
     return DF
 
 def zplug_in(data, InputPlugin, dataType):
