@@ -1,5 +1,4 @@
 import json
-from tkinter import YES
 import pandas as pd
 from datetime import datetime, timedelta
 yesterday = (datetime.today() - timedelta(1)).strftime("%Y%m%d")
@@ -33,46 +32,11 @@ def plug_in(data, InputPlugin, dataType) :
                 CN = d[1][0]['text']
                 LR = d[2][0]['text']
                 DTS = []
-                
                 for DTSD in d[3] :
                     DTS.append(DTSD['text'])
-                
-                ##############################Drive Use Size####################################    
                 DUS = []
-                # if  d[4][0]['text'][0] == "[" :
-                #     DUS.append(d[4][0]['text'])
-                # else:
-                #     if len(d[4]) == 1:
-                #         DUS_item.append(d[4][0]['text'].split(' '))
-                #     elif len(d[4]) > 1 :
-                #         for x in d[4] :
-                #             DUS_item.append(x['text'].split(' '))
-                #     for x in DUS_item :
-                #         if len(x) == 3 :
-                #             if(x[2] == 'KB') :
-                #                 DUS_result = int(x[1])
-                #             elif(x[2] == 'MB') :
-                #                 DUS_result = int(x[1])*1024
-                #             elif(x[2] == 'GB') : # 기준
-                #                 DUS_result = int(x[1])*1024*1024
-                #             elif(x[2] == 'TB') :
-                #                 DUS_result = int(x[1])*1024*1024*1024
-                #             elif(x[2] == 'PB') :
-                #                 DUS_result = int(x[1])*1024*1024*1024*1024
-                #         elif len(x) == 2 :
-                #             if("K" in x[1].upper()) :
-                #                 DUS_result = float(x[1].upper().strip("K"))
-                #             elif("M" in x[1].upper()) :
-                #                 DUS_result = float(x[1].strip("M")) * 1024
-                #             elif("G" in x[1].upper()) :
-                #                 DUS_result = float(x[1].strip("G")) * 1024 * 1024
-                #         DUS_sum += DUS_result
-                # items = round(DUS_sum/1024/1024)
-                # DUS.append(str(items) + "GB")
                 for DUSD in d[4] :
                     DUS.append(DUSD['text'])
-                
-                    
                 OP = d[5][0]['text']
                 OS = d[6][0]['text']
                 IV = d[7][0]['text']
