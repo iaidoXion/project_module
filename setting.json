@@ -38,7 +38,7 @@
                   "NAME": "postgres",
                   "USER": "postgres",
                   "PWD": "psql",
-                  "TNM": "daily_asset_new"
+                  "TNM": "daily_asset"
                 }
               },
               "ES" : {
@@ -57,7 +57,7 @@
                   "NAME": "postgres",
                   "USER": "postgres",
                   "PWD": "psql",
-                  "TNM": "daily_asset_new"
+                  "TNM": "daily_asset"
                 }
               },
               "ES": {
@@ -74,15 +74,6 @@
           "COLLECTION" : "true",
           "PLUGIN" : {
             "INPUT" : {
-              "API" : {
-                "USE" : "false",
-                "apiUrl" : "https://192.168.5.100",
-                 "PATH" : {
-                   "SesstionKey" : "/auth",
-                   "Sensor" : "/api/v2/result_data/saved_question/"
-                 },
-                 "SensorID": "2307"
-              },
               "DB" : {
                 "PS" : {
                 "USE" : "true",
@@ -90,7 +81,7 @@
                   "NAME" : "postgres",
                   "USER" : "postgres",
                   "PWD" : "psql",
-                  "TNM" : "daily_asset_new"
+                  "TNM" : "daily_asset"
                 }
               },
               "ES" : {

@@ -3,7 +3,6 @@ import json
 import pandas as pd
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
-AlarmRamUsage = SETTING['CORE']['Tanium']['MODULE']['CASE']['RamUsage']
 
 
 def DailyCount(TSDL):
@@ -18,10 +17,6 @@ def DailyCount(TSDL):
     AIDL = []
     for d in range(len(TSDL.id)) :
         AI = TSDL.assetItem[d]
-        if AI == 'Desktop' or AI == 'Notebook' or AI == 'Virtual' or AI == 'Rack Mount Chassis':
-            AI = AI
-        else :
-            AI = 'Other'
         AIDL.append([AI])
     AIDF = pd.DataFrame(AIDL, columns=['assetItem'])
     AIG = AIDF.groupby(['assetItem'])
@@ -57,9 +52,6 @@ def DailyCount(TSDL):
     EPNM = "no_change"
     EPNC = EPC
 
-
-
-
     RD = {
         "AA": {"name": [ATNM], "value": [ATC]},
         "AIS" : {"name": AINM.tolist(), "value": AIC.tolist()},
@@ -71,10 +63,3 @@ def DailyCount(TSDL):
     }
 
     return RD
-
-
-
-
-
-
-

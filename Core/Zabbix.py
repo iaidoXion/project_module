@@ -1,7 +1,6 @@
 from API.Zabbix import plug_in as IAPI
 from Transform.Dataframe import zplug_in as ZDFPI
-from Output.DB.PS.Tanium import plug_in as ODPI
-from datetime import datetime, timedelta
+from Output.DB.PS.Zabbix import plug_in as ODPI
 import urllib3
 import json
 import logging
@@ -22,7 +21,6 @@ ZStTP = SETTING['CORE']['Zabbix']['MODULE']['STATISTICS']['PLUGIN']['Transform']
 ZStOP = SETTING['CORE']['Zabbix']['MODULE']['STATISTICS']['PLUGIN']['OUTPUT']
 
 def plug_in() :
-    module_install_date = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
     if ZSoC == 'true':
         if ZSoIP == 'API':
             sk = IAPI('', 'SesstionKey', '')['dataList'][0]
@@ -34,31 +32,4 @@ def plug_in() :
             ZDFDL = ZDFPI(ZBDL, ZSoIP, 'source')
 
         if ZSoOP == 'DB':
-            ODPI(ZDFDL, 'zabbix', 'source')
-    """
-    # 일단은 사용안함
-    if ZStC == 'true':
-        if waitingUse == 'true':
-            if module_install_date == waitingDate:
-                logging.info(module_install_date)
-            else:
-                if ZStIP == 'DB':
-                    SBDL = IDPI()
-                    SDL = SBDL
-                elif ZStIP == 'ES':
-                    SBDL = IEPI()
-                    SDL = TMPI(SBDL)
-
-                if ZStTP == 'true':
-                    TSDL = TDFPI(SDL, TStIP, 'statistics')
-
-                ASDCL = ASDC(TSDL)
-                TSDL = TDLPI(ASDCL)
-
-                if ZStOP == 'DB':
-                    ODPI(TSDL, 'zabbix', 'statistics')
-                elif ZStOP == 'ES':
-                    OEPI(TSDL, 'statistics')
-    """
-
-
+            ODPI(ZDFDL, 'source')

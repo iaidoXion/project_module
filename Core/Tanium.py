@@ -32,7 +32,7 @@ TSoOPESU = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']['ES
 # Statistics Data
 TStC = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['COLLECTION']
 ## Input Plug In
-TStIPAU = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['API']['USE']
+# = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['API']['USE']
 TStIPDBPSU = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['DB']['PS']['USE']
 TStIPESU = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['ES']['USE']
 ## Transform Plug In
@@ -58,7 +58,7 @@ def plug_in() :
             TDFDL = TDFPI(BDL, TSoIP, 'source')
 
         if TSoOPDBPSU == 'true':
-            ODPI(TDFDL, 'tanium', 'source')
+            ODPI(TDFDL, 'source')
         if TSoOPESU == 'true':
             OEPI(TDFDL, 'tanium', 'source')
 
@@ -82,6 +82,6 @@ def plug_in() :
                 ASDCL = ASDC(TSDL)
                 TSDL = TDLPI(ASDCL)
                 if TStOPDBPSU == 'true':
-                    ODPI(TSDL, 'tanium', 'statistics')
+                    ODPI(TSDL, 'statistics')
                 if TStOPESU == 'ES':
                     OEPI(TSDL, 'statistics')
