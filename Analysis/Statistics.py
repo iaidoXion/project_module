@@ -27,10 +27,6 @@ def DailyCount(TSDL):
     OSDL = []
     for j in range(len(TSDL.id)):
         os = TSDL.os[j]
-        if os == 'Linux' or os == 'Mac' or os == 'Windows' :
-            os = os
-        else:
-            os = 'Other'
         OSDL.append([os])
     OSDF = pd.DataFrame(OSDL, columns=['os'])
     OSG = OSDF.groupby(['os'])

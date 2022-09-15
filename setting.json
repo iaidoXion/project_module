@@ -46,6 +46,12 @@
                 "URL" : "http://192.168.0.15",
                 "PORT" : "9200",
                 "INDEX" : "iaido"
+              },
+              "FILE" : {
+                "USE" : "false",
+                "Storage" : "data/asset/daily/",
+                "FileName" : "Asset_",
+                "FileType" : ".json"
               }
             },
             "Transform" : "true",
@@ -66,6 +72,12 @@
                 "PORT": "9200",
                 "INDEX": "iaido",
                 "MappingFile" : "Mapping/ES/Tanium/source.json"
+              },
+              "FILE" : {
+                "USE" : "false",
+                "Storage" : "data/asset/daily/",
+                "FileName" : "Asset_",
+                "FileType" : ".json"
               }
             }
           }
