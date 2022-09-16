@@ -14,15 +14,18 @@ twoago = (datetime.today() - timedelta(2)).strftime("%Y-%m-%d")
 
 def plug_in() :
     try:
+        """
         FileFullName = TSoIPFS+TSoIPFNM+'2022-09-14_900'+TSoIPFT
         with open(FileFullName, encoding="UTF-8") as ADF:
             ADL = json.loads(ADF.read())
         df = ADL[0]['rows']
-        return df
-        """with open('data.json', encoding="UTF-8") as ADF:
+        return {'dataList': df}
+        """
+        with open(TSoIPFS+'data.json', encoding="UTF-8") as ADF:
             ADL = json.loads(ADF.read())
         df = ADL
-        return df"""
+        print(df)
+        #return df
         #print("time :", time.time() - start)
         #return df
         #with open(TSoIPFS + FileFullName, encoding="UTF-8") as ADF:
@@ -41,7 +44,3 @@ def plug_in() :
         return AssetSelectL"""
     except :
         print('Asset Daily Table connection(Select) Failure')
-
-
-
-
