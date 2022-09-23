@@ -17,7 +17,7 @@ TSTDBUser = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['OUTPUT'
 TSTDBPwd = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['OUTPUT']['DB']['PS']['PWD']
 TSTTNM = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['OUTPUT']['DB']['PS']['TNM']
 
-today = datetime.today().strftime("%Y-%m-%d")
+today = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 yesterday = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
 
 
