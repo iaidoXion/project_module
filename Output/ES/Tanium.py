@@ -22,7 +22,8 @@ def plug_in(data, core, outputType) :
     try:
         logging.info(core + ' ' + outputType + ' Data OUTPUT Plug In : ES')
         logging.info(core + ' ' + outputType + ' Data ES connection(Insert) Start')
-        yesterday = (datetime.today() - timedelta(1)).strftime("%Y%m%d")
+        yesterday = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
+        today = datetime.today().strftime("%Y-%m-%d")
         if outputType == 'source':
             TESURL = TSOESURL
             TESPORT = TSOESP

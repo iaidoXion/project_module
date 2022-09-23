@@ -147,7 +147,6 @@ def plug_in(data, InputPlugin, dataType):
                 EPC = d[11]
                 RUS = d[12]
                 RTS = d[13]
-                """
                 IA = d[14]
                 IAV = d[15]
                 IASUS = d[16]
@@ -187,8 +186,7 @@ def plug_in(data, InputPlugin, dataType):
                 ADQLLIUD = d[50]
                 ADQLLIUN = d[51]
                 ADQLLIUT = d[52]
-                """
-            if InputPlugin == 'ES':
+            if InputPlugin == 'ES' :
                 CI = d['Computer ID']
                 CN = d['Computer Name']
                 LR = d['Last Reboot']

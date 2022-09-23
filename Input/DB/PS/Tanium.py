@@ -17,7 +17,7 @@ TSTDBUser = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']
 TSTDBPwd = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['DB']['PS']['PWD']
 TSTTNM = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['DB']['PS']['TNM']
 
-today = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+today = datetime.today().strftime("%Y-%m-%d")
 yesterday = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
 twoago = (datetime.today() - timedelta(2)).strftime("%Y-%m-%d")
 
@@ -45,20 +45,26 @@ def plug_in(core, dataType) :
             if dataType == 'source':
                 SelectQ = """ 
                     select 
-                        computer_id, 
-                        computer_name,
-                        last_reboot, 
-                        disk_total_space, 
-                        disk_used_space,
-                        os_platform,
-                        operating_system,
-                        is_virtual,
-                        chassis_type, 
-                        ip_address, 
-                        listen_port_count, 
-                        established_port_count
+                        computer_id, computer_name, last_reboot, disk_total_space, disk_used_space, os_platform, 
+                        operating_system, is_virtual, chassis_type, ipv_address, listen_port_count, 
+                        established_port_count, ram_use_size, ram_total_size, installed_applications_name, 
+                        installed_applications_version, installed_applications_silent_uninstall_string, 
+                        installed_applications_uninstallable, running_processes, running_service, cup_consumption, 
+                        cup_details_system_type, cup_details_cup, cup_details_cup_speed, 
+                        cup_details_total_physical_processors, cup_details_total_cores, 
+                        cup_details_total_logical_processors, 
+                        disk_free_space, high_cup_processes, 
+                        high_memory_processes, high_uptime, ip_address, tanium_client_nat_ip_address, 
+                        last_logged_in_user, listen_ports_process, listen_ports_name, listen_ports_local_port, 
+                        last_system_crash, mac_address, memory_consumption, open_port, open_share_details_name, 
+                        open_share_details_path, open_share_details_status, open_share_details_type, 
+                        open_share_details_permissions, primary_owner_name, uptime, usb_write_protected, user_accounts, 
+                        ad_query_last_logged_in_user_date, ad_query_last_logged_in_user_name, 
+                        ad_query_last_logged_in_user_time
                     from  
-                    """ + TNM
+                    """ + TNM + """
+                        where 
+                            to_char(asset_collection_date, 'YYYY-MM-DD') = '""" + yesterday + """' """
             if dataType == 'statistics':
                 SelectQ = """ 
                     select
