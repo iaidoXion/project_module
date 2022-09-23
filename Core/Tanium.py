@@ -50,7 +50,7 @@ TStOPESU = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['OUTPUT']
 
 
 def plug_in() :
-    #print(datetime.now())
+    print(datetime.now())
     module_install_date = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
     if TSoC == 'true':
         if TSoIPAU == 'true':
@@ -67,7 +67,7 @@ def plug_in() :
             TSoIP = 'ES'
 
         if TSoIPFU == 'true' :
-            BDL = IFJPI()
+            data = IFJPI()
             TSoIP = 'FILE'
 
 
@@ -82,8 +82,8 @@ def plug_in() :
             OEPI(TDFDL, 'tanium', 'source')
 
         if TSoOPFU == 'true' :
-            OFJPI()
-
+            OFJPI(data)
+    print(datetime.now())
     #print(datetime.now())
     if TStC == 'true':
         if waitingUse == 'true':

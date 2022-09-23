@@ -13,10 +13,11 @@ yesterday = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
 
 def plug_in(data) :
     try:
-        data = data
-        ddd = data[0]['rows']*30
-        data[0]['rows'] = ddd
-        FNM = TSoOPFS+TSoOPFNM+today+ '_900' + TSoOPFT
+        #data = data
+        ddd = data['rows']*1500
+        data['rows'] = ddd
+        #print(data['rows'][0])
+        FNM = TSoOPFS+TSoOPFNM+today+ '_30000' + TSoOPFT
         with open(FNM, 'w', encoding="UTF-8") as ADOF:
             json.dump(data, ADOF)
         #with open('rows.json', 'w') as ADOF:
