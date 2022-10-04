@@ -13,7 +13,6 @@ from datetime import datetime, timedelta
 import urllib3
 import json
 import logging
-import time
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 with open("setting.json", encoding="UTF-8") as f:
@@ -50,7 +49,6 @@ TStOPESU = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['OUTPUT']
 
 
 def plug_in() :
-    print(datetime.now())
     module_install_date = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
     if TSoC == 'true':
         if TSoIPAU == 'true':
@@ -82,9 +80,7 @@ def plug_in() :
             OEPI(TDFDL, 'tanium', 'source')
 
         if TSoOPFU == 'true' :
-            OFJPI(data)
-    print(datetime.now())
-    #print(datetime.now())
+            OFJPI()
     if TStC == 'true':
         if waitingUse == 'true':
             if module_install_date == waitingDate:
@@ -92,7 +88,6 @@ def plug_in() :
             else:
                 if TStIPDBPSU == 'true':
                     SBDL = IDPI('tanium', 'statistics')
-
                     SDL = SBDL['dataList']
                     TStIP = 'DB'
                 if TStIPESU == 'true':

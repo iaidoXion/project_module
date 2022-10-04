@@ -17,6 +17,11 @@ TSoIPFS = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['FILE
 TSoIPFNM = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['FILE']['FileName']
 TSoIPFT = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['FILE']['FileType']
 
+TSoOPFS = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']['FILE']['Storage']
+TSoOPFNM = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']['FILE']['FileName']
+TSoOPFT = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']['FILE']['FileType']
+TSoOPCS = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']['FILE']['chunkSize']
+
 today = datetime.today().strftime("%Y-%m-%d")
 yesterday = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
 twoago = (datetime.today() - timedelta(2)).strftime("%Y-%m-%d")
@@ -33,18 +38,18 @@ def plug_in():
         """
 
         start = time.process_time()
-        a = '{"rows":'
-        b = "}"
-        with open(TSoIPFS + 'Sample.json') as infile:
-            o = json.load(infile)
-            print(len(o['rows']))
-            chunkSize = 620
-            for i in range(0, len(o['rows']), chunkSize):
+        startFormat = '{"rows":'
+        endFormat = "}"
+        with open(TSoIPFS + TSoIPFNM + TSoIPFT) as infile:
+            readData = json.load(infile)
+            print(len(readData['rows']))
+            chunkSize = TSoOPCS
+            for i in range(0, len(readData['rows']), chunkSize):
                 print(i)
-                with open('./data/asset/daily/hh/devi' + str(i // chunkSize) + '.json', 'w') as outfile:
-                    outfile.write(a)
-                    json.dump(o['rows'][i:i + chunkSize], outfile)
-                    outfile.write(b)
+                with open(TSoOPFS + TSoOPFNM + str(i // chunkSize) + TSoOPFT, 'w') as outfile:
+                    outfile.write(startFormat)
+                    json.dump(readData['rows'][i:i + chunkSize], outfile)
+                    outfile.write(endFormat)
 
         end = time.process_time()
 

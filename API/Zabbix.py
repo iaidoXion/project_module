@@ -78,8 +78,9 @@ def plug_in(SK, APITYPE, data):
                                      'value': item['value']})
         resCode = r.status_code
         returnList = {'resCode': resCode, 'dataList': dataList}
+        logging.info('Zabbix ' + APITYPE + ' Data API Call Success')
+        logging.info('Zabbix ' + APITYPE + ' Data API Response Code : ' + str(resCode))
         return returnList
-        logging.warning('Zabbix ' + APITYPE + ' Data API Call Success')
-        logging.warning('Zabbix ' + APITYPE + ' Data API Response Code : '+str(resCode))
+
     except ConnectionError as e:
         logging.warning('Zabbix '+APITYPE+' Data API Call Error, Error Message : ' + str(e))

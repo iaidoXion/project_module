@@ -8,24 +8,25 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
 
-TAPIURL = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['URL']
-TAPISKPATH = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['PATH']['SesstionKey']
-TAPISPATH = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['PATH']['Sensor']
-TAPIUNM = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['username']
-TAPIPWD = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['password']
-TAPISID = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['SensorID']
+APIURL = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['URL']
+SKPATH = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['PATH']['SesstionKey']
+SPATH = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['PATH']['Sensor']
+SID = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['SensorID']
+APIUNM = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['username']
+APIPWD = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['password']
+
 
 def plug_in(SK, APITYPE):
     try:
         logging.info('Tanium '+APITYPE+' Data INPUT Plug In : API')
         logging.info('Tanium '+APITYPE+' Data API Call Start')
         dataList = []
-        apiUrl = TAPIURL
+        apiUrl = APIURL
         if APITYPE == 'SesstionKey':
-            path = TAPISKPATH
-            headers = '{"username": "' + TAPIUNM + '", "domain": "", "password": "' + TAPIPWD + '"}'
+            path = SKPATH
+            headers = '{"username": "' + APIUNM + '", "domain": "", "password": "' + APIPWD + '"}'
         if APITYPE == 'sensor':
-            path = TAPISPATH + TAPISID
+            path = SPATH + SID
             headers = {'session': SK}
         urls = apiUrl + path
         logging.info('Tanium ' + APITYPE + ' Data API URL : ' + urls)
@@ -49,8 +50,8 @@ def plug_in(SK, APITYPE):
                     DL.append(responseDataJson['result_sets'][0]['rows'][j]['data'][k])
                 dataList.append(DL)
         returnList = {'resCode': resCode, 'dataList': dataList}
+        logging.info('Tanium ' + APITYPE + ' Data API Call Success')
+        logging.info('Tanium ' + APITYPE + ' Data API Response Code : ' + str(resCode))
         return returnList
-        logging.warning('Tanium ' + APITYPE + ' Data API Call Success')
-        logging.warning('Tanium ' + APITYPE + ' Data API Response Code : '+str(resCode))
     except ConnectionError as e:
         logging.warning('Tanium '+APITYPE+' Data API Call Error, Error Message : ' + str(e))
