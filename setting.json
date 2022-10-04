@@ -21,7 +21,7 @@
           "PLUGIN" : {
             "INPUT" : {
               "API" : {
-                "USE" : "false",
+                "USE" : "true",
                 "URL" : "https://192.168.5.100",
                 "PATH" : {
                    "SesstionKey" : "/api/v2/session/login",
@@ -48,17 +48,17 @@
                 "INDEX" : "iaido"
               },
               "FILE" : {
-                "USE" : "true",
-                "Storage" : "data/asset/daily/",
+                "USE" : "false",
+                "Storage" : "data/asset/daily/input/",
                 "FileName" : "Asset_",
                 "FileType" : ".json"
               }
             },
-            "Transform" : "false",
+            "Transform" : "true",
             "OUTPUT" : {
               "DB": {
                 "PS" : {
-                  "USE": "false",
+                  "USE": "true",
                   "HOST": "192.168.5.160",
                   "NAME": "postgres",
                   "USER": "postgres",
@@ -75,15 +75,16 @@
               },
               "FILE" : {
                 "USE" : "false",
-                "Storage" : "data/asset/daily/",
+                "Storage" : "data/asset/daily/output/",
                 "FileName" : "Asset_",
-                "FileType" : ".json"
+                "FileType" : ".json",
+                "chunkSize" : 620
               }
             }
           }
         },
         "STATISTICS" : {
-          "COLLECTION" : "false",
+          "COLLECTION" : "true",
           "PLUGIN" : {
             "INPUT" : {
               "DB" : {

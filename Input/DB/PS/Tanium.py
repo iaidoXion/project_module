@@ -5,17 +5,17 @@ from datetime import datetime, timedelta
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
 
-TSODBHost = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['DB']['PS']['HOST']
-TSODBName = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['DB']['PS']['NAME']
-TSODBUser = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['DB']['PS']['USER']
-TSODBPwd = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['DB']['PS']['PWD']
-TSOTNM = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['DB']['PS']['TNM']
+SODBHOST = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['DB']['PS']['HOST']
+SODBNM = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['DB']['PS']['NAME']
+SODBUNM = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['DB']['PS']['USER']
+SODBPWD = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['DB']['PS']['PWD']
+SOTNM = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['DB']['PS']['TNM']
 
-TSTDBHost = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['DB']['PS']['HOST']
-TSTDBName = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['DB']['PS']['NAME']
-TSTDBUser = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['DB']['PS']['USER']
-TSTDBPwd = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['DB']['PS']['PWD']
-TSTTNM = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['DB']['PS']['TNM']
+STDBHOST = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['DB']['PS']['HOST']
+STDBNM = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['DB']['PS']['NAME']
+STDBUNM = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['DB']['PS']['USER']
+STDBPWD = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['DB']['PS']['PWD']
+STTNM = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['DB']['PS']['TNM']
 
 today = datetime.today().strftime("%Y-%m-%d")
 yesterday = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
@@ -27,17 +27,17 @@ def plug_in(core, dataType) :
 
         if core == 'tanium':
             if dataType == 'source' :
-                TDBHost = TSODBHost
-                TDBName = TSODBName
-                TDBUser = TSODBUser
-                TDBPwd = TSODBPwd
-                TNM = TSOTNM
+                TDBHost = SODBHOST
+                TDBName = SODBNM
+                TDBUser = SODBUNM
+                TDBPwd = SODBPWD
+                TNM = SOTNM
             if dataType == 'statistics':
-                TDBHost = TSTDBHost
-                TDBName = TSTDBName
-                TDBUser = TSTDBUser
-                TDBPwd = TSTDBPwd
-                TNM = TSTTNM
+                TDBHost = STDBHOST
+                TDBName = STDBNM
+                TDBUser = STDBUNM
+                TDBPwd = STDBPWD
+                TNM = STTNM
             logging.info(core + ' ' + dataType + ' Data ' + TNM + ' Table connection(Select) Start')
             DL = []
             SelectConn = psycopg2.connect('host={0} dbname={1} user={2} password={3}'.format(TDBHost, TDBName, TDBUser, TDBPwd))

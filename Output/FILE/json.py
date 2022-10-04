@@ -11,19 +11,17 @@ today = datetime.today().strftime("%Y-%m-%d")
 yesterday = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
 
 
-def plug_in(data) :
+def plug_in() :
     try:
-        #data = data
-        ddd = data['rows']*1500
+        with open('data/asset/daily/input/data.json') as infile:
+            data = json.load(infile)
+        ddd = data['rows']*16000
         data['rows'] = ddd
-        #print(data['rows'][0])
-        FNM = TSoOPFS+TSoOPFNM+today+ '_30000' + TSoOPFT
+        FNM = 'data/asset/daily/input/data_480000..json'
         with open(FNM, 'w', encoding="UTF-8") as ADOF:
             json.dump(data, ADOF)
-        #with open('rows.json', 'w') as ADOF:
-        #    json.dump(data['rows'], ADOF)
-        #ADOF.close()
-        #dataList.to_json('df_records1.json', orient='records', indent=4)
+        ADOF.close()
+
         """FNM = TSoOPFNM+today+'_test_1'+TSoOPFT
 
         with open(TSoOPFS + FNM, 'w') as ADOF:

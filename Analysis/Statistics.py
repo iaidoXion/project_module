@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 import json
 import pandas as pd
 with open("setting.json", encoding="UTF-8") as f:
@@ -6,14 +7,16 @@ with open("setting.json", encoding="UTF-8") as f:
 
 
 def DailyCount(TSDL):
+    now = datetime.now()
     ATNM = "all"
     ATC = len(TSDL)
-    weekAgo = (datetime.today() - timedelta(7)).strftime("%Y-%m-%d")
+    six_month_str = (now - relativedelta(months=6)).strftime("%Y-%m-%d %H:%M:%S")
+    six_month = datetime.strptime(six_month_str, '%Y-%m-%d %H:%M:%S')
 
     DF = TSDL
     LLNM = "no_change"
-    LLNC = len(DF[(DF['lastLogin'] < weekAgo)])
 
+    LLNC = len(DF[(DF['lastLogin'] < six_month)])
     AIDL = []
     for d in range(len(TSDL.id)) :
         AI = TSDL.assetItem[d]
@@ -57,5 +60,5 @@ def DailyCount(TSDL):
         "LPCS" : {"name" : [LPCNM], "value": [LPCNC]},
         "EPS" : {"name" : [EPNM], "value": [EPNC]},
     }
-
+    #print(RD)
     return RD
