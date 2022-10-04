@@ -3,7 +3,7 @@ from os.path import getsize
 
 import pandas as pd
 
-import json
+import ujson as json
 import sys
 import os
 import time
