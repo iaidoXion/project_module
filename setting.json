@@ -50,7 +50,7 @@
               "FILE" : {
                 "USE" : "false",
                 "Storage" : "data/asset/daily/input/",
-                "FileName" : "Asset_",
+                "FileName" : "Sample",
                 "FileType" : ".json"
               }
             },
@@ -209,6 +209,18 @@
           "FileType" : ""
         }
       }
+    }
+  },
+  "Report" : {
+    "USE" : "true",
+    "DAILY" : {
+      "USE" : "true"
+    },
+    "WEEKLY" : {
+      "USE" : "true"
+    },
+    "MONTHLY": {
+      "USE" : "true"
     }
   }
 }

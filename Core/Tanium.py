@@ -65,12 +65,14 @@ def plug_in() :
             TSoIP = 'ES'
 
         if TSoIPFU == 'true' :
-            data = IFJPI()
+            BDL = IFJPI()
             TSoIP = 'FILE'
 
 
         if TSoTP == "true":
             TDFDL = TDFPI(BDL, TSoIP, 'source')
+        else :
+            TDFDL = BDL
 
 
         if TSoOPDBPSU == 'true':
@@ -80,7 +82,7 @@ def plug_in() :
             OEPI(TDFDL, 'tanium', 'source')
 
         if TSoOPFU == 'true' :
-            OFJPI()
+            OFJPI(TDFDL)
     if TStC == 'true':
         if waitingUse == 'true':
             if module_install_date == waitingDate:

@@ -1,5 +1,6 @@
 from Core.Tanium import plug_in as TPI
 from Core.Zabbix import plug_in as ZPI
+from Core.Report import plug_in as RPI
 from datetime import datetime
 import urllib3
 import json
@@ -15,12 +16,19 @@ logFileName = SETTING['LOG']['fileName']
 logFileFormat = SETTING['LOG']['fileFormat']
 TU = SETTING['CORE']['Tanium']['USE']
 ZU = SETTING['CORE']['Zabbix']['USE']
+RU = SETTING['Report']['USE']
+RDU = SETTING['Report']['DAILY']['USE']
+RWU = SETTING['Report']['WEEKLY']['USE']
+RMU = SETTING['Report']['MONTHLY']['USE']
 
 def main() :
     if TU == 'true' :
         TPI()
     if ZU == 'true':
         ZPI()
+    if RU == 'true' :
+        if RDU == 'true' :
+            RPI()
 
 if __name__ == "__main__":
     today = datetime.today().strftime("%Y%m%d")
