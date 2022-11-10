@@ -2,6 +2,9 @@ import requests
 import json
 import urllib3
 import logging
+import time
+from pprint import pprint
+from ast import literal_eval
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -52,6 +55,48 @@ def plug_in(SK, APITYPE):
         returnList = {'resCode': resCode, 'dataList': dataList}
         logging.info('Tanium ' + APITYPE + ' Data API Call Success')
         logging.info('Tanium ' + APITYPE + ' Data API Response Code : ' + str(resCode))
+        return returnList
+    except ConnectionError as e:
+        logging.warning('Tanium '+APITYPE+' Data API Call Error, Error Message : ' + str(e))
+        
+
+def vul_plug_in(SK, APITYPE) :
+    try:
+        logging.info('Tanium '+APITYPE+' Data INPUT Plug In : API')
+        logging.info('Tanium '+APITYPE+' Data API Call Start')
+        apiUrl = APIURL
+        ContentType = "application/json"
+        dict = {}
+        dataList = [] 
+        if APITYPE == 'SWV' :
+            path = '/api/v2/result_data/saved_question/3626'
+            urls = apiUrl + path
+            logging.info('Tanium ' + APITYPE + ' Data API URL : ' + urls)
+            headers = {'session': SK, 'Content-Type': ContentType}
+            response = requests.request("GET", urls, headers=headers, verify=False)
+            resCode = response.status_code
+            logging.info('API Session Key Call Success, ' + 'Sesponse Status Code : ' + str(resCode))
+            responseText = response.text
+            jsonObj = json.loads(responseText)
+            for i in jsonObj['data']['result_sets'][0]['rows'] :
+                dict = {}
+                for j in i['data'][0] :
+                    if j['text'] == 'TSE-Error: No Sensor Definition for this Platform':
+                        logging.info('ComputerID :  {} has {}'.format(i['cid'], j['text']))
+                        continue
+                    elif j['text'] == '[current result unavailable]' :
+                        logging.info('ComputerID :  {} has {}'.format(i['cid'], j['text']))
+                        continue
+                    elif j['text'] == 'TSE-Error: Python is not available on this system.':
+                        logging.info('ComputerID :  {} has {}'.format(i['cid'], j['text']))
+                        continue
+                    else :
+                        dict = literal_eval(j['text'])
+                    dict['cid'] = i['cid']
+                    dataList.append(dict)
+            returnList = {'resCode': resCode, 'dataList': dataList}
+            logging.info('Tanium ' + APITYPE + ' Data API Call Success')
+            logging.info('Tanium ' + APITYPE + ' Data API Response Code : ' + str(resCode))
         return returnList
     except ConnectionError as e:
         logging.warning('Tanium '+APITYPE+' Data API Call Error, Error Message : ' + str(e))
