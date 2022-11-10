@@ -6,12 +6,14 @@ with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
 
 SODBHOST = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['DB']['PS']['HOST']
+SODBPORT = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['DB']['PS']['PORT']
 SODBNM = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['DB']['PS']['NAME']
 SODBUNM = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['DB']['PS']['USER']
 SODBPWD = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['DB']['PS']['PWD']
 SOTNM = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['DB']['PS']['TNM']
 
 STDBHOST = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['DB']['PS']['HOST']
+STDBPORT = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['DB']['PS']['PORT']
 STDBNM = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['DB']['PS']['NAME']
 STDBUNM = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['DB']['PS']['USER']
 STDBPWD = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['DB']['PS']['PWD']
@@ -28,19 +30,21 @@ def plug_in(core, dataType) :
         if core == 'tanium':
             if dataType == 'source' :
                 TDBHost = SODBHOST
+                TDBPort = SODBPORT
                 TDBName = SODBNM
                 TDBUser = SODBUNM
                 TDBPwd = SODBPWD
                 TNM = SOTNM
             if dataType == 'statistics':
                 TDBHost = STDBHOST
+                TDBPort = STDBPORT
                 TDBName = STDBNM
                 TDBUser = STDBUNM
                 TDBPwd = STDBPWD
                 TNM = STTNM
             logging.info(core + ' ' + dataType + ' Data ' + TNM + ' Table connection(Select) Start')
             DL = []
-            SelectConn = psycopg2.connect('host={0} dbname={1} user={2} password={3}'.format(TDBHost, TDBName, TDBUser, TDBPwd))
+            SelectConn = psycopg2.connect('host={0} port={1} dbname={2} user={3} password={4}'.format(TDBHost, TDBPort, TDBName, TDBUser, TDBPwd))
             SelectCur = SelectConn.cursor()
             if dataType == 'source':
                 SelectQ = """ 

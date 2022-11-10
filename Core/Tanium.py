@@ -12,7 +12,6 @@ from Output.DB.PS.Tanium import plug_in as ODPI
 from Output.DB.PS.Tanium import vul_plug_in as VUL_ODPI
 from Output.ES.Tanium import plug_in as OEPI
 from Output.FILE.json import plug_in as OFJPI
-from pprint import pprint
 from datetime import datetime, timedelta
 import urllib3
 import json
@@ -87,6 +86,7 @@ def plug_in() :
 
         if TSoOPFU == 'true' :
             OFJPI(TDFDL)
+
     if TStC == 'true':
         if waitingUse == 'true':
             if module_install_date == waitingDate:

@@ -24,11 +24,11 @@ RMU = SETTING['Report']['MONTHLY']['USE']
 def main() :
     if TU == 'true' :
         TPI()
-    if ZU == 'true':
+    """if ZU == 'true':
         ZPI()
     if RU == 'true' :
         if RDU == 'true' :
-            RPI()
+            RPI()"""
 
 if __name__ == "__main__":
     today = datetime.today().strftime("%Y%m%d")

@@ -1,14 +1,13 @@
 import psycopg2
 import json
 import logging
-import sqlalchemy
-from sqlalchemy import create_engine
 
 from datetime import datetime, timedelta
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
 
 TSODBHost = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']['DB']['PS']['HOST']
+TSODBPort = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']['DB']['PS']['PORT']
 TSODBName = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']['DB']['PS']['NAME']
 TSODBUser = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']['DB']['PS']['USER']
 TSODBPwd = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']['DB']['PS']['PWD']
@@ -16,6 +15,7 @@ TSOTNM = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']['DB']
 VSOTNM = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']['DB']['PS']['VUL']
 
 TSTDBHost = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['OUTPUT']['DB']['PS']['HOST']
+TSTDBPort = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['OUTPUT']['DB']['PS']['PORT']
 TSTDBName = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['OUTPUT']['DB']['PS']['NAME']
 TSTDBUser = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['OUTPUT']['DB']['PS']['USER']
 TSTDBPwd = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['OUTPUT']['DB']['PS']['PWD']
@@ -30,9 +30,11 @@ def plug_in(data, dataType) :
         logging.info('Tanium '+dataType+' Data OUTPUT Plug In : DB')
         logging.info('Tanium ' + dataType + ' Data Table connection(Insert) Start')
         DBHost = TSODBHost
+        DBPort = TSODBPort
         DBName = TSODBName
         DBUser = TSODBUser
         DBPwd = TSODBPwd
+
         if dataType == 'source':
             TNM = TSOTNM
         if dataType == 'statistics':
@@ -43,7 +45,7 @@ def plug_in(data, dataType) :
         logging.info('Databases Name : ' + DBName)
         logging.info('Databases User : ' + DBUser)
         logging.info('Databases PWD : ' + DBPwd)
-        insertConn = psycopg2.connect('host={0} dbname={1} user={2} password={3}'.format(DBHost, DBName, DBUser, DBPwd))
+        insertConn = psycopg2.connect('host={0} port={1} dbname={2} user={3} password={4}'.format(DBHost, DBPort, DBName, DBUser, DBPwd))
         insertCur = insertConn.cursor()
 
         if dataType == 'source':

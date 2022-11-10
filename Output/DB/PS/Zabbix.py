@@ -6,7 +6,8 @@ with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
 
 ZU = SETTING['CORE']['Zabbix']['USE']
-ZDBHost = SETTING['CORE']['Zabbix']['DB']['DBHost']
+ZDBHost = SETTING['CORE']['Zabbix']['DB']['HOST']
+ZDBPort = SETTING['CORE']['Zabbix']['DB']['PORT']
 ZDBName = SETTING['CORE']['Zabbix']['DB']['DBName']
 ZDBUser = SETTING['CORE']['Zabbix']['DB']['DBUser']
 ZDBPwd = SETTING['CORE']['Zabbix']['DB']['DBPwd']
@@ -22,6 +23,7 @@ def plug_in(data, dataType) :
         logging.info('Zabbix '+dataType+' Data OUTPUT Plug In : DB')
         logging.info('Zabbix ' + dataType + ' Data Table connection(Insert) Start')
         DBHost = ZDBHost
+        DBPort = ZDBHost
         DBName = ZDBName
         DBUser = ZDBUser
         DBPwd = ZDBPwd
@@ -33,7 +35,7 @@ def plug_in(data, dataType) :
         logging.info('Databases Name : ' + DBName)
         logging.info('Databases User : ' + DBUser)
         logging.info('Databases PWD : ' + DBPwd)
-        insertConn = psycopg2.connect('host={0} dbname={1} user={2} password={3}'.format(DBHost, DBName, DBUser, DBPwd))
+        insertConn = psycopg2.connect('host={0} port={1} dbname={2} user={3} password={4}'.format(DBHost, DBPort, DBName, DBUser, DBPwd))
         insertCur = insertConn.cursor()
 
         if dataType == 'source':
