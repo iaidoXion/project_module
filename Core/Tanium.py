@@ -1,14 +1,18 @@
 from API.Tanium import plug_in as IAPI
+from API.Tanium import vul_plug_in as HYAPI
 from Input.DB.PS.Tanium import plug_in as IDPI
 from Input.ES.Tanium import plug_in as IEPI
 from Input.FILE.json import plug_in as IFJPI
 from Transform.Dataframe import plug_in as TDFPI
+from Transform.Dataframe import vul_plug_in as VUL_TDFPI
 from Transform.Merge import plug_in as TMPI
 from Transform.Datalist import plug_in as TDLPI
 from Analysis.Statistics import DailyCount as ASDC
 from Output.DB.PS.Tanium import plug_in as ODPI
+from Output.DB.PS.Tanium import vul_plug_in as VUL_ODPI
 from Output.ES.Tanium import plug_in as OEPI
 from Output.FILE.json import plug_in as OFJPI
+from pprint import pprint
 from datetime import datetime, timedelta
 import urllib3
 import json
@@ -105,3 +109,10 @@ def plug_in() :
                     ODPI(TSDL, 'statistics')
                 if TStOPESU == 'ES':
                     OEPI(TSDL, 'statistics')
+
+def vul_plug_in() :
+    sk = IAPI('', 'SesstionKey')['dataList'][0]
+    SWV = HYAPI(sk, 'SWV')
+    DF = VUL_TDFPI(SWV, 'SW1')
+    DB = VUL_ODPI(DF, 'vulnerability')
+    

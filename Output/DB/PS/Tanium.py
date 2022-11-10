@@ -1,6 +1,9 @@
 import psycopg2
 import json
 import logging
+import sqlalchemy
+from sqlalchemy import create_engine
+
 from datetime import datetime, timedelta
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
@@ -10,6 +13,7 @@ TSODBName = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']['D
 TSODBUser = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']['DB']['PS']['USER']
 TSODBPwd = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']['DB']['PS']['PWD']
 TSOTNM = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']['DB']['PS']['TNM']
+VSOTNM = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']['DB']['PS']['VUL']
 
 TSTDBHost = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['OUTPUT']['DB']['PS']['HOST']
 TSTDBName = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['OUTPUT']['DB']['PS']['NAME']
@@ -144,6 +148,56 @@ def plug_in(data, dataType) :
 
             insertCur.execute(IQ, (dataList))
         insertConn.commit()
+        insertConn.close()
+    except ConnectionError as e:
+        logging.warning('Tanium '+ dataType + 'Data Insert Connection Failure : ' + str(e))
+
+def vul_plug_in(data, dataType) :
+    try:
+        logging.info('Tanium '+dataType+' Data OUTPUT Plug In : DB')
+        logging.info('Tanium ' + dataType + ' Data Table connection(Insert) Start')
+        DBHost = TSODBHost
+        DBName = TSODBName
+        DBUser = TSODBUser
+        DBPwd = TSODBPwd
+        if dataType == 'vulnerability':
+            TNM = VSOTNM
+
+        logging.info('Insert Data Type : '+dataType)
+        logging.info('Databases Host : ' + DBHost)
+        logging.info('Databases Name : ' + DBName)
+        logging.info('Databases User : ' + DBUser)
+        logging.info('Databases PWD : ' + DBPwd)
+        insertConn = psycopg2.connect('host={0} dbname={1} user={2} password={3}'.format(DBHost, DBName, DBUser, DBPwd))
+        insertCur = insertConn.cursor()
+
+        if dataType == 'vulnerability':
+            IQ = """ INSERT INTO 
+                """ + TNM + """ (
+                    computer_id,
+                    vulnerability_code,
+                    vulnerability_judge_result,
+                    vulnerability_judge_update_time,
+                    vulnerability_judge_reason
+                    ) VALUES (
+                    %s, %s, %s, %s, %s
+                    );"""
+            datalen = len(data.computer_id)
+
+        logging.info('Table Name : ' + TNM)
+        logging.info('Insert Data Count : ' + str(datalen))
+        for i in range(datalen):
+            if dataType == 'vulnerability':
+                CI = data.computer_id[i]
+                VC = data.vulnerability_code[i]
+                VJR = data.vulnerability_judge_result[i]
+                VJUT = data.vulnerability_judge_update_time[i]
+                VJRS = data.vulnerability_judge_reason[i]
+                dataList = CI, VC, VJR, VJUT, VJRS
+
+            insertCur.execute(IQ, (dataList))
+        insertConn.commit()
+        logging.info('Tanium '+ dataType + 'Data Insert Connection Sucess!!!')
         insertConn.close()
     except ConnectionError as e:
         logging.warning('Tanium '+ dataType + 'Data Insert Connection Failure : ' + str(e))

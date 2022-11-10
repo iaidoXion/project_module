@@ -22,7 +22,7 @@
             "INPUT" : {
               "API" : {
                 "USE" : "true",
-                "URL" : "https://192.168.5.100",
+                "URL" : "https://1.223.168.93:49105",
                 "PATH" : {
                    "SesstionKey" : "/api/v2/session/login",
                    "Sensor" : "/api/v2/result_data/saved_question/"
@@ -34,10 +34,10 @@
               "DB" : {
                 "PS" : {
                   "USE": "false",
-                  "HOST": "192.168.5.160",
+                  "HOST": "localhost",
                   "NAME": "postgres",
                   "USER": "postgres",
-                  "PWD": "psql",
+                  "PWD": "0515",
                   "TNM": "daily_asset"
                 }
               },
@@ -59,11 +59,12 @@
               "DB": {
                 "PS" : {
                   "USE": "true",
-                  "HOST": "192.168.5.160",
+                  "HOST": "localhost",
                   "NAME": "postgres",
                   "USER": "postgres",
-                  "PWD": "psql",
-                  "TNM": "daily_asset"
+                  "PWD": "0515",
+                  "TNM": "daily_asset",
+                  "VUL": "vulnerability_judge"
                 }
               },
               "ES": {
@@ -90,10 +91,10 @@
               "DB" : {
                 "PS" : {
                 "USE" : "true",
-                  "HOST" : "192.168.5.160",
+                  "HOST" : "localhost",
                   "NAME" : "postgres",
                   "USER" : "postgres",
-                  "PWD" : "psql",
+                  "PWD" : "0515",
                   "TNM" : "daily_asset"
                 }
               },
@@ -109,10 +110,10 @@
               "DB" : {
                 "PS" : {
                   "USE" : "true",
-                  "HOST" : "192.168.5.160",
+                  "HOST" : "localhost",
                   "NAME" : "postgres",
                   "USER" : "postgres",
-                  "PWD" : "psql",
+                  "PWD" : "0515",
                   "TNM" : "daily_statistics"
                 }
               },
