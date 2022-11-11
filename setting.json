@@ -197,8 +197,11 @@
   },
   "Report" : {
     "USE" : "true",
+    "URL" : "1.223.168.93",
+    "PORT" : "40020",
     "DAILY" : {
-      "USE" : "true"
+      "USE" : "true",
+
     },
     "WEEKLY" : {
       "USE" : "true"
