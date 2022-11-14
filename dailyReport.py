@@ -1,23 +1,19 @@
-from Core.Report import plug_in as RPI
 from datetime import datetime
 import urllib3
 import json
 import logging
+from Core.Report import plug_in as RPI
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
-waitingUse = SETTING['PROJECT']['WAITING']['USE']
-waitingDate = SETTING['PROJECT']['WAITING']['DATE']
 logFileDirectory = SETTING['LOG']['directory']
 logFileName = SETTING['LOG']['fileName']
 logFileFormat = SETTING['LOG']['fileFormat']
-TU = SETTING['CORE']['Tanium']['USE']
-ZU = SETTING['CORE']['Zabbix']['USE']
-RU = SETTING['Report']['USE']
-RDU = SETTING['Report']['DAILY']['USE']
-RWU = SETTING['Report']['WEEKLY']['USE']
-RMU = SETTING['Report']['MONTHLY']['USE']
+RU = SETTING['REPORT']['USE']
+RDU = SETTING['REPORT']['DAILY']['USE']
+RWU = SETTING['REPORT']['WEEKLY']['USE']
+RMU = SETTING['REPORT']['MONTHLY']['USE']
 
 def main() :
     if RU == 'true' :

@@ -195,19 +195,21 @@
       }
     }
   },
-  "Report" : {
+  "REPORT" : {
     "USE" : "true",
-    "URL" : "1.223.168.93",
-    "PORT" : "40020",
+    "HOST" : "http://1.223.168.93:40020",
+    "FILEFORMAT" : ".html",
     "DAILY" : {
       "USE" : "true",
-
+      "FILENAME" : "Report_Daily_"
     },
     "WEEKLY" : {
-      "USE" : "true"
+      "USE" : "true",
+      "FILENAME" : "Report_Weekly_"
     },
-    "MONTHLY": {
-      "USE" : "true"
+    "MONTHLY" : {
+      "USE" : "true",
+      "FILENAME" : "Report_Daily_"
     }
   }
 }

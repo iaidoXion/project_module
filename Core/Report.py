@@ -1,9 +1,13 @@
 import json
-
+from datetime import datetime
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
-libUrl = SETTING['Report']['URL']
-libPort = SETTING['Report']['PORT']
+libUrl = SETTING['REPORT']['HOST']
+fileName = SETTING['REPORT']['DAILY']['FILENAME']
+fileFormat = SETTING['REPORT']['FILEFORMAT']
+fileNameDate = datetime.today().strftime("%Y%m%d")
+reportCreateDate = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+
 def plug_in():
     html_text = """
         <!DOCTYPE html>
@@ -13,9 +17,9 @@ def plug_in():
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>X-Factor Daily Report</title>
-                <link rel="shortcunt icon" href='http://"""+libUrl+""":"""+libPort+"""/static/img/X-Factor_favicon/favicon.ico'>
-                <link rel="stylesheet" href='http://"""+libUrl+""":"""+libPort+"""/static/assets/css/vendor.min.css'>
-                <link rel="stylesheet" href='http://"""+libUrl+""":"""+libPort+"""/static/assets/css/app.min.css'>
+                <link rel="shortcunt icon" href='http://"""+libUrl+"""/static/img/X-Factor_favicon/favicon.ico'>
+                <link rel="stylesheet" href='http://"""+libUrl+"""/static/assets/css/vendor.min.css'>
+                <link rel="stylesheet" href='http://"""+libUrl+"""/static/assets/css/app.min.css'>
                 <link rel="stylesheet" type="text/css" href='/Users/aidoi/X-Factor/static/css/reportPageStyle/font/reportPage_font.css'>
                 <link rel="stylesheet" type="text/css" href='/Users/aidoi/X-Factor/static/css/reportPageStyle/reportPage_daily.css'>
             </head>
@@ -779,15 +783,15 @@ def plug_in():
                     <!-- END daily-report 2 page -->
                 </div>
             </div>
-            <script src='http://"""+libUrl+""":"""+libPort+"""/static/js/jquery/jquery-3.6.0.min.js'></script>
-            <script src='http://"""+libUrl+""":"""+libPort+"""/static/assets/plugins/bootstrap/dist/js/bootstrap.min.js'></script>
-            <script src='http://"""+libUrl+""":"""+libPort+"""/static/assets/js/vendor.min.js'></script>
-            <script src='http://"""+libUrl+""":"""+libPort+"""/static/assets/js/app.min.js'></script>
+            <script src='http://"""+libUrl+"""/static/js/jquery/jquery-3.6.0.min.js'></script>
+            <script src='http://"""+libUrl+"""/static/assets/plugins/bootstrap/dist/js/bootstrap.min.js'></script>
+            <script src='http://"""+libUrl+"""/static/assets/js/vendor.min.js'></script>
+            <script src='http://"""+libUrl+"""/static/assets/js/app.min.js'></script>
             <!-- apexchart -->
-            <script src='http://"""+libUrl+""":"""+libPort+"""/static/assets/plugins/apexcharts/dist/apexcharts.min.js'></script>
+            <script src='http://"""+libUrl+"""/static/assets/plugins/apexcharts/dist/apexcharts.min.js'></script>
             <script src='/Users/aidoi/X-Factor/static/js/reportPageJS/reportPage_dailyChart.js'></script>
             </body>
             </html>
     """
-    with open('html_file.html', 'w', encoding="UTF-8") as html_file:
+    with open(fileName+fileNameDate+fileFormat, 'w', encoding="UTF-8") as html_file:
         html_file.write(html_text)
