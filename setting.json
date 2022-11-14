@@ -29,7 +29,8 @@
                  },
                  "username" : "administrator",
                  "password" : "xion123!",
-                 "SensorID": "2307"
+                 "SensorID": "2307",
+                 "VUL_SensorID": "3668"
               },
               "DB" : {
                 "PS" : {

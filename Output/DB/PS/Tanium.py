@@ -162,6 +162,7 @@ def vul_plug_in(data, dataType) :
         DBName = TSODBName
         DBUser = TSODBUser
         DBPwd = TSODBPwd
+        DBPort = TSODBPort
         if dataType == 'vulnerability':
             TNM = VSOTNM
 
@@ -170,7 +171,7 @@ def vul_plug_in(data, dataType) :
         logging.info('Databases Name : ' + DBName)
         logging.info('Databases User : ' + DBUser)
         logging.info('Databases PWD : ' + DBPwd)
-        insertConn = psycopg2.connect('host={0} dbname={1} user={2} password={3}'.format(DBHost, DBName, DBUser, DBPwd))
+        insertConn = psycopg2.connect('host={0} dbname={1} user={2} password={3} port={4}'.format(DBHost, DBName, DBUser, DBPwd, DBPort))
         insertCur = insertConn.cursor()
 
         if dataType == 'vulnerability':
@@ -180,9 +181,14 @@ def vul_plug_in(data, dataType) :
                     vulnerability_code,
                     vulnerability_judge_result,
                     vulnerability_judge_update_time,
-                    vulnerability_judge_reason
+                    vulnerability_judge_reason,
+                    computer_name,
+                    chassis_type,
+                    tanium_client_nat_ip_address,
+                    last_reboot,
+                    operating_system
                     ) VALUES (
-                    %s, %s, %s, %s, %s
+                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
                     );"""
             datalen = len(data.computer_id)
 
@@ -195,7 +201,12 @@ def vul_plug_in(data, dataType) :
                 VJR = data.vulnerability_judge_result[i]
                 VJUT = data.vulnerability_judge_update_time[i]
                 VJRS = data.vulnerability_judge_reason[i]
-                dataList = CI, VC, VJR, VJUT, VJRS
+                VJCN = data.computer_name[i]
+                VJCT = data.chassis_type[i]
+                VJIP = data.tanium_client_nat_ip_address[i]
+                VJLR = data.last_reboot[i]
+                VJOS = data.operating_system[i]
+                dataList = CI, VC, VJR, VJUT, VJRS, VJCN, VJCT, VJIP, VJLR, VJOS
 
             insertCur.execute(IQ, (dataList))
         insertConn.commit()
