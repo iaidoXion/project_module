@@ -11,12 +11,13 @@ logFileDirectory = SETTING['LOG']['directory']
 logFileName = SETTING['LOG']['fileName']
 logFileFormat = SETTING['LOG']['fileFormat']
 RU = SETTING['REPORT']['USE']
-RDU = SETTING['REPORT']['DAILY']['USE']
+RWU = SETTING['REPORT']['WEEKLY']['USE']
+RMU = SETTING['REPORT']['MONTHLY']['USE']
 
 def main() :
     if RU == 'true' :
-        if RDU == 'true' :
-            RPI('daily')
+        if RWU == 'true' :
+            RPI('weekly')
 
 if __name__ == "__main__":
     today = datetime.today().strftime("%Y%m%d")
@@ -24,6 +25,6 @@ if __name__ == "__main__":
     logFormat = '%(levelname)s, %(asctime)s, %(message)s'
     logDateFormat = '%Y%m%d%H%M%S'
     logging.basicConfig(filename=logFile, format=logFormat, datefmt=logDateFormat, level=logging.DEBUG)
-    logging.info('Daily Report Module Started')
+    logging.info('Weekly Report Module Started')
     main()
-    logging.info('Daily Report Module Finished')
+    logging.info('Weekly Report Module Finished')

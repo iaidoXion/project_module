@@ -202,10 +202,12 @@
     "FILEFORMAT" : ".html",
     "DAILY" : {
       "USE" : "true",
+      "StorageLocation" : "Report/daily/",
       "FILENAME" : "Report_Daily_"
     },
     "WEEKLY" : {
       "USE" : "true",
+      "StorageLocation" : "Report/weekly/",
       "FILENAME" : "Report_Weekly_"
     },
     "MONTHLY" : {
