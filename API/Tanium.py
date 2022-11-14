@@ -15,6 +15,7 @@ APIURL = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']
 SKPATH = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['PATH']['SesstionKey']
 SPATH = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['PATH']['Sensor']
 SID = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['SensorID']
+VUL_SID = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['VUL_SensorID']
 APIUNM = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['username']
 APIPWD = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['password']
 
@@ -67,9 +68,12 @@ def vul_plug_in(SK, APITYPE) :
         apiUrl = APIURL
         ContentType = "application/json"
         dict = {}
-        dataList = [] 
+        list_dict = {}
+        dict_list = []
+        dataList = []
         if APITYPE == 'SWV' :
-            path = '/api/v2/result_data/saved_question/3626'
+            path = SPATH + VUL_SID
+            headers = {'session': SK, 'Content-Type': ContentType}
             urls = apiUrl + path
             logging.info('Tanium ' + APITYPE + ' Data API URL : ' + urls)
             headers = {'session': SK, 'Content-Type': ContentType}
@@ -78,22 +82,35 @@ def vul_plug_in(SK, APITYPE) :
             logging.info('API Session Key Call Success, ' + 'Sesponse Status Code : ' + str(resCode))
             responseText = response.text
             jsonObj = json.loads(responseText)
-            for i in jsonObj['data']['result_sets'][0]['rows'] :
+            data = jsonObj['data']['result_sets'][0]['rows']
+            for i in range(len(data)) :
                 dict = {}
-                for j in i['data'][0] :
+                dict_list = []
+                list_dict = {}
+                for j in data[i]['data'][0] :
                     if j['text'] == 'TSE-Error: No Sensor Definition for this Platform':
-                        logging.info('ComputerID :  {} has {}'.format(i['cid'], j['text']))
+                        logging.info('ComputerID :  {} has {}'.format(data[i]['cid'], j['text']))
                         continue
                     elif j['text'] == '[current result unavailable]' :
-                        logging.info('ComputerID :  {} has {}'.format(i['cid'], j['text']))
+                        logging.info('ComputerID :  {} has {}'.format(data[i]['cid'], j['text']))
                         continue
                     elif j['text'] == 'TSE-Error: Python is not available on this system.':
-                        logging.info('ComputerID :  {} has {}'.format(i['cid'], j['text']))
+                        logging.info('ComputerID :  {} has {}'.format(data[i]['cid'], j['text']))
                         continue
                     else :
                         dict = literal_eval(j['text'])
-                    dict['cid'] = i['cid']
-                    dataList.append(dict)
+                        dict_list.append(dict)
+                if len(dict_list) != 0 :
+                    list_dict['list'] = dict_list
+                    list_dict['cid'] = data[i]['data'][1][0]['text'] #computer_id
+                    list_dict['cpn'] = data[i]['data'][2][0]['text'] #computer_name
+                    list_dict['os'] = data[i]['data'][3][0]['text'] #Operating System
+                    list_dict['ip'] = data[i]['data'][4][0]['text'] #Tanium Client NAT IP Address
+                    list_dict['ct'] = data[i]['data'][5][0]['text'] #Chassis Type
+                    list_dict['lr'] = data[i]['data'][6][0]['text'] #Last Reboot
+                    dataList.append(list_dict)
+            for i in range(len(dataList)) :
+                dataList[i]['list'] = sorted(dataList[i]['list'], key= lambda x: x['SWV'])
             returnList = {'resCode': resCode, 'dataList': dataList}
             logging.info('Tanium ' + APITYPE + ' Data API Call Success')
             logging.info('Tanium ' + APITYPE + ' Data API Response Code : ' + str(resCode))

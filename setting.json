@@ -29,7 +29,8 @@
                  },
                  "username" : "administrator",
                  "password" : "xion123!",
-                 "SensorID": "2307"
+                 "SensorID": "2307",
+                 "VUL_SensorID": "3668"
               },
               "DB" : {
                 "PS" : {
@@ -200,7 +201,7 @@
     "URL" : "1.223.168.93",
     "PORT" : "40020",
     "DAILY" : {
-      "USE" : "true",
+      "USE" : "true"
 
     },
     "WEEKLY" : {
