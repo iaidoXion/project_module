@@ -2,8 +2,6 @@ import requests
 import json
 import urllib3
 import logging
-import time
-from pprint import pprint
 from ast import literal_eval
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)

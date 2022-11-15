@@ -2,7 +2,7 @@ from datetime import datetime
 import urllib3
 import json
 import logging
-from Core.Report import plug_in as RPI
+from Core.Tanium import report_plug_in as RPI
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 with open("setting.json", encoding="UTF-8") as f:

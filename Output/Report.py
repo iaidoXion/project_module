@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
 libUrl = SETTING['REPORT']['HOST']
@@ -11,6 +12,7 @@ fileFormat = SETTING['REPORT']['FILEFORMAT']
 fileNameDate = datetime.today().strftime("%Y%m%d")
 reportCreateDate = datetime.today().strftime("%Y-%m-%d")
 
+
 def plug_in(type):
     html_text = """
         <!DOCTYPE html>
@@ -19,17 +21,17 @@ def plug_in(type):
                 <meta charset="UTF-8">
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>X-Factor """+type+""" report</title>
-                <link rel="shortcunt icon" href='"""+libUrl+"""/static/img/X-Factor_favicon/favicon.ico'>
-                <link rel="stylesheet" href='"""+libUrl+"""/static/assets/css/vendor.min.css'>
-                <link rel="stylesheet" href='"""+libUrl+"""/static/assets/css/app.min.css'>
-                <link rel="stylesheet" type="text/css" href='"""+libUrl+"""/static/css/reportPageStyle/font/reportPage_font.css'>
-                <link rel="stylesheet" type="text/css" href='"""+libUrl+"""/static/css/reportPageStyle/reportPage_"""+type+""".css'>
+                <title>X-Factor """ + type + """ report</title>
+                <link rel="shortcunt icon" href='""" + libUrl + """/static/img/X-Factor_favicon/favicon.ico'>
+                <link rel="stylesheet" href='""" + libUrl + """/static/assets/css/vendor.min.css'>
+                <link rel="stylesheet" href='""" + libUrl + """/static/assets/css/app.min.css'>
+                <link rel="stylesheet" type="text/css" href='""" + libUrl + """/static/css/reportPageStyle/font/reportPage_font.css'>
+                <link rel="stylesheet" type="text/css" href='""" + libUrl + """/static/css/reportPageStyle/reportPage_""" + type + """.css'>
             </head>
             <body class="theme-orange">
                 <div id="app" class="app pt-0">
     """
-    if type == 'daily' :
+    if type == 'daily':
         fileName = dailyFileName
         storageLocation = dailyStorageLocation
         html_text += """
@@ -40,7 +42,7 @@ def plug_in(type):
                                 <!-- brand logo -->
                                 <div class="sub-content brand">
                                     <div class="brand-logo">
-                                        <img src='"""+libUrl+"""/static/css/reportPageStyle/images/XFactor_logo.png' alt="x-factor로고">
+                                        <img src='""" + libUrl + """/static/css/reportPageStyle/images/XFactor_logo.png' alt="x-factor로고">
                                     </div>
                                     <p class="brand-title">자산 리포트</p>
                                 </div>
@@ -48,7 +50,7 @@ def plug_in(type):
                                 <div class="sub-content daily-report-content">
                                     <div class="daily-report-content-right">
                                         <div class="daily-report-logo">
-                                            <img src='"""+libUrl+"""/static/css/reportPageStyle/images/Tanium_logo.png' alt="Tanium로고">
+                                            <img src='""" + libUrl + """/static/css/reportPageStyle/images/Tanium_logo.png' alt="Tanium로고">
                                         </div>
                                         <p class="daily-report-text">
                                             일간 자산 리포트
@@ -58,7 +60,7 @@ def plug_in(type):
                                         <ul>
                                             <li>
                                                 <p>리포트 생성일</p>
-                                                <p>"""+reportCreateDate+"""</p>
+                                                <p>""" + reportCreateDate + """</p>
                                             </li>
                                             <li>
                                                 <p>데이터 기간</p>
@@ -133,7 +135,7 @@ def plug_in(type):
                                     </div>
                                 </div>
                                 <!-- END daily-asset-state -->
-                
+
                                 <!-- BEGIN asset-action-list -->
                                 <div class="sub-content asset-action-list">
                                     <div class="asset-action-title">
@@ -294,7 +296,7 @@ def plug_in(type):
                                     </div>
                                 </div>
                                 <!-- END asset-action-list -->
-                
+
                                 <!-- BEGIN asset-usage-list -->
                                 <div class="sub-content asset-usage-list">
                                     <div class="resource-usage-frame">
@@ -488,7 +490,7 @@ def plug_in(type):
                             </div>
                         </div>
                         <!-- END daily-report 1 page -->
-                
+
                         <!-- BEGIN daily-report 2 page -->
                         <div class="daily-report">
                             <div class="daily-sub-page">
@@ -660,7 +662,7 @@ def plug_in(type):
                                     </div>
                                 </div>
                                 <!-- END asset-port-list -->
-                
+
                                 <!-- BEGIN sw-asset-info -->
                                 <div class="sub-content sw-asset-info">
                                     <div class="sw-asset-title">
@@ -766,7 +768,7 @@ def plug_in(type):
                                     </div>
                                 </div>
                                 <!-- END sw-asset-info -->
-                
+
                                 <!-- BEGIN failure-Symptom-info -->
                                 <div class="sub-content failure-Symptom-info">
                                     <div class="failure-Symptom-title">
@@ -790,13 +792,13 @@ def plug_in(type):
                                     </div>
                                 </div>
                                 <!-- END failure-Symptom-info -->
-                
+
                             </div>
                         </div>
                         <!-- END daily-report 2 page -->
                     </div>
         """
-    if type == 'weekly' :
+    if type == 'weekly':
         fileName = weeklyFileName
         storageLocation = weeklyStorageLocation
         html_text += """
@@ -807,7 +809,7 @@ def plug_in(type):
                                 <!-- brand logo -->
                                 <div class="sub-content brand">
                                     <div class="brand-logo">
-                                        <img src='"""+libUrl+"""/static/css/reportPageStyle/images/XFactor_logo.png' alt="x-factor로고">
+                                        <img src='""" + libUrl + """/static/css/reportPageStyle/images/XFactor_logo.png' alt="x-factor로고">
                                     </div>
                                     <p class="brand-title">자산 리포트</p>
                                 </div>
@@ -815,7 +817,7 @@ def plug_in(type):
                                 <div class="sub-content weekly-report-content">
                                     <div class="weekly-report-content-right">
                                         <div class="weekly-report-logo">
-                                            <img src='"""+libUrl+"""/static/css/reportPageStyle/images/Tanium_logo.png' alt="Tanium로고">
+                                            <img src='""" + libUrl + """/static/css/reportPageStyle/images/Tanium_logo.png' alt="Tanium로고">
                                         </div>
                                         <p class="weekly-report-text">
                                             주간 자산 리포트
@@ -825,7 +827,7 @@ def plug_in(type):
                                         <ul>
                                             <li>
                                                 <p>리포트 생성일</p>
-                                                <p>"""+reportCreateDate+"""</p>
+                                                <p>""" + reportCreateDate + """</p>
                                             </li>
                                             <li>
                                                 <p>데이터 기간</p>
@@ -834,7 +836,7 @@ def plug_in(type):
                                         </ul>
                                     </div>
                                 </div>
-                
+
                                 <!-- BEGIN weekly-asset-state -->
                                 <div class="sub-content weekly-asset-state">
                                     <div class="weekly-asset-state-title">
@@ -901,7 +903,7 @@ def plug_in(type):
                                     </div>
                                 </div>
                                 <!-- END weekly-asset-state -->
-                
+
                                 <!-- BEGIN asset-device-state -->
                                 <div class="sub-content asset-device-state">
                                     <div class="asset-device-state-title">
@@ -944,7 +946,7 @@ def plug_in(type):
                                     </div>
                                 </div>
                                 <!-- END asset-device-state -->
-                
+
                                 <!-- BEGIN asset-device-list -->
                                 <div class="sub-content asset-device-list">
                                     <div class="asset-action-frame">
@@ -988,7 +990,7 @@ def plug_in(type):
                             </div>
                         </div>
                         <!-- END weekly-report 1 page -->
-                
+
                         <!-- BEGIN weekly-report 2 page -->
                         <div class="weekly-report">
                             <div class="weekly-sub-page">
@@ -1177,16 +1179,16 @@ def plug_in(type):
     """
     html_text += """
                 </div>
-                <script src='"""+libUrl+"""/static/js/jquery/jquery-3.6.0.min.js'></script>
-                <script src='"""+libUrl+"""/static/assets/plugins/bootstrap/dist/js/bootstrap.min.js'></script>
-                <script src='"""+libUrl+"""/static/assets/js/vendor.min.js'></script>
-                <script src='"""+libUrl+"""/static/assets/js/app.min.js'></script>
+                <script src='""" + libUrl + """/static/js/jquery/jquery-3.6.0.min.js'></script>
+                <script src='""" + libUrl + """/static/assets/plugins/bootstrap/dist/js/bootstrap.min.js'></script>
+                <script src='""" + libUrl + """/static/assets/js/vendor.min.js'></script>
+                <script src='""" + libUrl + """/static/assets/js/app.min.js'></script>
                 <!-- apexchart -->
-                <script src='"""+libUrl+"""/static/assets/plugins/apexcharts/dist/apexcharts.min.js'></script>
-                <script src='"""+libUrl+"""/static/js/reportPageJS/reportPage_"""+type+"""Chart.js'></script>
+                <script src='""" + libUrl + """/static/assets/plugins/apexcharts/dist/apexcharts.min.js'></script>
+                <script src='""" + libUrl + """/static/js/reportPageJS/reportPage_""" + type + """Chart.js'></script>
             </body>
         </html>
     """
     print(type)
-    with open(storageLocation+fileName+fileNameDate+fileFormat, 'w', encoding="UTF-8") as html_file:
+    with open(storageLocation + fileName + fileNameDate + fileFormat, 'w', encoding="UTF-8") as html_file:
         html_file.write(html_text)

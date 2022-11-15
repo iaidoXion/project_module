@@ -1,9 +1,8 @@
-from API.Zabbix import plug_in as IAPI
+from Input.API.Zabbix import plug_in as IAPI
 from Transform.Dataframe import zplug_in as ZDFPI
 from Output.DB.PS.Zabbix import plug_in as ODPI
 import urllib3
 import json
-import logging
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
