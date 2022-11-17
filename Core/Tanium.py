@@ -13,10 +13,16 @@ from Output.DB.PS.Tanium import vul_plug_in as VUL_ODPI
 from Output.ES.Tanium import plug_in as OEPI
 from Output.FILE.json import plug_in as OFJPI
 from Output.Report import plug_in as RP
+from Analysis.AlarmDetection import plug_in as AADP
 from datetime import datetime, timedelta
 import urllib3
 import json
 import logging
+import pandas as pd
+import numpy as np
+import itertools
+from collections import Counter
+
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 with open("setting.json", encoding="UTF-8") as f:
@@ -37,7 +43,6 @@ TSoOPDBPSU = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']['
 TSoOPESU = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']['ES']['USE']
 TSoOPFU = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']['FILE']['USE']
 
-
 # Statistics Data
 TStC = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['COLLECTION']
 ## Input Plug In
@@ -50,49 +55,43 @@ TStTP = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['Transform']
 TStOPDBPSU = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['OUTPUT']['DB']['PS']['USE']
 TStOPESU = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['OUTPUT']['ES']['USE']
 
+# Report
+RU = SETTING['REPORT']['USE']
+RDU = SETTING['REPORT']['DAILY']['USE']
 
 
-def plug_in() :
+def plug_in():
     module_install_date = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
     if TSoC == 'true':
         if TSoIPAU == 'true':
             sk = IAPI('', 'SesstionKey')['dataList'][0]
             BDL = IAPI(sk, 'sensor')
             TSoIP = 'API'
-
         if TSoIPDBPSU == 'true':
             BDL = IDPI('tanium', 'source')
             TSoIP = 'DB'
-
         if TSoIPESU == 'true':
             BDL = IEPI('source')
             TSoIP = 'ES'
-
-        if TSoIPFU == 'true' :
+        if TSoIPFU == 'true':
             BDL = IFJPI()
             TSoIP = 'FILE'
-
-
         if TSoTP == "true":
             TDFDL = TDFPI(BDL, TSoIP, 'source')
-        else :
+        else:
             TDFDL = BDL
-
-
         if TSoOPDBPSU == 'true':
             ODPI(TDFDL, 'source')
-
         if TSoOPESU == 'true':
             OEPI(TDFDL, 'tanium', 'source')
-
-        if TSoOPFU == 'true' :
+        if TSoOPFU == 'true':
             OFJPI(TDFDL)
 
-    if TStC == 'true':
-        if waitingUse == 'true':
-            if module_install_date == waitingDate:
-                logging.info(module_install_date)
-            else:
+    if waitingUse == 'true':
+        if module_install_date == waitingDate:
+            logging.info(module_install_date)
+        else:
+            if TStC == 'true':
                 if TStIPDBPSU == 'true':
                     SBDL = IDPI('tanium', 'statistics')
                     SDL = SBDL['dataList']
@@ -102,22 +101,27 @@ def plug_in() :
                     SDL = TMPI(SBDL)
                     TStIP = 'ES'
                 if TStTP == 'true':
-                    TSDL = TDFPI(SDL, TStIP, 'statistics')
+                    STDL = TDFPI(SDL, TStIP, 'statistics')
 
-                ASDCL = ASDC(TSDL)
+                ASDCL = ASDC(STDL)
                 TSDL = TDLPI(ASDCL)
                 if TStOPDBPSU == 'true':
                     ODPI(TSDL, 'statistics')
                 if TStOPESU == 'ES':
                     OEPI(TSDL, 'statistics')
 
-def vul_plug_in() :
+            if RU == 'true' :
+                AADP(STDL)
+                if RDU == 'true' :
+                    RP('daily')
+
+
+def vul_plug_in():
     sk = IAPI('', 'SesstionKey')['dataList'][0]
     SWV = HYAPI(sk, 'SWV')
     DF = VUL_TDFPI(SWV, 'SW1')
     DB = VUL_ODPI(DF, 'vulnerability')
 
 
-def report_plug_in(type) :
+def report_plug_in(type):
     RP(type)
-    

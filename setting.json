@@ -197,7 +197,7 @@
     }
   },
   "REPORT" : {
-    "USE" : "true",
+    "USE" : "false",
     "HOST" : "http://1.223.168.93:40020",
     "FILEFORMAT" : ".html",
     "DAILY" : {

@@ -83,6 +83,7 @@ def plug_in(core, dataType) :
                         y.established_port_count,
                         yt.established_port_count,
                         y.last_reboot as last_seen_at, 
+                        y.installed_applications_name as installed_applications_name,
                         y.asset_collection_date as asset_collection_date
                     from 
                         (select 
@@ -95,7 +96,8 @@ def plug_in(core, dataType) :
                             established_port_count,
                             ram_use_size,
                             ram_total_size,
-                            last_reboot, 
+                            last_reboot,
+                            installed_applications_name, 
                             asset_collection_date
                         from 
                             """ + TNM + """

@@ -27,15 +27,18 @@ def plug_in(data) :
     EPSL = []
     for EPC in range(len(data['EPS']['name'])):
         EPSL.append("established_port_count")
+    IANDL = []
+    for IANM in range(len(data['IANM']['name'])):
+        IANDL.append("installed_applications_name")
     #RUSL = []
     #for RUSC in range(len(data['RUS']['name'])):
     #    RUSL.append("ram_use_size")
 
-    DC = AACL + AICL + OCL + LCL + DSCL + LPCSL + EPSL #+ RUSL
+    DC = AACL + AICL + OCL + LCL + DSCL + LPCSL + EPSL + IANDL#+ RUSL
     DNM = data['AA']['name'] + data['AIS']['name'] + data['OS']['name'] + data['LS']['name'] + data['DSS'][
-        'name'] + data['LPCS']['name'] + data['EPS']['name'] #+ data['RUS']['name']
+        'name'] + data['LPCS']['name'] + data['EPS']['name'] + data['IANM']['name']#+ data['RUS']['name']
     DV = data['AA']['value'] + data['AIS']['value'] + data['OS']['value'] + data['LS']['value'] + data['DSS'][
-        'value'] + data['LPCS']['value'] + data['EPS']['value'] #+ data['RUS']['value']
+        'value'] + data['LPCS']['value'] + data['EPS']['value'] + data['IANM']['value'] #+ data['RUS']['value']
     returnData = {"classification": DC, "item": DNM, "count": DV}
     return returnData
     """

@@ -1,6 +1,5 @@
 from Core.Tanium import plug_in as TPI
 from Core.Zabbix import plug_in as ZPI
-from Core.Report import plug_in as RPI
 from datetime import datetime
 import urllib3
 import json

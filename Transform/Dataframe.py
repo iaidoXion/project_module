@@ -1,4 +1,3 @@
-
 import pandas as pd
 import logging
 from datetime import datetime, timedelta
@@ -6,6 +5,7 @@ from pprint import pprint
 
 yesterday = (datetime.today() - timedelta(1)).strftime("%Y%m%d")
 twodaysago = (datetime.today() - timedelta(2)).strftime("%Y%m%d")
+
 
 def plug_in(data, InputPlugin, dataType):
     try:
@@ -21,7 +21,8 @@ def plug_in(data, InputPlugin, dataType):
                 'installed_applications_version', 'installed_applications_silent_uninstall_string',
                 'installed_applications_uninstallable', 'running_processes', 'running_service', 'cup_consumption',
                 'cup_details_system_type', 'cup_details_cup', 'cup_details_cup_speed',
-                'cup_details_total_physical_processors', 'cup_details_total_cores', 'cup_details_total_logical_processors',
+                'cup_details_total_physical_processors', 'cup_details_total_cores',
+                'cup_details_total_logical_processors',
                 'disk_free_space', 'high_cup_processes', 'high_memory_processes', 'high_uptime', 'ip_address',
                 'tanium_client_nat_ip_address', 'last_logged_in_user', 'listen_ports_process', 'listen_ports_name',
                 'listen_ports_local_port', 'last_system_crash', 'mac_address', 'memory_consumption', 'open_port',
@@ -188,7 +189,7 @@ def plug_in(data, InputPlugin, dataType):
                     ADQLLIUD = d[50]
                     ADQLLIUN = d[51]
                     ADQLLIUT = d[52]
-                if InputPlugin == 'ES' :
+                if InputPlugin == 'ES':
                     CI = d['Computer ID']
                     CN = d['Computer Name']
                     LR = d['Last Reboot']
@@ -302,14 +303,19 @@ def plug_in(data, InputPlugin, dataType):
                     ADQLLIUD = "d[50]"
                     ADQLLIUN = "d[51]"
                     ADQLLIUT = "d[52]"
-                DFL.append([CI, CN, LR, DTS, DUS, OP, OS, IV, CT, IP, LPC, EPC, RUS, RTS, IA, IAV, IASUS, IAU, RP, RS, CPUC,
-                            CPUDST, CPUDCPU, CPUDCPUS, CPUDTPP, CPUDTC, CPUDTLP, DFS, HCPUP, HMP, HU, IPA, TCNATIPA, LLIU,
-                            LPP, LPN, LPLP, LSC, MACA, MC, openPort, OSDN, OSDPath, OSDS, OSDT, OSDP, PON, Uptime, USBWP,
-                            UA, ADQLLIUD, ADQLLIUN, ADQLLIUT])
+                DFL.append(
+                    [CI, CN, LR, DTS, DUS, OP, OS, IV, CT, IP, LPC, EPC, RUS, RTS, IA, IAV, IASUS, IAU, RP, RS, CPUC,
+                     CPUDST, CPUDCPU, CPUDCPUS, CPUDTPP, CPUDTC, CPUDTLP, DFS, HCPUP, HMP, HU, IPA, TCNATIPA, LLIU,
+                     LPP, LPN, LPLP, LSC, MACA, MC, openPort, OSDN, OSDPath, OSDS, OSDT, OSDP, PON, Uptime, USBWP,
+                     UA, ADQLLIUD, ADQLLIUN, ADQLLIUT])
 
         if dataType == 'statistics':
-            DFC = ['id', 'assetItem', 'os', 'yesterdayDriveSize', 'twodaysagoDriveSize', 'ip', 'yesterdayListenPortCount',
-                   'twodaysagoListenPortCount', 'yesterdayEstablishedPort', 'twodaysagoEstablishedPort', 'lastLogin']
+            DFC = ['id', 'assetItem', 'os',
+                   'yesterdayDriveSize', 'twodaysagoDriveSize',
+                   'ip',
+                   'yesterdayListenPortCount', 'twodaysagoListenPortCount',
+                   'yesterdayEstablishedPort', 'twodaysagoEstablishedPort',
+                   'lastLogin', 'installed_applications_name']
             if InputPlugin == 'DB':
                 for d in data:
                     CID = d[0]
@@ -412,11 +418,24 @@ def plug_in(data, InputPlugin, dataType):
                     YLPC = d[7]
                     TEP = d[8]
                     YEP = d[9]
-                    # TRUS = d[10]
-                    # TRTS = d[11]
-                    if type(d[10]) != float and d[10] != '[current result unavailable]':
+                    #LSA = d[10]
+
+                    if d[10].startswith('TSE-Error') :
+                        LSA = d[10]
+                    elif d[10].startswith('[current') :
+                        LSA = d[10]
+                    else :
                         LSA = datetime.strptime(d[10].replace('-', '+').split(' +')[0], "%a, %d %b %Y %H:%M:%S")
-                    DFL.append([CID, AI, OI, TDTS, YDTS, IP, TLPC, YLPC, TEP, YEP, LSA])
+                    #print(LSA)
+                    #if type(d[10]) == float or type(d[10]) == str :
+                    #
+                    #else :
+                    #
+
+                    AINM = d[11].replace('{', '').replace('}', '').replace('"', '').split(',')
+
+                    DFL.append([CID, AI, OI, TDTS, YDTS, IP, TLPC, YLPC, TEP, YEP, LSA, AINM])
+
             if InputPlugin == 'ES':
                 data = data.dropna(axis=0)
                 for i in range(len(data.id)):
@@ -441,8 +460,9 @@ def plug_in(data, InputPlugin, dataType):
                     DFL.append([CID, AI, OI, TDTS, YDTS, IP, TLPC, YLPC, TEP, YEP, TRUS, TRTS, LSA])
         DF = pd.DataFrame(DFL, columns=DFC)
         return DF
-    except :
-        logging.warning('Error running Tanium '+dataType+' Data Transform (Data Frame) plugin')
+    except:
+        logging.warning('Error running Tanium ' + dataType + ' Data Transform (Data Frame) plugin')
+
 
 def zplug_in(data, InputPlugin, dataType):
     if dataType == 'source':
@@ -481,70 +501,9 @@ def zplug_in(data, InputPlugin, dataType):
     DF = pd.DataFrame(DFL, columns=DFC)
     return DF
 
-    """
-        for i in range(len(DL)):
-            # CI = DL[i][0]
-            LPI = DL[i][10]
-            if len(LPI) > 10:
-                LPI = '0'
-            else:
-                LPI = DL[i][10]
-            EPI = DL[i][11]
-            if len(EPI) > 10:
-                EPI = '0'
-            else:
-                EPI = DL[i][11]
-            RUS = DL[i][12].split(' ')[0]
-            if RUS.isdigit():
-                RUS = int(RUS)
-            else:
-                RUS = 0
-            RTS = DL[i][13].split(' ')[0]
-            if RTS.isdigit():
-                RTS = int(RTS)
-            else:
-                RTS = 0
-            # RTS = DL[i][13].split(' ')[0]
-            # if RTS.isdigit() :
-            #    RTS = int(RUS)
-            # else:
-            #    RTS = 0
-            DFL.append([CI, LPI, EPI, RUS, RTS])
-            # print(DL[i])
-    DF = pd.DataFrame(DFL, columns=DFC)
-    # print(DF)
-    return DF
-
-            if dataType == 'asset' :
-                DFC = ['computer_id', 'asset_item', 'os_platform', 'drive_use_size', 'last_seen_at', 'ip_address']
-                for d in DL :
-                    if InputPlugin == 'API' :
-                        CI = d['computer_id']
-                        AI = d['asset_item']
-                        OI = d['os_platform']
-                        DI = d['drive_use_size']
-                        LI = d['last_seen_at'].split('T')[0]
-                        II = d['ip_address']
-                    elif InputPlugin == 'ES' :
-                        CI = d['Computer ID']
-                        AI = d['Chassis Type']
-                        OI = d['OS Platform']
-                        DI = d['Disk Used Space'].split(' ')[1]
-                        dateString = d['Last Reboot'].split('+')[0]
-                        dateFormatter = "%a, %d %b %Y %H:%M:%S "
-                        LI = datetime.strptime(dateString, dateFormatter)
-                        II = d['IPv4 Address']
-                    AIPer = AI.lower()
-                    if AIPer.startswith('macbook'):
-                        AI = 'Notebook'
-                    if AIPer.startswith('imac'):
-                        AI = 'Desktop'
-                    DFL.append([CI, AI, OI, DI, LI, II])
 
 
 
-            elif dataType == 'sensor' :
-            """
 def vul_plug_in(data, dataType):
     try:
         cpu_dict = {}
@@ -560,35 +519,35 @@ def vul_plug_in(data, dataType):
         swv_list = []
         date_list = []
         logging.info('Tanium ' + dataType + ' Data Transform(Dataframe) Plug In Start')
-        for i in data['dataList'] :
-            for j in i['list'] :
-                if 'cid' in i :
+        for i in data['dataList']:
+            for j in i['list']:
+                if 'cid' in i:
                     cid_list.append(i['cid'])
-                if 'cpn' in i :
+                if 'cpn' in i:
                     cpn_list.append(i['cpn'])
-                if 'ct' in i :
+                if 'ct' in i:
                     ct_list.append(i['ct'])
-                if 'ip' in i :
+                if 'ip' in i:
                     ip_list.append(i['ip'])
-                if 'lr' in i :
+                if 'lr' in i:
                     lr_list.append(i['lr'])
-                if 'os' in i :
+                if 'os' in i:
                     os_list.append(i['os'])
-                if 'status' in j :
+                if 'status' in j:
                     status_list.append(j['status'])
-                else :
+                else:
                     status_list.append('TSE-Error')
-                if 'value' in j :
+                if 'value' in j:
                     value_list.append(j['value'])
-                else :
+                else:
                     value_list.append('TSE-Error')
-                if 'SWV' in j :
+                if 'SWV' in j:
                     swv_list.append(j['SWV'])
-                else :
+                else:
                     swv_list.append('TSE-Error')
                 date_list.append(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         logging.info('Completing list operations for putting into a data frame')
-        
+
         weak_dict['computer_id'] = cid_list
         weak_dict['vulnerability_code'] = swv_list
         weak_dict['vulnerability_judge_result'] = status_list
@@ -599,7 +558,7 @@ def vul_plug_in(data, dataType):
         weak_dict['tanium_client_nat_ip_address'] = ip_list
         weak_dict['last_reboot'] = lr_list
         weak_dict['operating_system'] = os_list
-        
+
         DF = pd.DataFrame(weak_dict)
         DF = DF.astype({'computer_id': 'object'})
         DF = DF.astype({'vulnerability_judge_update_time': 'datetime64'})
@@ -607,4 +566,4 @@ def vul_plug_in(data, dataType):
 
         return DF
     except:
-        logging.warning('Error running Tanium '+dataType+' Data Transform (Data Frame) plugin')
+        logging.warning('Error running Tanium ' + dataType + ' Data Transform (Data Frame) plugin')
