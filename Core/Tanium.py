@@ -119,7 +119,7 @@ def plug_in():
 def vul_plug_in():
     sk = IAPI('', 'SesstionKey')['dataList'][0]
     SWV = HYAPI(sk, 'SWV')
-    DF = VUL_TDFPI(SWV, 'SW1')
+    DF = VUL_TDFPI(SWV, 'SW')
     DB = VUL_ODPI(DF, 'vulnerability')
 
 

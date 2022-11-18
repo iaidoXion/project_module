@@ -1,6 +1,6 @@
 from Core.Tanium import vul_plug_in as TPI
-from Core.Zabbix import plug_in as ZPI
-from Core.Report import plug_in as RPI
+from Transform.Dataframe import vul_plug_in as VUL_TDFPI
+from Output.DB.PS.Tanium import vul_plug_in as VUL_ODPI
 from datetime import datetime
 import urllib3
 import json
@@ -15,14 +15,15 @@ logFileDirectory = SETTING['LOG']['directory']
 logFileName = SETTING['LOG']['fileName']
 logFileFormat = SETTING['LOG']['fileFormat']
 TU = SETTING['CORE']['Tanium']['USE']
-ZU = SETTING['CORE']['Zabbix']['USE']
-RU = SETTING['Report']['USE']
-RDU = SETTING['Report']['DAILY']['USE']
-RWU = SETTING['Report']['WEEKLY']['USE']
-RMU = SETTING['Report']['MONTHLY']['USE']
+
+VUL_USE = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']['VUL']['USE']
 
 def main() :
-    TPI()
+    if VUL_USE == "true" :
+        VDF = VUL_TDFPI('', 'question')
+        VUL_ODPI(VDF, 'question')
+    else :
+        TPI()
 
 if __name__ == "__main__":
     today = datetime.today().strftime("%Y%m%d")
