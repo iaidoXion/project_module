@@ -19,14 +19,14 @@ STDBUNM = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['
 STDBPWD = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['DB']['PS']['PWD']
 STTNM = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['INPUT']['DB']['PS']['TNM']
 
-today = datetime.today().strftime("%Y-%m-%d")
-yesterday = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
-twoago = (datetime.today() - timedelta(2)).strftime("%Y-%m-%d")
+
 
 def plug_in(core, dataType) :
     try:
         logging.info(core+' '+dataType+' Data INPUT Plug In : DB')
-
+        today = datetime.today().strftime("%Y-%m-%d")
+        yesterday = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
+        twoago = (datetime.today() - timedelta(2)).strftime("%Y-%m-%d")
         if core == 'tanium':
             if dataType == 'source' :
                 TDBHost = SODBHOST
@@ -67,8 +67,8 @@ def plug_in(core, dataType) :
                         ad_query_last_logged_in_user_time
                     from  
                     """ + TNM + """
-                        where 
-                            to_char(asset_collection_date, 'YYYY-MM-DD') = '""" + yesterday + """' """
+                    where 
+                        to_char(asset_collection_date, 'YYYY-MM-DD') = '""" + yesterday + """' """
             if dataType == 'statistics':
                 SelectQ = """ 
                     select
