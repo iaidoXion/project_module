@@ -21,16 +21,18 @@
           "PLUGIN" : {
             "INPUT" : {
               "API" : {
-                "USE" : "true",
-                "URL" : "https://1.223.168.93:49105",
-                "PATH" : {
-                   "SesstionKey" : "/api/v2/session/login",
-                   "Sensor" : "/api/v2/result_data/saved_question/"
-                 },
-                 "username" : "administrator",
-                 "password" : "xion123!",
-                 "SensorID": "2307",
-                 "VUL_SensorID": "3668"
+                "USE": "true",
+                "URL": "https://1.223.168.93:49105",
+                "PATH": {
+                  "SesstionKey": "/api/v2/session/login",
+                  "Sensor": "/api/v2/result_data/saved_question/"
+                },
+                "username": "administrator",
+                "password": "xion123!",
+                "SensorID": "2307",
+                "VUL_SensorID": {
+                  "SW": "3754"
+                }
               },
               "DB" : {
                 "PS" : {
@@ -83,6 +85,11 @@
                 "FileName" : "Asset_",
                 "FileType" : ".json",
                 "chunkSize" : 620
+              },
+              "VUL" : {
+                "USE": "false",
+                "VUL_PATH": "C:\\Users\\user\\Documents\\",
+                "VUL_FILE_NAME": "question.xlsx"
               }
             }
           }

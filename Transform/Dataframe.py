@@ -1,11 +1,17 @@
 import pandas as pd
 import logging
+import json
 from datetime import datetime, timedelta
 from pprint import pprint
 
 yesterday = (datetime.today() - timedelta(1)).strftime("%Y%m%d")
 twodaysago = (datetime.today() - timedelta(2)).strftime("%Y%m%d")
 
+with open("setting.json", encoding="UTF-8") as f:
+    SETTING = json.loads(f.read())
+
+PATH = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']['VUL']['VUL_PATH']
+FNM = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['OUTPUT']['VUL']['VUL_FILE_NAME']
 
 def plug_in(data, InputPlugin, dataType):
     try:
@@ -505,65 +511,89 @@ def zplug_in(data, InputPlugin, dataType):
 
 
 def vul_plug_in(data, dataType):
-    try:
-        cpu_dict = {}
-        weak_dict = {}
-        status_list = []
-        value_list = []
-        cid_list = []
-        cpn_list = []
-        ct_list = []
-        ip_list = []
-        lr_list = []
-        os_list = []
-        swv_list = []
+    if dataType == "question" :
+        a = []
         date_list = []
-        logging.info('Tanium ' + dataType + ' Data Transform(Dataframe) Plug In Start')
-        for i in data['dataList']:
-            for j in i['list']:
-                if 'cid' in i:
-                    cid_list.append(i['cid'])
-                if 'cpn' in i:
-                    cpn_list.append(i['cpn'])
-                if 'ct' in i:
-                    ct_list.append(i['ct'])
-                if 'ip' in i:
-                    ip_list.append(i['ip'])
-                if 'lr' in i:
-                    lr_list.append(i['lr'])
-                if 'os' in i:
-                    os_list.append(i['os'])
-                if 'status' in j:
-                    status_list.append(j['status'])
-                else:
-                    status_list.append('TSE-Error')
-                if 'value' in j:
-                    value_list.append(j['value'])
-                else:
-                    value_list.append('TSE-Error')
-                if 'SWV' in j:
-                    swv_list.append(j['SWV'])
-                else:
-                    swv_list.append('TSE-Error')
-                date_list.append(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-        logging.info('Completing list operations for putting into a data frame')
-
-        weak_dict['computer_id'] = cid_list
-        weak_dict['vulnerability_code'] = swv_list
-        weak_dict['vulnerability_judge_result'] = status_list
-        weak_dict['vulnerability_judge_update_time'] = date_list
-        weak_dict['vulnerability_judge_reason'] = value_list
-        weak_dict['computer_name'] = cpn_list
-        weak_dict['chassis_type'] = ct_list
-        weak_dict['tanium_client_nat_ip_address'] = ip_list
-        weak_dict['last_reboot'] = lr_list
-        weak_dict['operating_system'] = os_list
-
-        DF = pd.DataFrame(weak_dict)
-        DF = DF.astype({'computer_id': 'object'})
-        DF = DF.astype({'vulnerability_judge_update_time': 'datetime64'})
-        logging.info('Tanium ' + dataType + ' Data Transform(Dataframe) Plug In Finish')
-
+        fullpath = PATH + FNM
+        QDF = pd.read_excel(fullpath)
+        for i in QDF['vulnerability_standard'] :
+            a = i.split('취약')
+            a[1] = "취약" + a[1]
+            date_list.append(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+            
+        QDF['vulnerability_standard_good'] = a[0]
+        QDF['vulnerability_standard_weak'] = a[1]
+        QDF['vulnerability_create_date'] = date_list
+        DF = QDF.drop(['vulnerability_standard'], axis=1)
+        print(DF)
         return DF
-    except:
-        logging.warning('Error running Tanium ' + dataType + ' Data Transform (Data Frame) plugin')
+    else :
+        try:
+            weak_dict = {}
+            status_list = []
+            value_list = []
+            cid_list = []
+            cpn_list = []
+            ct_list = []
+            ip_list = []
+            lr_list = []
+            os_list = []
+            swv_list = []
+            date_list = []
+            class_date_list = []
+            logging.info('Tanium ' + dataType + ' Data Transform(Dataframe) Plug In Start')
+            for i in data['dataList'] :
+                for j in i['list'] :
+                    if 'cid' in i :
+                        cid_list.append(i['cid'])
+                    if 'cpn' in i :
+                        cpn_list.append(i['cpn'])
+                    if 'ct' in i :
+                        ct_list.append(i['ct'])
+                    if 'ip' in i :
+                        ip_list.append(i['ip'])
+                    if 'lr' in i :
+                        lr_list.append(i['lr'])
+                    if 'os' in i :
+                        os_list.append(i['os'])
+                    if 'status' in j :
+                        status_list.append(j['status'])
+                    else :
+                        status_list.append('TSE-Error')
+                    if 'value' in j :
+                        value_list.append(j['value'])
+                    else :
+                        value_list.append('TSE-Error')
+                    if 'SWV' in j :
+                        swv_list.append(j['SWV'])
+                    else :
+                        swv_list.append('TSE-Error')
+                    date_list.append(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+                    # class_date_list.append(datetime.now().strftime('%Y-%m-%d'))
+            logging.info('Completing list operations for putting into a data frame')
+            for i in range(len(value_list)) :
+                if type(value_list[i]) == list :
+                    for j in range(len(value_list[i])) :
+                        if type(value_list[i][j]) == dict :
+                            value_list[i][j] = str(value_list[i][j])
+                elif type(value_list[i]) == dict :
+                    value_list[i] = str(value_list[i])
+            weak_dict['computer_id'] = cid_list
+            weak_dict['vulnerability_code'] = swv_list
+            weak_dict['vulnerability_judge_result'] = status_list
+            weak_dict['vulnerability_judge_update_time'] = date_list
+            weak_dict['vulnerability_judge_reason'] = value_list
+            weak_dict['computer_name'] = cpn_list
+            weak_dict['chassis_type'] = ct_list
+            weak_dict['tanium_client_nat_ip_address'] = ip_list
+            weak_dict['last_reboot'] = lr_list
+            weak_dict['operating_system'] = os_list
+            # weak_dict['classification_date'] = class_date_list
+            DF = pd.DataFrame(weak_dict)
+            DF = DF.astype({'computer_id': 'object'})
+            DF = DF.astype({'vulnerability_judge_update_time': 'datetime64'})
+            logging.info('Tanium ' + dataType + ' Data Transform(Dataframe) Plug In Finish')
+
+            return DF
+        except:
+            logging.warning('Error running Tanium ' + dataType + ' Data Transform (Data Frame) plugin')

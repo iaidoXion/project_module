@@ -165,7 +165,8 @@ def vul_plug_in(data, dataType) :
         DBPort = TSODBPort
         if dataType == 'vulnerability':
             TNM = VSOTNM
-
+        if dataType == 'question' :
+            TNM = 'vulnerability_list'
         logging.info('Insert Data Type : '+dataType)
         logging.info('Databases Host : ' + DBHost)
         logging.info('Databases Name : ' + DBName)
@@ -176,22 +177,66 @@ def vul_plug_in(data, dataType) :
 
         if dataType == 'vulnerability':
             IQ = """ INSERT INTO 
-                """ + TNM + """ (
-                    computer_id,
-                    vulnerability_code,
-                    vulnerability_judge_result,
-                    vulnerability_judge_update_time,
-                    vulnerability_judge_reason,
-                    computer_name,
-                    chassis_type,
-                    tanium_client_nat_ip_address,
-                    last_reboot,
-                    operating_system
-                    ) VALUES (
-                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
-                    );"""
+            """ + TNM + """ (computer_id,
+                                vulnerability_code,
+                                vulnerability_judge_result,
+                                vulnerability_judge_update_time,
+                                vulnerability_judge_reason,
+                                computer_name,
+                                chassis_type,
+                                tanium_client_nat_ip_address,
+                                last_reboot,
+                                operating_system,
+                                classification_cid) 
+                VALUES (
+                        %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+                        ) 
+                ON CONFLICT (classification_cid)
+                DO UPDATE SET 
+                        computer_id = excluded.computer_id ,
+                        vulnerability_code = excluded.vulnerability_code,
+                        vulnerability_judge_result = excluded.vulnerability_judge_result,
+                        vulnerability_judge_update_time = excluded.vulnerability_judge_update_time,
+                        vulnerability_judge_reason = excluded.vulnerability_judge_reason,
+                        computer_name = excluded.computer_name,
+                        chassis_type = excluded.chassis_type,
+                        tanium_client_nat_ip_address = excluded.tanium_client_nat_ip_address,
+                        last_reboot = excluded.last_reboot,
+                        operating_system = excluded.operating_system,
+                        classification_cid = excluded.classification_cid;"""
             datalen = len(data.computer_id)
-
+                # IQ = """ INSERT INTO 
+                #     """ + TNM + """ (
+                #         computer_id,
+                #         vulnerability_code,
+                #         vulnerability_judge_result,
+                #         vulnerability_judge_update_time,
+                #         vulnerability_judge_reason,
+                #         computer_name,
+                #         chassis_type,
+                #         tanium_client_nat_ip_address,
+                #         last_reboot,
+                #         operating_system,
+                #         classification_cid
+                #         ) VALUES (
+                #         %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+                #         );"""
+                # datalen = len(data.computer_id)
+            
+        if dataType == 'question' :
+            IQ = """ INSERT INTO 
+                """ + TNM + """ (
+                    vulnerability_classification,
+                    vulnerability_code,
+                    vulnerability_item,
+                    vulnerability_explanation,
+                    vulnerability_standard_good,
+                    vulnerability_standard_weak,
+                    vulnerability_create_date
+                    ) VALUES (
+                    %s, %s, %s, %s, %s, %s, %s
+                    );"""
+            datalen = len(data.vulnerability_code)
         logging.info('Table Name : ' + TNM)
         logging.info('Insert Data Count : ' + str(datalen))
         for i in range(datalen):
@@ -206,11 +251,22 @@ def vul_plug_in(data, dataType) :
                 VJIP = data.tanium_client_nat_ip_address[i]
                 VJLR = data.last_reboot[i]
                 VJOS = data.operating_system[i]
-                dataList = CI, VC, VJR, VJUT, VJRS, VJCN, VJCT, VJIP, VJLR, VJOS
+                CCD = data.computer_id[i] + '_' + str(i)
+                dataList = CI, VC, VJR, VJUT, VJRS, VJCN, VJCT, VJIP, VJLR, VJOS, CCD
 
+            if dataType == 'question' :
+                VCL = data.vulnerability_classification[i]
+                VC = data.vulnerability_code[i]
+                VI = data.vulnerability_item[i]
+                VE = data.vulnerability_explanation[i]
+                VSG = data.vulnerability_standard_good[i]
+                VSW = data.vulnerability_standard_weak[i]
+                VCD = data.vulnerability_create_date[i]
+                dataList = VCL, VC, VI, VE, VSG, VSW, VCD
             insertCur.execute(IQ, (dataList))
         insertConn.commit()
         logging.info('Tanium '+ dataType + 'Data Insert Connection Sucess!!!')
+        print("!!!!!!DB INSERT Sucess!!!!!")
         insertConn.close()
     except ConnectionError as e:
         logging.warning('Tanium '+ dataType + 'Data Insert Connection Failure : ' + str(e))

@@ -13,7 +13,7 @@ APIURL = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']
 SKPATH = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['PATH']['SesstionKey']
 SPATH = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['PATH']['Sensor']
 SID = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['SensorID']
-VUL_SID = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['VUL_SensorID']
+VUL_SID = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['VUL_SensorID']['SW']
 APIUNM = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['username']
 APIPWD = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['password']
 
@@ -69,6 +69,8 @@ def vul_plug_in(SK, APITYPE) :
         list_dict = {}
         dict_list = []
         dataList = []
+        count = 0
+        for_list = ['SW1', 'SW2', 'SW2_2', 'SW3', 'SW4']
         if APITYPE == 'SWV' :
             path = SPATH + VUL_SID
             headers = {'session': SK, 'Content-Type': ContentType}
@@ -85,27 +87,35 @@ def vul_plug_in(SK, APITYPE) :
                 dict = {}
                 dict_list = []
                 list_dict = {}
-                for j in data[i]['data'][0] :
-                    if j['text'] == 'TSE-Error: No Sensor Definition for this Platform':
-                        logging.info('ComputerID :  {} has {}'.format(data[i]['cid'], j['text']))
-                        continue
-                    elif j['text'] == '[current result unavailable]' :
-                        logging.info('ComputerID :  {} has {}'.format(data[i]['cid'], j['text']))
-                        continue
-                    elif j['text'] == 'TSE-Error: Python is not available on this system.':
-                        logging.info('ComputerID :  {} has {}'.format(data[i]['cid'], j['text']))
-                        continue
-                    else :
-                        dict = literal_eval(j['text'])
-                        dict_list.append(dict)
-                if len(dict_list) != 0 :
-                    list_dict['list'] = dict_list
-                    list_dict['cid'] = data[i]['data'][1][0]['text'] #computer_id
-                    list_dict['cpn'] = data[i]['data'][2][0]['text'] #computer_name
-                    list_dict['os'] = data[i]['data'][3][0]['text'] #Operating System
-                    list_dict['ip'] = data[i]['data'][4][0]['text'] #Tanium Client NAT IP Address
-                    list_dict['ct'] = data[i]['data'][5][0]['text'] #Chassis Type
-                    list_dict['lr'] = data[i]['data'][6][0]['text'] #Last Reboot
+                for k in range(len(for_list)) :
+                    for j in data[i]['data'][k] :
+                        if j['text'] == 'TSE-Error: No Sensor Definition for this Platform':
+                            logging.info('ComputerID :  {} has {}'.format(data[i]['cid'], j['text']))
+                            continue
+                        elif j['text'] == '[current result unavailable]' :
+                            logging.info('ComputerID :  {} has {}'.format(data[i]['cid'], j['text']))
+                            continue
+                        elif j['text'] == 'TSE-Error: Python is not available on this system.':
+                            logging.info('ComputerID :  {} has {}'.format(data[i]['cid'], j['text']))
+                            continue
+                        else :
+                            if j['text'] == 'TSE-Error: Failed to send to sensor child process: broken pipe' :
+                                dict['SWV'] = for_list[k]
+                                dict['value'] = j['text']
+                                j['text'] = dict
+                            else :
+                                dict = literal_eval(j['text'])
+                            dict_list.append(dict)
+                            
+                    if len(dict_list) != 0 :
+                        list_dict['list'] = dict_list
+                        list_dict['cid'] = data[i]['data'][5][0]['text'] #computer_id
+                        list_dict['cpn'] = data[i]['data'][6][0]['text'] #computer_name
+                        list_dict['os'] = data[i]['data'][7][0]['text'] #Operating System
+                        list_dict['ip'] = data[i]['data'][8][0]['text'] #Tanium Client NAT IP Address
+                        list_dict['ct'] = data[i]['data'][9][0]['text'] #Chassis Type
+                        list_dict['lr'] = data[i]['data'][10][0]['text'] #Last Reboot
+                if len(list_dict) != 0 :
                     dataList.append(list_dict)
             for i in range(len(dataList)) :
                 dataList[i]['list'] = sorted(dataList[i]['list'], key= lambda x: x['SWV'])
