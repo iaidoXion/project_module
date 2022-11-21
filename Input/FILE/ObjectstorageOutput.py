@@ -1,5 +1,6 @@
 import boto3
 import os
+import json
 
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())

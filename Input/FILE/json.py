@@ -1,13 +1,5 @@
-from ctypes import sizeof
-from os.path import getsize
-
-import pandas as pd
-
 import ujson as json
-import sys
-import os
 import time
-from filesplit.split import Split
 
 from datetime import datetime, timedelta
 

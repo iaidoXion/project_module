@@ -1,5 +1,4 @@
 import json
-import logging
 from datetime import datetime, timedelta
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())

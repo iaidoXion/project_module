@@ -2,7 +2,6 @@ import pandas as pd
 import logging
 import json
 from datetime import datetime, timedelta
-from pprint import pprint
 
 yesterday = (datetime.today() - timedelta(1)).strftime("%Y%m%d")
 twodaysago = (datetime.today() - timedelta(2)).strftime("%Y%m%d")

@@ -1,6 +1,4 @@
 import json
-import pandas as pd
-import numpy as np
 
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())

@@ -1,8 +1,6 @@
 import ujson as json
-import time
 import teradata
 import os
-from datetime import datetime, timedelta
 
 with open("setting.json", encoding="UTF-8") as f:
     SETTING = json.loads(f.read())
