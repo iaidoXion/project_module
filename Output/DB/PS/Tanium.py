@@ -251,7 +251,7 @@ def vul_plug_in(data, dataType) :
                 VJIP = data.tanium_client_nat_ip_address[i]
                 VJLR = data.last_reboot[i]
                 VJOS = data.operating_system[i]
-                CCD = data.computer_id[i] + '_' + str(i)
+                CCD = data.classification_cid[i]
                 dataList = CI, VC, VJR, VJUT, VJRS, VJCN, VJCT, VJIP, VJLR, VJOS, CCD
 
             if dataType == 'question' :

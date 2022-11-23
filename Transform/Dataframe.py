@@ -2,6 +2,8 @@ import pandas as pd
 import logging
 import json
 from datetime import datetime, timedelta
+from pprint import pprint
+from collections import Counter
 
 yesterday = (datetime.today() - timedelta(1)).strftime("%Y%m%d")
 twodaysago = (datetime.today() - timedelta(2)).strftime("%Y%m%d")
@@ -512,19 +514,24 @@ def zplug_in(data, InputPlugin, dataType):
 def vul_plug_in(data, dataType):
     if dataType == "question" :
         a = []
+        good_list = []
+        weak_list = []
         date_list = []
         fullpath = PATH + FNM
         QDF = pd.read_excel(fullpath)
         for i in QDF['vulnerability_standard'] :
             a = i.split('취약')
             a[1] = "취약" + a[1]
+            good_list.append(a[0])
+            weak_list.append(a[1])
             date_list.append(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-            
-        QDF['vulnerability_standard_good'] = a[0]
-        QDF['vulnerability_standard_weak'] = a[1]
+        QDF['vulnerability_standard_good'] = good_list
+        QDF['vulnerability_standard_weak'] = weak_list
+        print(QDF['vulnerability_standard_good'])
+        # pprint(QDF['vulnerability_standard_good'])
         QDF['vulnerability_create_date'] = date_list
         DF = QDF.drop(['vulnerability_standard'], axis=1)
-        print(DF)
+        # print(DF)
         return DF
     else :
         try:
@@ -577,6 +584,11 @@ def vul_plug_in(data, dataType):
                             value_list[i][j] = str(value_list[i][j])
                 elif type(value_list[i]) == dict :
                     value_list[i] = str(value_list[i])
+            dup_cid = dict(Counter(cid_list))
+            cid = []
+            for x in dup_cid :
+                for y in range(int(dup_cid[x])) :
+                    cid.append(x + '-' + str(y))
             weak_dict['computer_id'] = cid_list
             weak_dict['vulnerability_code'] = swv_list
             weak_dict['vulnerability_judge_result'] = status_list
@@ -587,6 +599,7 @@ def vul_plug_in(data, dataType):
             weak_dict['tanium_client_nat_ip_address'] = ip_list
             weak_dict['last_reboot'] = lr_list
             weak_dict['operating_system'] = os_list
+            weak_dict['classification_cid'] = cid
             # weak_dict['classification_date'] = class_date_list
             DF = pd.DataFrame(weak_dict)
             DF = DF.astype({'computer_id': 'object'})
