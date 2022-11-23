@@ -7,7 +7,7 @@ from Transform.Dataframe import plug_in as TDFPI
 from Transform.Dataframe import vul_plug_in as VUL_TDFPI
 from Transform.Merge import plug_in as TMPI
 from Transform.Datalist import plug_in as TDLPI
-from Analysis.Statistics.Count import DailyCount as ASDC
+from Analysis.Statistics.GroupByCount import plug_in as ASDC
 from Output.DB.PS.Tanium import plug_in as ODPI
 from Output.DB.PS.Tanium import vul_plug_in as VUL_ODPI
 from Output.ES.Tanium import plug_in as OEPI
