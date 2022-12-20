@@ -21,6 +21,9 @@ TSTDBUser = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['OUTPUT'
 TSTDBPwd = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['OUTPUT']['DB']['PS']['PWD']
 TSTTNM = SETTING['CORE']['Tanium']['MODULE']['STATISTICS']['PLUGIN']['OUTPUT']['DB']['PS']['TNM']
 
+
+VUL_STS = SETTING['CORE']['Tanium']['MODULE']['SOURCE']['PLUGIN']['INPUT']['API']['VUL']['Status']
+
 today = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 yesterday = (datetime.today() - timedelta(1)).strftime("%Y-%m-%d")
 
@@ -174,55 +177,62 @@ def vul_plug_in(data, dataType) :
         logging.info('Databases PWD : ' + DBPwd)
         insertConn = psycopg2.connect('host={0} dbname={1} user={2} password={3} port={4}'.format(DBHost, DBName, DBUser, DBPwd, DBPort))
         insertCur = insertConn.cursor()
-
         if dataType == 'vulnerability':
-            IQ = """ INSERT INTO 
-            """ + TNM + """ (computer_id,
-                                vulnerability_code,
-                                vulnerability_judge_result,
-                                vulnerability_judge_update_time,
-                                vulnerability_judge_reason,
-                                computer_name,
-                                chassis_type,
-                                tanium_client_nat_ip_address,
-                                last_reboot,
-                                operating_system,
-                                classification_cid) 
-                VALUES (
-                        %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
-                        ) 
-                ON CONFLICT (classification_cid)
-                DO UPDATE SET 
-                        computer_id = excluded.computer_id ,
-                        vulnerability_code = excluded.vulnerability_code,
-                        vulnerability_judge_result = excluded.vulnerability_judge_result,
-                        vulnerability_judge_update_time = excluded.vulnerability_judge_update_time,
-                        vulnerability_judge_reason = excluded.vulnerability_judge_reason,
-                        computer_name = excluded.computer_name,
-                        chassis_type = excluded.chassis_type,
-                        tanium_client_nat_ip_address = excluded.tanium_client_nat_ip_address,
-                        last_reboot = excluded.last_reboot,
-                        operating_system = excluded.operating_system,
-                        classification_cid = excluded.classification_cid;"""
-            datalen = len(data.computer_id)
-                # IQ = """ INSERT INTO 
-                #     """ + TNM + """ (
-                #         computer_id,
-                #         vulnerability_code,
-                #         vulnerability_judge_result,
-                #         vulnerability_judge_update_time,
-                #         vulnerability_judge_reason,
-                #         computer_name,
-                #         chassis_type,
-                #         tanium_client_nat_ip_address,
-                #         last_reboot,
-                #         operating_system,
-                #         classification_cid
-                #         ) VALUES (
-                #         %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
-                #         );"""
-                # datalen = len(data.computer_id)
-            
+            if VUL_STS == 'None' :
+                IQ = """ INSERT INTO 
+                """ + TNM + """ (computer_id,
+                                    vulnerability_code,
+                                    vulnerability_judge_result,
+                                    vulnerability_judge_update_time,
+                                    vulnerability_judge_reason,
+                                    computer_name,
+                                    chassis_type,
+                                    tanium_client_nat_ip_address,
+                                    last_reboot,
+                                    operating_system,
+                                    classification_cid,
+                                    online) 
+                    VALUES (
+                            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+                            ) 
+                    ON CONFLICT (classification_cid)
+                    DO UPDATE SET 
+                            computer_id = excluded.computer_id ,
+                            vulnerability_code = excluded.vulnerability_code,
+                            vulnerability_judge_result = excluded.vulnerability_judge_result,
+                            vulnerability_judge_update_time = excluded.vulnerability_judge_update_time,
+                            vulnerability_judge_reason = excluded.vulnerability_judge_reason,
+                            computer_name = excluded.computer_name,
+                            chassis_type = excluded.chassis_type,
+                            tanium_client_nat_ip_address = excluded.tanium_client_nat_ip_address,
+                            last_reboot = excluded.last_reboot,
+                            operating_system = excluded.operating_system,
+                            classification_cid = excluded.classification_cid,
+                            online = excluded.online;"""
+                datalen = len(data.computer_id)
+            elif VUL_STS == "Online" :
+                insertCur.execute('TRUNCATE TABLE ' + TNM + ';')
+                insertCur.execute('ALTER SEQUENCE seq_vulnerability_judge_num RESTART WITH 1;')
+                
+                IQ = """ INSERT INTO 
+                """ + TNM + """ (computer_id,
+                                    vulnerability_code,
+                                    vulnerability_judge_result,
+                                    vulnerability_judge_update_time,
+                                    vulnerability_judge_reason,
+                                    computer_name,
+                                    chassis_type,
+                                    tanium_client_nat_ip_address,
+                                    last_reboot,
+                                    operating_system,
+                                    classification_cid,
+                                    online) 
+                    VALUES (
+                            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+                            );"""
+                datalen = len(data.computer_id)
+            elif VUL_STS == "Offline" :
+                return None
         if dataType == 'question' :
             IQ = """ INSERT INTO 
                 """ + TNM + """ (
@@ -252,7 +262,8 @@ def vul_plug_in(data, dataType) :
                 VJLR = data.last_reboot[i]
                 VJOS = data.operating_system[i]
                 CCD = data.classification_cid[i]
-                dataList = CI, VC, VJR, VJUT, VJRS, VJCN, VJCT, VJIP, VJLR, VJOS, CCD
+                ONLINE = data.online[i]
+                dataList = CI, VC, VJR, VJUT, VJRS, VJCN, VJCT, VJIP, VJLR, VJOS, CCD, ONLINE
 
             if dataType == 'question' :
                 VCL = data.vulnerability_classification[i]

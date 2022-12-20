@@ -30,8 +30,9 @@
                 "username": "administrator",
                 "password": "xion123!",
                 "SensorID": "2307",
-                "VUL_SensorID": {
-                  "SW": "3754"
+                "VUL": {
+                  "SensorID" : "4356",
+                  "Status" : "Online"
                 }
               },
               "DB" : {

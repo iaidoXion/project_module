@@ -527,11 +527,10 @@ def vul_plug_in(data, dataType):
             date_list.append(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         QDF['vulnerability_standard_good'] = good_list
         QDF['vulnerability_standard_weak'] = weak_list
-        print(QDF['vulnerability_standard_good'])
         # pprint(QDF['vulnerability_standard_good'])
         QDF['vulnerability_create_date'] = date_list
         DF = QDF.drop(['vulnerability_standard'], axis=1)
-        # print(DF)
+        
         return DF
     else :
         try:
@@ -544,9 +543,10 @@ def vul_plug_in(data, dataType):
             ip_list = []
             lr_list = []
             os_list = []
+            online_list = []
             swv_list = []
             date_list = []
-            class_date_list = []
+            
             logging.info('Tanium ' + dataType + ' Data Transform(Dataframe) Plug In Start')
             for i in data['dataList'] :
                 for j in i['list'] :
@@ -562,6 +562,8 @@ def vul_plug_in(data, dataType):
                         lr_list.append(i['lr'])
                     if 'os' in i :
                         os_list.append(i['os'])
+                    if 'online' in i :
+                        online_list.append(i['online'])
                     if 'status' in j :
                         status_list.append(j['status'])
                     else :
@@ -597,7 +599,12 @@ def vul_plug_in(data, dataType):
             weak_dict['computer_name'] = cpn_list
             weak_dict['chassis_type'] = ct_list
             weak_dict['tanium_client_nat_ip_address'] = ip_list
+            # for i in range(len(lr_list)) :
+            #     if 'current result unavailable' in lr_list[i] :
+            #         lr_list[i] = '0000-00-00 00:00:00.000'
+            # pprint(lr_list)
             weak_dict['last_reboot'] = lr_list
+            weak_dict['online'] = online_list
             weak_dict['operating_system'] = os_list
             weak_dict['classification_cid'] = cid
             # weak_dict['classification_date'] = class_date_list
@@ -605,7 +612,6 @@ def vul_plug_in(data, dataType):
             DF = DF.astype({'computer_id': 'object'})
             DF = DF.astype({'vulnerability_judge_update_time': 'datetime64'})
             logging.info('Tanium ' + dataType + ' Data Transform(Dataframe) Plug In Finish')
-
             return DF
         except:
             logging.warning('Error running Tanium ' + dataType + ' Data Transform (Data Frame) plugin')
