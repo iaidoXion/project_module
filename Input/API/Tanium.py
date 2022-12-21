@@ -3,7 +3,7 @@ import json
 import urllib3
 import logging
 from ast import literal_eval
-from pprint import pprint
+
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 with open("setting.json", encoding="UTF-8") as f:
@@ -90,11 +90,10 @@ def vul_plug_in(SK, APITYPE) :
                 dict_list = []
                 list_dict = {}
                 count = 0
-                
                 SWV_list = []
-                for i, cdata in enumerate(chekc_swv) :
+                for index, cdata in enumerate(chekc_swv) :
                     for j in range(cdata) :
-                        SWV_list.append('SW' + str(i+1) + '-' + str(j + 1).zfill(2))
+                        SWV_list.append('SW' + str(index+1) + '-' + str(j + 1).zfill(2))
                 for k in range(len(for_list)) :
                     count = count + 1
                     for j in data[i]['data'][k] :
